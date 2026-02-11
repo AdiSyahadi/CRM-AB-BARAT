@@ -1,0 +1,512 @@
+/* ==================================================
+   WhatsApp Inbox - Custom Styles
+   Style selaras dengan Donatur CRM existing
+   ================================================== */
+
+/* Base & Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+/* ==================================================
+   SCROLLBAR STYLES
+   ================================================== */
+.sidebar-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.3);
+    border-radius: 2px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(16, 185, 129, 0.5);
+}
+
+/* Custom Scrollbar for messages */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F3F4F6;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #10B981;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+}
+
+/* ==================================================
+   BADGE COLORS (Segment)
+   ================================================== */
+.badge-vip {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.badge-loyal {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.badge-new {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.badge-one_time,
+.badge-one-time {
+    background: #F3F4F6;
+    color: #374151;
+}
+
+.badge-at_risk,
+.badge-at-risk {
+    background: #FFEDD5;
+    color: #9A3412;
+}
+
+.badge-churned {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.badge-never_donated,
+.badge-never {
+    background: #F1F5F9;
+    color: #475569;
+}
+
+/* ==================================================
+   SCORE BADGE (Engagement)
+   ================================================== */
+.score-hot {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+}
+
+.score-warm {
+    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+    color: white;
+}
+
+.score-cold {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: white;
+}
+
+/* ==================================================
+   ANIMATIONS
+   ================================================== */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes ping {
+    75%, 100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-bounce {
+    animation: bounce 0.6s ease-in-out infinite;
+}
+
+.animate-ping {
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ==================================================
+   CONVERSATION ITEM EFFECTS
+   ================================================== */
+.conversation-item {
+    transition: all 0.2s ease;
+}
+
+.conversation-item:hover {
+    transform: translateX(4px);
+}
+
+.conversation-item.active {
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%);
+    border-left: 4px solid #10B981;
+}
+
+/* ==================================================
+   MESSAGE BUBBLES
+   ================================================== */
+.message-bubble {
+    animation: fadeIn 0.2s ease-out;
+}
+
+.message-bubble.incoming {
+    background: #FFFFFF;
+    color: #1F2937;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.message-bubble.outgoing {
+    background: #10B981;
+    color: #FFFFFF;
+    box-shadow: 0 1px 2px rgba(16, 185, 129, 0.2);
+}
+
+/* Message hover effect */
+.message-bubble:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* ==================================================
+   TYPING INDICATOR
+   ================================================== */
+.typing-indicator .dot {
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator .dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-indicator .dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+/* ==================================================
+   INPUT STYLES
+   ================================================== */
+.message-input:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #10B981;
+    border-color: transparent;
+}
+
+.message-input::placeholder {
+    color: #9CA3AF;
+}
+
+/* Emoji & Attachment buttons hover */
+.input-action-btn {
+    transition: all 0.2s ease;
+}
+
+.input-action-btn:hover {
+    background-color: #F3F4F6;
+    transform: scale(1.1);
+}
+
+/* ==================================================
+   FILTER TABS
+   ================================================== */
+.filter-tab {
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.filter-tab:hover {
+    transform: scale(1.05);
+}
+
+.filter-tab.active {
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+
+/* ==================================================
+   QUICK ACTION BUTTONS
+   ================================================== */
+.quick-action-card {
+    transition: all 0.2s ease;
+}
+
+.quick-action-card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* ==================================================
+   DROPDOWN STYLES
+   ================================================== */
+.dropdown-menu {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ==================================================
+   UNREAD BADGE
+   ================================================== */
+.unread-badge {
+    background: #EF4444;
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+/* ==================================================
+   ONLINE STATUS INDICATOR
+   ================================================== */
+.status-online {
+    background: #10B981;
+    box-shadow: 0 0 0 2px white;
+}
+
+.status-offline {
+    background: #9CA3AF;
+    box-shadow: 0 0 0 2px white;
+}
+
+.status-away {
+    background: #F59E0B;
+    box-shadow: 0 0 0 2px white;
+}
+
+/* ==================================================
+   EMPTY STATE
+   ================================================== */
+.empty-state {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ==================================================
+   LOADING STATES
+   ================================================== */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #F3F4F6 0%,
+        #E5E7EB 50%,
+        #F3F4F6 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.spinner {
+    border: 3px solid #D1FAE5;
+    border-top: 3px solid #10B981;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+.spinner-sm {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+}
+
+/* ==================================================
+   MOBILE RESPONSIVE
+   ================================================== */
+@media (max-width: 768px) {
+    /* Hide right panel on mobile by default */
+    .right-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 100%;
+        z-index: 50;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .right-panel.open {
+        transform: translateX(0);
+    }
+    
+    /* Adjust left panel width */
+    .left-panel {
+        width: 100%;
+    }
+    
+    /* Hide left panel when conversation is open */
+    .conversation-open .left-panel {
+        display: none;
+    }
+}
+
+/* ==================================================
+   UTILITY CLASSES
+   ================================================== */
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.1),
+                0 10px 10px -5px rgba(16, 185, 129, 0.04);
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-truncate-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* ==================================================
+   WHATSAPP BACKGROUND PATTERN (Optional)
+   ================================================== */
+.whatsapp-bg {
+    background-color: #F0F2F5;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(16, 185, 129, 0.01) 10px,
+            rgba(16, 185, 129, 0.01) 20px
+        );
+}
+
+/* ==================================================
+   CUSTOM FOCUS STATES
+   ================================================== */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #10B981;
+    outline-offset: 2px;
+}
+
+/* ==================================================
+   TRANSITION UTILITIES
+   ================================================== */
+.transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-fast {
+    transition: all 0.15s ease-out;
+}
+
+/* ==================================================
+   GRADIENT BACKGROUNDS
+   ================================================== */
+.gradient-primary {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.gradient-vip {
+    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+}
+
+.gradient-info {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+}
+
+/* ==================================================
+   TOOLTIP (Optional for future use)
+   ================================================== */
+.tooltip {
+    position: relative;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem 0.75rem;
+    background: #1F2937;
+    color: white;
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    margin-bottom: 0.5rem;
+}
+
+.tooltip:hover::after {
+    opacity: 1;
+}
+
+/* ==================================================
+   PRINT STYLES (if needed)
+   ================================================== */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}

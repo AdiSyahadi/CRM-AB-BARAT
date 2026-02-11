@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Inbox - Donatur CRM</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#ECFDF5',
+                            100: '#D1FAE5',
+                            200: '#A7F3D0',
+                            300: '#6EE7B7',
+                            400: '#34D399',
+                            500: '#10B981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065F46',
+                            900: '#064E3B',
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter antialiased">
+    
+    <!-- Main Container -->
+    <div id="app" x-data="whatsappInboxApp()" class="h-screen flex flex-col overflow-hidden">
+        
+        <!-- Top Header -->
+        <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-4">
+                <a href="/donatur" class="text-gray-500 hover:text-primary-600 transition">
+                    <i class="bi bi-arrow-left text-xl"></i>
+                </a>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center shadow-sm">
+                        <i class="bi bi-whatsapp text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">WhatsApp Inbox</h1>
+                        <p class="text-xs text-gray-500">Kelola percakapan dengan donatur</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <!-- Session Selector -->
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-xl hover:bg-primary-100 transition border border-primary-200">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
+                            <span class="font-medium text-sm" x-text="activeSession.name">CS Budi</span>
+                        </div>
+                        <i class="bi bi-chevron-down text-xs"></i>
+                    </button>
+                    
+                    <!-- Session Dropdown -->
+                    <div x-show="open" 
+                         @click.away="open = false"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         class="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
+                        <div class="px-4 py-2 border-b border-gray-100">
+                            <p class="text-xs font-semibold text-gray-500 uppercase">Active Session</p>
+                        </div>
+                        <div class="px-2 py-1">
+                            <div class="p-3 rounded-lg bg-primary-50 border border-primary-200">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="font-semibold text-gray-800">CS Budi</span>
+                                    <span class="flex items-center gap-1 text-xs text-primary-600">
+                                        <div class="w-2 h-2 bg-primary-500 rounded-full"></div>
+                                        Connected
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-600">0821-XXXX-1111</p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2 border-t border-gray-100 mt-2">
+                            <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Switch Session</p>
+                        </div>
+                        <div class="px-2">
+                            <button class="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-medium text-gray-800">CS Ani</span>
+                                    <span class="flex items-center gap-1 text-xs text-gray-500">
+                                        <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                                        Disconnected
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-500">0821-XXXX-2222</p>
+                            </button>
+                            <button class="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-medium text-gray-800">CS Dedi</span>
+                                    <span class="flex items-center gap-1 text-xs text-primary-600">
+                                        <div class="w-2 h-2 bg-primary-500 rounded-full"></div>
+                                        Connected
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-500">0821-XXXX-3333</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                                <!-- Tutorial Button -->
+                <a href="tutorial.html" class="p-2 hover:bg-gray-100 rounded-lg transition" title="Tutorial & Panduan">
+                    <i class="bi bi-question-circle text-xl text-gray-600"></i>
+                </a>
+                                <!-- Notifications -->
+                <div class="relative">
+                    <button @click="showNotifications = !showNotifications" class="relative p-2 hover:bg-gray-100 rounded-lg transition">
+                        <i class="bi bi-bell text-xl text-gray-600"></i>
+                        <span x-show="unreadNotifications > 0" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+                
+                <!-- User Menu -->
+                <div class="flex items-center gap-2 pl-4 border-l border-gray-200">
+                    <div class="w-9 h-9 bg-primary-100 rounded-lg flex items-center justify-center">
+                        <span class="text-primary-700 font-semibold text-sm">B</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Layout: 3 Panels -->
+        <div class="flex-1 flex overflow-hidden">
+            
+            <!-- LEFT PANEL: Inbox List -->
+            <div class="w-96 bg-white border-r border-gray-200 flex flex-col">
+                
+                <!-- Search & Filters -->
+                <div class="p-4 border-b border-gray-200 space-y-3">
+                    <!-- Search -->
+                    <div class="relative">
+                        <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" 
+                               x-model="searchQuery"
+                               placeholder="Cari donatur atau pesan..."
+                               class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm">
+                    </div>
+                    
+                    <!-- Filter Tabs -->
+                    <div class="flex gap-2 overflow-x-auto pb-1">
+                        <template x-for="tab in filterTabs" :key="tab.key">
+                            <button @click="activeFilter = tab.key"
+                                    :class="activeFilter === tab.key ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition flex items-center gap-1.5">
+                                <i :class="tab.icon" class="text-sm"></i>
+                                <span x-text="tab.label">All</span>
+                                <span x-show="tab.count > 0" 
+                                      :class="activeFilter === tab.key ? 'bg-white/30' : 'bg-primary-500'"
+                                      class="px-1.5 py-0.5 rounded text-xs font-semibold min-w-[20px] text-center text-white"
+                                      x-text="tab.count">0</span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Conversations List -->
+                <div class="flex-1 overflow-y-auto sidebar-scroll">
+                    <template x-for="conversation in filteredConversations" :key="conversation.id">
+                        <div @click="selectConversation(conversation)"
+                             :class="selectedConversation?.id === conversation.id ? 'bg-primary-50 border-l-4 border-primary-500' : 'hover:bg-gray-50'"
+                             class="p-4 border-b border-gray-100 cursor-pointer transition">
+                            
+                            <div class="flex items-start gap-3">
+                                <!-- Avatar -->
+                                <div class="relative flex-shrink-0">
+                                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-lg"
+                                         :class="conversation.segment === 'vip' ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' : 
+                                                 conversation.segment === 'loyal' ? 'bg-gradient-to-br from-primary-400 to-primary-600' : 
+                                                 conversation.segment === 'new' ? 'bg-gradient-to-br from-blue-400 to-blue-600' : 
+                                                 'bg-gradient-to-br from-gray-400 to-gray-600'"
+                                         x-text="conversation.initial">A</div>
+                                    <div x-show="conversation.unread_count > 0" 
+                                         class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white text-xs font-bold" x-text="conversation.unread_count">3</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Content -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-start justify-between mb-1">
+                                        <div class="flex items-center gap-2">
+                                            <h4 class="font-semibold text-gray-900 truncate" x-text="conversation.name">Ahmad Ibrahim</h4>
+                                            <i x-show="conversation.is_starred" class="bi bi-star-fill text-yellow-500 text-xs"></i>
+                                        </div>
+                                        <span class="text-xs text-gray-500 flex-shrink-0" x-text="conversation.time">2 min</span>
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-600 truncate mb-1" x-text="conversation.last_message">
+                                        Alhamdulillah baik kak, terima kasih
+                                    </p>
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <span :class="'badge-' + conversation.segment" 
+                                              class="px-2 py-0.5 rounded-md text-xs font-medium"
+                                              x-text="conversation.segment_label">VIP</span>
+                                        <span x-show="conversation.is_replied" class="text-xs text-gray-400 flex items-center gap-1">
+                                            <i class="bi bi-reply-fill"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    
+                    <!-- Empty State -->
+                    <div x-show="filteredConversations.length === 0" class="p-8 text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="bi bi-chat-dots text-gray-400 text-2xl"></i>
+                        </div>
+                        <p class="text-gray-500 text-sm">Tidak ada percakapan</p>
+                    </div>
+                </div>
+                
+                <!-- Footer Stats -->
+                <div class="p-4 border-t border-gray-200 bg-gray-50">
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div>
+                            <div class="text-xl font-bold text-gray-800" x-text="stats.total">45</div>
+                            <div class="text-xs text-gray-500">Total</div>
+                        </div>
+                        <div>
+                            <div class="text-xl font-bold text-primary-600" x-text="stats.unread">12</div>
+                            <div class="text-xs text-gray-500">Unread</div>
+                        </div>
+                        <div>
+                            <div class="text-xl font-bold text-yellow-600" x-text="stats.vip">8</div>
+                            <div class="text-xs text-gray-500">VIP</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CENTER PANEL: Conversation -->
+            <div class="flex-1 flex flex-col bg-[#F0F2F5]">
+                
+                <!-- Conversation Header -->
+                <div x-show="selectedConversation" class="bg-white border-b border-gray-200 px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <!-- Avatar -->
+                            <div class="w-11 h-11 rounded-full flex items-center justify-center text-white font-semibold text-lg"
+                                 :class="selectedConversation?.segment === 'vip' ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' : 
+                                         selectedConversation?.segment === 'loyal' ? 'bg-gradient-to-br from-primary-400 to-primary-600' : 
+                                         'bg-gradient-to-br from-gray-400 to-gray-600'"
+                                 x-text="selectedConversation?.initial">A</div>
+                            
+                            <!-- Info -->
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h3 class="font-semibold text-gray-900" x-text="selectedConversation?.name">Ahmad Ibrahim</h3>
+                                    <span :class="'badge-' + selectedConversation?.segment" 
+                                          class="px-2 py-0.5 rounded-md text-xs font-medium"
+                                          x-text="selectedConversation?.segment_label">VIP</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs text-gray-500">
+                                    <span x-text="selectedConversation?.phone">0812-3456-7890</span>
+                                    <span>•</span>
+                                    <span class="flex items-center gap-1">
+                                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                        Online 5 min ago
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="flex items-center gap-2">
+                            <button @click="toggleStar()" class="p-2 hover:bg-gray-100 rounded-lg transition">
+                                <i :class="selectedConversation?.is_starred ? 'bi-star-fill text-yellow-500' : 'bi-star text-gray-500'" 
+                                   class="bi text-xl"></i>
+                            </button>
+                            <button class="p-2 hover:bg-gray-100 rounded-lg transition">
+                                <i class="bi bi-search text-gray-500 text-xl"></i>
+                            </button>
+                            <button class="p-2 hover:bg-gray-100 rounded-lg transition">
+                                <i class="bi bi-three-dots-vertical text-gray-500 text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Messages Area -->
+                <div x-show="selectedConversation" class="flex-1 overflow-y-auto p-6 space-y-4" id="messagesContainer">
+                    <template x-for="message in messages" :key="message.id">
+                        <div :class="message.from_me ? 'flex justify-end' : 'flex justify-start'">
+                            <div :class="message.from_me ? 'bg-primary-500 text-white' : 'bg-white text-gray-800'"
+                                 class="max-w-md rounded-2xl px-4 py-2.5 shadow-sm">
+                                <!-- Message Header (for incoming) -->
+                                <div x-show="!message.from_me" class="flex items-center gap-2 mb-1">
+                                    <span class="text-xs font-semibold" x-text="message.sender_name">Ahmad</span>
+                                </div>
+                                
+                                <!-- Message Content -->
+                                <p class="text-sm leading-relaxed" x-text="message.content">
+                                    Alhamdulillah baik kak, terima kasih sudah follow up
+                                </p>
+                                
+                                <!-- Message Footer -->
+                                <div class="flex items-center justify-end gap-1 mt-1">
+                                    <span :class="message.from_me ? 'text-white/80' : 'text-gray-500'" 
+                                          class="text-xs" 
+                                          x-text="message.time">10:30</span>
+                                    <template x-if="message.from_me">
+                                        <i :class="message.read ? 'bi-check-all text-blue-300' : 'bi-check-all text-white/60'" 
+                                           class="bi text-sm"></i>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    
+                    <!-- Typing Indicator -->
+                    <div x-show="isTyping" class="flex justify-start">
+                        <div class="bg-white rounded-2xl px-4 py-3 shadow-sm">
+                            <div class="flex gap-1">
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty State -->
+                <div x-show="!selectedConversation" class="flex-1 flex items-center justify-center">
+                    <div class="text-center">
+                        <div class="w-32 h-32 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="bi bi-chat-left-text text-primary-600 text-5xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Pilih Percakapan</h3>
+                        <p class="text-gray-500 text-sm">Klik percakapan di sebelah kiri untuk mulai chat</p>
+                    </div>
+                </div>
+                
+                <!-- Message Input -->
+                <div x-show="selectedConversation" class="bg-white border-t border-gray-200 p-4 relative">
+                    <div class="flex items-end gap-3">
+                        <!-- Emoji Button -->
+                        <button @click="showEmojiPicker = !showEmojiPicker" class="p-2 hover:bg-gray-100 rounded-lg transition flex-shrink-0">
+                            <i class="bi bi-emoji-smile text-gray-500 text-xl"></i>
+                        </button>
+                        
+                        <!-- Attachment Button -->
+                        <button @click="document.getElementById('fileInput').click()" class="p-2 hover:bg-gray-100 rounded-lg transition flex-shrink-0">
+                            <i class="bi bi-paperclip text-gray-500 text-xl"></i>
+                        </button>
+                        
+                        <!-- Input -->
+                        <div class="flex-1 relative">
+                            <textarea x-model="messageInput"
+                                      @keydown.enter.prevent="sendMessage()"
+                                      placeholder="Ketik pesan..."
+                                      rows="1"
+                                      class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"></textarea>
+                            
+                            <!-- Template Button -->
+                            <button @click="showTemplates = !showTemplates"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-gray-200 rounded-lg transition">
+                                <i class="bi bi-lightning-charge-fill text-primary-500 text-lg"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Send Button -->
+                        <button @click="sendMessage()" 
+                                :disabled="!messageInput.trim()"
+                                :class="messageInput.trim() ? 'bg-primary-500 hover:bg-primary-600' : 'bg-gray-300'"
+                                class="p-3 rounded-xl transition flex-shrink-0 disabled:cursor-not-allowed">
+                            <i class="bi bi-send-fill text-white text-lg"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Emoji Picker Modal (Inside relative container) -->
+                    <div x-show="showEmojiPicker" @click.away="showEmojiPicker = false" x-cloak
+                         class="absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border border-gray-200 p-4 w-80 z-50"
+                         style="max-height: 300px; overflow-y: auto;">
+                        <div class="mb-3">
+                            <input type="text" x-model="emojiSearch" placeholder="Cari emoji..." 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <div class="grid grid-cols-8 gap-2">
+                            <template x-for="emoji in filteredEmojis" :key="emoji">
+                                <button @click="insertEmoji(emoji)" 
+                                        class="text-2xl hover:bg-gray-100 rounded p-1 transition-colors"
+                                        x-text="emoji"></button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Quick Reply Dropdown (Inside relative container) -->
+                    <div x-show="showQuickReply" @click.away="showQuickReply = false" x-cloak
+                         class="absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border border-gray-200 w-64 z-50">
+                        <div class="p-2">
+                            <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">Quick Replies</div>
+                            <template x-for="reply in quickReplies" :key="reply.id">
+                                <button @click="useQuickReply(reply)" 
+                                        class="w-full text-left px-3 py-2 hover:bg-gray-100 rounded transition-colors">
+                                    <div class="flex items-center gap-2">
+                                        <i class="bi bi-lightning-charge text-yellow-500"></i>
+                                        <span class="text-sm text-gray-700" x-text="reply.text"></span>
+                                    </div>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions Bar -->
+                    <div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+                        <button @click="console.log('Templates clicked!'); showTemplateSelector = true" class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-medium text-gray-700 transition">
+                            <i class="bi bi-lightning-charge-fill text-primary-500"></i>
+                            Templates
+                        </button>
+                        <button @click="console.log('Quick Reply clicked!'); showQuickReply = !showQuickReply" class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-medium text-gray-700 transition">
+                            <i class="bi bi-reply-fill text-blue-500"></i>
+                            Quick Reply
+                        </button>
+                        <button @click="console.log('Assign clicked!'); showAssignCS = true" class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-medium text-gray-700 transition">
+                            <i class="bi bi-person-check text-purple-500"></i>
+                            Assign
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- RIGHT PANEL: Donatur Info -->
+            <div x-show="selectedConversation" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-x-full"
+                 x-transition:enter-end="opacity-100 translate-x-0"
+                 class="w-96 bg-white border-l border-gray-200 overflow-y-auto sidebar-scroll">
+                
+                <!-- Donatur Profile -->
+                <div class="p-6 border-b border-gray-200">
+                    <div class="text-center mb-6">
+                        <div class="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-3xl mx-auto mb-3"
+                             :class="selectedConversation?.segment === 'vip' ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' : 
+                                     'bg-gradient-to-br from-primary-400 to-primary-600'"
+                             x-text="selectedConversation?.initial">A</div>
+                        <h3 class="font-bold text-xl text-gray-900 mb-1" x-text="donaturInfo?.name">Ahmad Ibrahim</h3>
+                        <p class="text-sm text-gray-500 mb-2" x-text="donaturInfo?.did">DID: D001234</p>
+                        <div class="flex items-center justify-center gap-2">
+                            <span :class="'badge-' + selectedConversation?.segment" 
+                                  class="px-3 py-1 rounded-lg text-xs font-medium"
+                                  x-text="selectedConversation?.segment_label">VIP</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Info -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 text-sm">
+                            <i class="bi bi-phone text-gray-400"></i>
+                            <span class="text-gray-700" x-text="donaturInfo?.phone">0812-3456-7890</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm">
+                            <i class="bi bi-envelope text-gray-400"></i>
+                            <span class="text-gray-700" x-text="donaturInfo?.email">ahmad@email.com</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm">
+                            <i class="bi bi-person-badge text-gray-400"></i>
+                            <span class="text-gray-700">CS: <span x-text="donaturInfo?.cs">Budi</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Donation Metrics -->
+                <div class="p-6 border-b border-gray-200 bg-gradient-to-br from-primary-50 to-green-50">
+                    <h4 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-graph-up text-primary-600"></i>
+                        Metrik Donasi
+                    </h4>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="bg-white rounded-xl p-3 shadow-sm">
+                            <div class="text-xs text-gray-500 mb-1">Lifetime Value</div>
+                            <div class="font-bold text-primary-600" x-text="donaturInfo?.lifetime_value">Rp 15.5jt</div>
+                        </div>
+                        <div class="bg-white rounded-xl p-3 shadow-sm">
+                            <div class="text-xs text-gray-500 mb-1">Frequency</div>
+                            <div class="font-bold text-primary-600" x-text="donaturInfo?.frequency">12x</div>
+                        </div>
+                        <div class="bg-white rounded-xl p-3 shadow-sm">
+                            <div class="text-xs text-gray-500 mb-1">Rata-rata</div>
+                            <div class="font-bold text-gray-800" x-text="donaturInfo?.avg_donation">Rp 1.2jt</div>
+                        </div>
+                        <div class="bg-white rounded-xl p-3 shadow-sm">
+                            <div class="text-xs text-gray-500 mb-1">Last Donation</div>
+                            <div class="font-bold text-gray-800" x-text="donaturInfo?.last_donation">3 hari lalu</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Engagement Score -->
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs text-gray-500">Engagement Score</span>
+                            <span class="score-hot px-2 py-1 rounded-md text-xs font-bold" x-text="donaturInfo?.engagement_score">85</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-primary-400 to-primary-600 h-2 rounded-full transition-all"
+                                 :style="'width: ' + donaturInfo?.engagement_score + '%'"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-gray-500 mt-2">
+                            <span>Response Rate: 90%</span>
+                            <span>Avg Reply: 2 jam</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="p-6 border-b border-gray-200">
+                    <h4 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-lightning-fill text-yellow-500"></i>
+                        Quick Actions
+                    </h4>
+                    
+                    <div class="space-y-2">
+                        <button @click="showFullProfile = true" class="w-full flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition text-left">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-file-earmark-text text-blue-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-medium text-gray-800 text-sm">View Full Profile</div>
+                                <div class="text-xs text-gray-500">Lihat detail lengkap</div>
+                            </div>
+                            <i class="bi bi-chevron-right text-gray-400"></i>
+                        </button>
+                        
+                        <button @click="showAddNote = true" class="w-full flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition text-left">
+                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-pencil text-green-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-medium text-gray-800 text-sm">Add Note</div>
+                                <div class="text-xs text-gray-500">Tambah catatan</div>
+                            </div>
+                            <i class="bi bi-chevron-right text-gray-400"></i>
+                        </button>
+                        
+                        <button @click="showSetReminder = true" class="w-full flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition text-left">
+                            <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-calendar-check text-yellow-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-medium text-gray-800 text-sm">Set Reminder</div>
+                                <div class="text-xs text-gray-500">Jadwalkan follow-up</div>
+                            </div>
+                            <i class="bi bi-chevron-right text-gray-400"></i>
+                        </button>
+                        
+                        <button @click="showLogDonation = true" class="w-full flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition text-left">
+                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-cash-coin text-purple-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-medium text-gray-800 text-sm">Log Donation</div>
+                                <div class="text-xs text-gray-500">Catat donasi baru</div>
+                            </div>
+                            <i class="bi bi-chevron-right text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Recent History -->
+                <div class="p-6">
+                    <h4 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-clock-history text-gray-600"></i>
+                        Recent History
+                    </h4>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-cash text-green-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-medium text-sm text-gray-800">Donasi Rp 1jt</div>
+                                <div class="text-xs text-gray-500">02 Jan 2026 • Program Wakaf</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-whatsapp text-blue-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-medium text-sm text-gray-800">WA Follow-up</div>
+                                <div class="text-xs text-gray-500">28 Des 2025</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-cash text-green-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-medium text-sm text-gray-800">Donasi Rp 2jt</div>
+                                <div class="text-xs text-gray-500">20 Des 2025 • Program Pendidikan</div>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full text-center text-sm text-primary-600 hover:text-primary-700 font-medium py-2">
+                            View All History →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Template Selector Modal -->
+        <div x-show="showTemplateSelector" @click.away="showTemplateSelector = false" x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Pilih Template Pesan</h3>
+                <button @click="showTemplateSelector = false" class="text-gray-400 hover:text-gray-600">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="mb-4">
+                <input type="text" x-model="templateSearch" placeholder="Cari template..." 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+            <div class="space-y-3">
+                <template x-for="template in filteredTemplates" :key="template.id">
+                    <div @click="useTemplate(template)" 
+                         class="p-4 border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 cursor-pointer transition-all">
+                        <div class="flex items-start justify-between mb-2">
+                            <h4 class="font-medium text-gray-800" x-text="template.name"></h4>
+                            <span class="text-xs px-2 py-1 rounded-full" 
+                                  :class="template.category === 'greeting' ? 'bg-blue-100 text-blue-700' : template.category === 'follow-up' ? 'bg-yellow-100 text-yellow-700' : 'bg-purple-100 text-purple-700'"
+                                  x-text="template.category"></span>
+                        </div>
+                        <p class="text-sm text-gray-600" x-text="template.message"></p>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign CS Modal -->
+    <div x-show="showAssignCS" @click.away="showAssignCS = false" x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Assign ke CS</h3>
+                <button @click="showAssignCS = false" class="text-gray-400 hover:text-gray-600">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-2">
+                <template x-for="cs in csTeam" :key="cs.id">
+                    <button @click="assignToCS(cs)" 
+                            class="w-full p-3 border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all text-left"
+                            :class="cs.status === 'offline' ? 'opacity-50' : ''">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="relative">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-semibold">
+                                        <span x-text="cs.name.split(' ')[1].charAt(0)"></span>
+                                    </div>
+                                    <div class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white"
+                                         :class="cs.status === 'online' ? 'bg-green-500' : cs.status === 'busy' ? 'bg-yellow-500' : 'bg-gray-400'"></div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-800" x-text="cs.name"></div>
+                                    <div class="text-xs text-gray-500" x-text="cs.status === 'online' ? 'Online' : cs.status === 'busy' ? 'Sibuk' : 'Offline'"></div>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                <span x-text="cs.activeChats"></span> chats
+                            </div>
+                        </div>
+                    </button>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Attachment Preview Modal -->
+    <div x-show="showAttachmentPreview" @click.away="showAttachmentPreview = false" x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Lampiran File</h3>
+                <button @click="cancelAttachment()" class="text-gray-400 hover:text-gray-600">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <template x-if="selectedFile">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                        <div class="flex-shrink-0">
+                            <i class="bi text-4xl" :class="getFileIcon(selectedFile.type)"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-medium text-gray-800 truncate" x-text="selectedFile.name"></p>
+                            <p class="text-sm text-gray-500" x-text="formatFileSize(selectedFile.size)"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Caption (opsional)</label>
+                        <textarea x-model="attachmentCaption" rows="3" 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                  placeholder="Tambahkan caption untuk file ini..."></textarea>
+                    </div>
+                    <div class="flex gap-3">
+                        <button @click="sendAttachment()" 
+                                class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="bi bi-send mr-2"></i>Kirim
+                        </button>
+                        <button @click="cancelAttachment()" 
+                                class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                            Batal
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- Notification Dropdown -->
+    <div x-show="showNotifications" @click.away="showNotifications = false" x-cloak
+         class="absolute top-16 right-4 bg-white rounded-lg shadow-xl border border-gray-200 w-80 max-h-96 overflow-y-auto z-50">
+        <div class="sticky top-0 bg-white border-b border-gray-200 px-4 py-3">
+            <div class="flex items-center justify-between">
+                <h3 class="font-semibold text-gray-800">Notifikasi</h3>
+                <button @click="markAllAsRead()" class="text-xs text-green-600 hover:text-green-700">
+                    Tandai semua dibaca
+                </button>
+            </div>
+        </div>
+        <div class="divide-y divide-gray-100">
+            <template x-for="notif in notifications" :key="notif.id">
+                <div @click="handleNotificationClick(notif)" 
+                     class="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                     :class="!notif.read ? 'bg-green-50' : ''">
+                    <div class="flex gap-3">
+                        <div class="flex-shrink-0">
+                            <i class="bi text-xl" :class="notif.icon"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-800" x-text="notif.title"></p>
+                            <p class="text-sm text-gray-600 mt-1" x-text="notif.message"></p>
+                            <p class="text-xs text-gray-400 mt-1" x-text="notif.time"></p>
+                        </div>
+                        <template x-if="!notif.read">
+                            <div class="flex-shrink-0">
+                                <div class="w-2 h-2 bg-green-600 rounded-full"></div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <template x-if="notifications.length === 0">
+            <div class="p-8 text-center">
+                <i class="bi bi-bell-slash text-4xl text-gray-300 mb-2"></i>
+                <p class="text-sm text-gray-500">Tidak ada notifikasi</p>
+            </div>
+        </template>
+    </div>
+
+    <!-- Add Note Modal -->
+    <div x-show="showAddNote" @click.away="showAddNote = false" x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div @click.stop class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Tambah Catatan</h3>
+                <button @click="showAddNote = false" class="text-gray-400 hover:text-gray-600">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <template x-if="selectedConversation">
+                <div>
+                    <div class="mb-4">
+                        <div class="flex items-center gap-2 mb-3 pb-3 border-b">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-semibold text-sm"
+                                 x-text="conversations.find(c => c.id === selectedConversation)?.initial"></div>
+                            <div>
+                                <div class="font-medium text-gray-800" x-text="conversations.find(c => c.id === selectedConversation)?.name"></div>
+                                <div class="text-xs text-gray-500" x-text="conversations.find(c => c.id === selectedConversation)?.did"></div>
+                            </div>
+                        </div>
+                        <textarea x-model="newNote" rows="5" 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                  placeholder="Tulis catatan tentang donatur ini..."></textarea>
+                    </div>
+                    <div class="flex gap-3">
+                        <button @click="saveNote()" 
+                                class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="bi bi-check-lg mr-2"></i>Simpan
+                        </button>
+                        <button @click="showAddNote = false" 
+                                class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                            Batal
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- Set Reminder Modal -->
+    <div x-show="showSetReminder" @click.away="showSetReminder = false" x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div @click.stop class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Set Reminder</h3>
+                <button @click="showSetReminder = false" class="text-gray-400 hover:text-gray-600">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center gap-2 pb-3 border-b">
+                    <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-700 font-semibold text-sm"
+                         x-text="conversations.find(c => c.id === selectedConversation)?.initial"></div>
+                    <div>
+                        <div class="font-medium text-gray-800" x-text="conversations.find(c => c.id === selectedConversation)?.name"></div>
+                        <div class="text-xs text-gray-500">Jadwalkan follow-up</div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
+                    <input type="date" x-model="reminderDate" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Waktu</label>
+                    <input type="time" x-model="reminderTime" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Catatan (opsional)</label>
+                    <textarea x-model="reminderNote" rows="3" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                              placeholder="Follow up untuk..."></textarea>
+                </div>
+                <div class="flex gap-3">
+                    <button @click="saveReminder()" 
+                            class="flex-1 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors">
+                        <i class="bi bi-bell mr-2"></i>Set Reminder
+                    </button>
+                    <button @click="showSetReminder = false" 
+                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Donation Modal -->
+    <div x-show="showLogDonation" @click.away="showLogDonation = false" x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div @click.stop class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Catat Donasi Baru</h3>
+                <button @click="showLogDonation = false" class="text-gray-400 hover:text-gray-600">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center gap-2 pb-3 border-b">
+                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 font-semibold text-sm"
+                         x-text="conversations.find(c => c.id === selectedConversation)?.initial"></div>
+                    <div>
+                        <div class="font-medium text-gray-800" x-text="conversations.find(c => c.id === selectedConversation)?.name"></div>
+                        <div class="text-xs text-gray-500" x-text="conversations.find(c => c.id === selectedConversation)?.did"></div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah Donasi <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-gray-500">Rp</span>
+                        <input type="number" x-model="donationAmount" 
+                               class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                               placeholder="500000">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Program <span class="text-red-500">*</span></label>
+                    <select x-model="donationProgram" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">Pilih program...</option>
+                        <option value="Wakaf">Wakaf</option>
+                        <option value="Pendidikan">Pendidikan</option>
+                        <option value="Kesehatan">Kesehatan</option>
+                        <option value="Sosial">Sosial</option>
+                        <option value="Dakwah">Dakwah</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Donasi</label>
+                    <input type="date" x-model="donationDate" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div class="flex gap-3">
+                    <button @click="saveDonation()" 
+                            class="flex-1 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                        <i class="bi bi-save mr-2"></i>Catat Donasi
+                    </button>
+                    <button @click="showLogDonation = false" 
+                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Full Profile Modal -->
+    <div x-show="showFullProfile" @click.away="showFullProfile = false" x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div @click.stop class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-800">Profil Donatur Lengkap</h3>
+                <button @click="showFullProfile = false" class="text-gray-400 hover:text-gray-600">
+                    <i class="bi bi-x-lg text-xl"></i>
+                </button>
+            </div>
+            <template x-if="selectedConversation">
+                <div class="space-y-6">
+                    <!-- Header Profile -->
+                    <div class="flex items-start gap-4 pb-6 border-b">
+                        <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-2xl"
+                             x-text="conversations.find(c => c.id === selectedConversation)?.initial"></div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold text-gray-800 mb-1" x-text="conversations.find(c => c.id === selectedConversation)?.name"></h4>
+                            <p class="text-gray-600 mb-2" x-text="conversations.find(c => c.id === selectedConversation)?.phone"></p>
+                            <div class="flex gap-2">
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium"
+                                      x-text="conversations.find(c => c.id === selectedConversation)?.segment_label"></span>
+                                <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium"
+                                      x-text="conversations.find(c => c.id === selectedConversation)?.did"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
+                            <div class="text-sm text-gray-600 mb-1">Lifetime Value</div>
+                            <div class="text-2xl font-bold text-green-700">Rp 25jt</div>
+                        </div>
+                        <div class="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
+                            <div class="text-sm text-gray-600 mb-1">Total Donasi</div>
+                            <div class="text-2xl font-bold text-blue-700">18x</div>
+                        </div>
+                        <div class="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
+                            <div class="text-sm text-gray-600 mb-1">Rata-rata</div>
+                            <div class="text-2xl font-bold text-purple-700">Rp 1.4jt</div>
+                        </div>
+                        <div class="p-4 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg">
+                            <div class="text-sm text-gray-600 mb-1">Terakhir</div>
+                            <div class="text-2xl font-bold text-yellow-700">7 hari</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detail Info -->
+                    <div class="space-y-3">
+                        <h5 class="font-semibold text-gray-800">Informasi Detail</h5>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <div class="text-gray-500">Email</div>
+                                <div class="font-medium">ahmad.ibrahim@email.com</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-500">Bergabung</div>
+                                <div class="font-medium">15 Maret 2024</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-500">Lokasi</div>
+                                <div class="font-medium">Jakarta Selatan</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-500">Engagement Score</div>
+                                <div class="font-medium">85%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex gap-3 pt-4 border-t">
+                        <button @click="showFullProfile = false; showAddNote = true" 
+                                class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                            <i class="bi bi-pencil mr-2"></i>Add Note
+                        </button>
+                        <button @click="showFullProfile = false; showSetReminder = true" 
+                                class="flex-1 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
+                            <i class="bi bi-calendar-check mr-2"></i>Set Reminder
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" @change="handleFileSelect($event)" class="hidden">
+    
+    </div><!-- End of x-data="whatsappInboxApp()" -->
+    
+    <!-- Load app.js first, then Alpine.js -->
+    <script src="app.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>

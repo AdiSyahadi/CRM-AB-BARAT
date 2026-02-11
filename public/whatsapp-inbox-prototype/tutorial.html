@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial - WhatsApp CRM Donatur</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#ECFDF5',
+                            100: '#D1FAE5',
+                            200: '#A7F3D0',
+                            300: '#6EE7B7',
+                            400: '#34D399',
+                            500: '#10B981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065F46',
+                            900: '#064E3B',
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Tutorial Styles -->
+    <link rel="stylesheet" href="tutorial.css">
+</head>
+<body class="bg-gray-50 font-inter">
+    
+    <div id="tutorialApp" x-data="tutorialApp()" x-cloak>
+        
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+            <div class="max-w-7xl mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <a href="index.html" class="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition">
+                            <i class="bi bi-arrow-left text-xl"></i>
+                            <span class="font-medium">Kembali ke App</span>
+                        </a>
+                        <div class="h-8 w-px bg-gray-300"></div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center">
+                                <i class="bi bi-book text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h1 class="text-lg font-bold text-gray-800">Tutorial & Panduan</h1>
+                                <p class="text-xs text-gray-500">Pelajari cara menggunakan WhatsApp CRM</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Indicator -->
+                    <div class="hidden md:flex items-center gap-3">
+                        <span class="text-sm text-gray-600">Progress:</span>
+                        <div class="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 transition-all duration-300"
+                                 :style="'width: ' + completionPercentage + '%'"></div>
+                        </div>
+                        <span class="text-sm font-semibold text-primary-600" x-text="completionPercentage + '%'">0%</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto px-6 py-8">
+            
+            <!-- Hero Section -->
+            <div class="bg-gradient-to-br from-primary-500 to-primary-700 rounded-3xl p-8 md:p-12 mb-8 text-white shadow-xl">
+                <div class="max-w-3xl">
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
+                        <i class="bi bi-lightbulb-fill text-yellow-300"></i>
+                        <span class="text-sm font-medium">Panduan Lengkap</span>
+                    </div>
+                    <h2 class="text-4xl font-bold mb-4">Selamat Datang di WhatsApp CRM! 👋</h2>
+                    <p class="text-lg text-primary-50 mb-6 leading-relaxed">
+                        Sistem terintegrasi untuk mengelola komunikasi WhatsApp dengan donatur Anda. 
+                        Semua percakapan, data donatur, dan histori donasi dalam satu tempat.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button @click="scrollToSection('overview')" class="px-6 py-3 bg-white text-primary-600 rounded-xl font-semibold hover:bg-primary-50 transition shadow-lg">
+                            <i class="bi bi-play-fill mr-2"></i>Mulai Tutorial
+                        </button>
+                        <button @click="scrollToSection('faq')" class="px-6 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-xl font-semibold hover:bg-white/20 transition">
+                            <i class="bi bi-question-circle mr-2"></i>FAQ
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <i class="bi bi-book text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-800">6</div>
+                    </div>
+                    <p class="text-sm text-gray-600">Modul Tutorial</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                            <i class="bi bi-patch-check text-green-600 text-xl"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-800">12</div>
+                    </div>
+                    <p class="text-sm text-gray-600">Fitur Utama</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                            <i class="bi bi-lightning-charge text-purple-600 text-xl"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-800">20</div>
+                    </div>
+                    <p class="text-sm text-gray-600">Tips & Tricks</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                            <i class="bi bi-clock-history text-yellow-600 text-xl"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-800">15</div>
+                    </div>
+                    <p class="text-sm text-gray-600">Menit Belajar</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                
+                <!-- Sidebar Navigation -->
+                <aside class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl border border-gray-200 p-4 sticky top-24">
+                        <h3 class="font-bold text-gray-800 mb-4 px-2">Daftar Isi</h3>
+                        <nav class="space-y-1">
+                            <template x-for="(section, index) in sections" :key="section.id">
+                                <button @click="scrollToSection(section.id); toggleComplete(section.id)"
+                                        :class="completedSections.includes(section.id) ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-50'"
+                                        class="w-full text-left px-3 py-2.5 rounded-lg transition flex items-center gap-3 group">
+                                    <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                                         :class="completedSections.includes(section.id) ? 'bg-primary-500' : 'bg-gray-200 group-hover:bg-gray-300'">
+                                        <i :class="completedSections.includes(section.id) ? 'bi-check-lg text-white' : 'bi-circle text-gray-500'"
+                                           class="text-xs"></i>
+                                    </div>
+                                    <span class="text-sm font-medium flex-1" x-text="section.title">Section</span>
+                                </button>
+                            </template>
+                        </nav>
+                    </div>
+                </aside>
+                
+                <!-- Main Tutorial Content -->
+                <main class="lg:col-span-3 space-y-8">
+                    
+                    <!-- Section 1: Overview -->
+                    <section id="overview" class="tutorial-section">
+                        <div class="section-header">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                                    <i class="bi bi-grid-3x3-gap-fill text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">Overview Sistem</h2>
+                                    <p class="text-sm text-gray-500">Memahami layout dan komponen utama</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-content">
+                            <p class="text-gray-700 leading-relaxed mb-6">
+                                WhatsApp CRM Donatur terdiri dari <strong>3 panel utama</strong> yang dirancang untuk memudahkan 
+                                CS dalam mengelola percakapan dan memahami profil donatur secara menyeluruh.
+                            </p>
+                            
+                            <!-- 3 Panel Layout -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <div class="feature-card">
+                                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                                        <i class="bi bi-chat-left-dots-fill text-blue-600 text-2xl"></i>
+                                    </div>
+                                    <h3 class="font-bold text-gray-800 mb-2 text-center">Panel Kiri</h3>
+                                    <p class="text-sm text-gray-600 text-center mb-3">Inbox List</p>
+                                    <ul class="text-sm text-gray-600 space-y-2">
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-primary-500 mt-0.5"></i>
+                                            <span>Daftar semua percakapan</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-primary-500 mt-0.5"></i>
+                                            <span>Filter & search</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-primary-500 mt-0.5"></i>
+                                            <span>Status unread</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="feature-card">
+                                    <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                                        <i class="bi bi-chat-text-fill text-green-600 text-2xl"></i>
+                                    </div>
+                                    <h3 class="font-bold text-gray-800 mb-2 text-center">Panel Tengah</h3>
+                                    <p class="text-sm text-gray-600 text-center mb-3">Conversation</p>
+                                    <ul class="text-sm text-gray-600 space-y-2">
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-primary-500 mt-0.5"></i>
+                                            <span>Area chat utama</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-primary-500 mt-0.5"></i>
+                                            <span>Kirim pesan & media</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-primary-500 mt-0.5"></i>
+                                            <span>Template messages</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="feature-card">
+                                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-4 mx-auto">
+                                        <i class="bi bi-person-badge-fill text-purple-600 text-2xl"></i>
+                                    </div>
+                                    <h3 class="font-bold text-gray-800 mb-2 text-center">Panel Kanan</h3>
+                                    <p class="text-sm text-gray-600 text-center mb-3">Donatur Info</p>
+                                    <ul class="text-sm text-gray-600 space-y-2">
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-primary-500 mt-0.5"></i>
+                                            <span>Profile lengkap</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-primary-500 mt-0.5"></i>
+                                            <span>Donation metrics</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-primary-500 mt-0.5"></i>
+                                            <span>Quick actions</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="tip-box">
+                                <div class="flex items-start gap-3">
+                                    <i class="bi bi-lightbulb-fill text-yellow-500 text-xl flex-shrink-0"></i>
+                                    <div>
+                                        <p class="font-semibold text-gray-800 mb-1">Tips Pro</p>
+                                        <p class="text-sm text-gray-600">
+                                            Gunakan keyboard shortcut <kbd>Ctrl + K</kbd> untuk quick search, 
+                                            dan <kbd>Ctrl + N</kbd> untuk compose message baru!
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Section 2: Inbox Management -->
+                    <section id="inbox" class="tutorial-section">
+                        <div class="section-header">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                                    <i class="bi bi-inbox-fill text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">Mengelola Inbox</h2>
+                                    <p class="text-sm text-gray-500">Filter, search, dan organize conversations</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-content">
+                            
+                            <!-- Search Feature -->
+                            <div class="feature-block">
+                                <h3 class="feature-title">
+                                    <i class="bi bi-search"></i>
+                                    Pencarian Cepat
+                                </h3>
+                                <p class="text-gray-700 mb-4">
+                                    Search box memungkinkan Anda mencari donatur berdasarkan nama, nomor HP, atau isi pesan.
+                                </p>
+                                <div class="step-by-step">
+                                    <div class="step-item">
+                                        <div class="step-number">1</div>
+                                        <div class="step-content">
+                                            <h4>Klik search box di atas inbox list</h4>
+                                            <p>Atau gunakan shortcut <kbd>Ctrl + K</kbd></p>
+                                        </div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-number">2</div>
+                                        <div class="step-content">
+                                            <h4>Ketik nama atau nomor HP</h4>
+                                            <p>Hasil akan muncul secara real-time</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-number">3</div>
+                                        <div class="step-content">
+                                            <h4>Klik conversation yang diinginkan</h4>
+                                            <p>Chat akan terbuka di panel tengah</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Filter Tabs -->
+                            <div class="feature-block">
+                                <h3 class="feature-title">
+                                    <i class="bi bi-funnel-fill"></i>
+                                    Filter Berdasarkan Status
+                                </h3>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <div class="filter-badge-demo">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <i class="bi bi-chat-dots text-gray-600"></i>
+                                            <span class="font-semibold">All</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Semua percakapan</p>
+                                    </div>
+                                    <div class="filter-badge-demo">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <i class="bi bi-circle-fill text-red-500 text-xs"></i>
+                                            <span class="font-semibold">Unread</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Belum dibaca</p>
+                                    </div>
+                                    <div class="filter-badge-demo">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <i class="bi bi-star-fill text-yellow-500"></i>
+                                            <span class="font-semibold">VIP</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Donatur VIP</p>
+                                    </div>
+                                    <div class="filter-badge-demo">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <i class="bi bi-exclamation-circle text-orange-500"></i>
+                                            <span class="font-semibold">At Risk</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Perlu follow-up</p>
+                                    </div>
+                                    <div class="filter-badge-demo">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <i class="bi bi-person-plus text-blue-500"></i>
+                                            <span class="font-semibold">New</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Donatur baru</p>
+                                    </div>
+                                    <div class="filter-badge-demo">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <i class="bi bi-heart text-green-500"></i>
+                                            <span class="font-semibold">Loyal</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">Donatur setia</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Segment Badges -->
+                            <div class="feature-block">
+                                <h3 class="feature-title">
+                                    <i class="bi bi-tags-fill"></i>
+                                    Memahami Segment Badge
+                                </h3>
+                                <p class="text-gray-700 mb-4">
+                                    Setiap donatur memiliki segment badge yang menunjukkan status mereka:
+                                </p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="flex items-start gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                        <span class="badge-vip px-3 py-1 rounded-md text-sm font-medium">VIP</span>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-semibold text-gray-800">Donatur VIP</p>
+                                            <p class="text-xs text-gray-600">Total donasi ≥10jt atau ≥10 transaksi</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                        <span class="badge-loyal px-3 py-1 rounded-md text-sm font-medium">Loyal</span>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-semibold text-gray-800">Donatur Loyal</p>
+                                            <p class="text-xs text-gray-600">≥3 transaksi dalam 6 bulan terakhir</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <span class="badge-new px-3 py-1 rounded-md text-sm font-medium">New</span>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-semibold text-gray-800">Donatur Baru</p>
+                                            <p class="text-xs text-gray-600">Registrasi kurang dari 30 hari</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                                        <span class="badge-at-risk px-3 py-1 rounded-md text-sm font-medium">At Risk</span>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-semibold text-gray-800">At Risk</p>
+                                            <p class="text-xs text-gray-600">Tidak donasi 60-90 hari, perlu follow-up</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Section 3: Sending Messages -->
+                    <section id="messages" class="tutorial-section">
+                        <div class="section-header">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                                    <i class="bi bi-send-fill text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">Mengirim Pesan</h2>
+                                    <p class="text-sm text-gray-500">Cara berkomunikasi dengan donatur</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-content">
+                            
+                            <!-- Basic Messaging -->
+                            <div class="feature-block">
+                                <h3 class="feature-title">
+                                    <i class="bi bi-chat-left-text"></i>
+                                    Mengirim Pesan Teks
+                                </h3>
+                                <div class="step-by-step">
+                                    <div class="step-item">
+                                        <div class="step-number">1</div>
+                                        <div class="step-content">
+                                            <h4>Pilih conversation dari inbox</h4>
+                                            <p>Chat akan terbuka di panel tengah</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-number">2</div>
+                                        <div class="step-content">
+                                            <h4>Ketik pesan di input box</h4>
+                                            <p>Area input berada di bagian bawah chat</p>
+                                        </div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-number">3</div>
+                                        <div class="step-content">
+                                            <h4>Tekan Enter atau klik tombol Send</h4>
+                                            <p>Pesan akan terkirim dengan read receipt</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Templates -->
+                            <div class="feature-block">
+                                <h3 class="feature-title">
+                                    <i class="bi bi-lightning-charge-fill text-yellow-500"></i>
+                                    Menggunakan Template
+                                </h3>
+                                <p class="text-gray-700 mb-4">
+                                    Template memudahkan Anda mengirim pesan yang sering digunakan dengan cepat.
+                                </p>
+                                <div class="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-200 rounded-xl p-4 mb-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                            <i class="bi bi-lightning-charge-fill text-yellow-600 text-lg"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-gray-800 mb-2">Template Tersedia:</p>
+                                            <ul class="space-y-2 text-sm text-gray-700">
+                                                <li>✓ Salam & Kabar</li>
+                                                <li>✓ Follow-up Donasi</li>
+                                                <li>✓ Info Program Baru</li>
+                                                <li>✓ Ucapan Terima Kasih</li>
+                                                <li>✓ VIP Special Offer</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600">
+                                    Klik icon <i class="bi bi-lightning-charge-fill text-primary-500"></i> di sebelah input box 
+                                    untuk membuka template selector.
+                                </p>
+                            </div>
+                            
+                            <!-- Attachments -->
+                            <div class="feature-block">
+                                <h3 class="feature-title">
+                                    <i class="bi bi-paperclip"></i>
+                                    Mengirim File & Media
+                                </h3>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    <div class="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                        <i class="bi bi-image text-blue-500 text-3xl mb-2"></i>
+                                        <p class="text-sm font-medium text-gray-800">Gambar</p>
+                                        <p class="text-xs text-gray-500">JPG, PNG</p>
+                                    </div>
+                                    <div class="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                        <i class="bi bi-file-earmark-pdf text-red-500 text-3xl mb-2"></i>
+                                        <p class="text-sm font-medium text-gray-800">Dokumen</p>
+                                        <p class="text-xs text-gray-500">PDF, DOC</p>
+                                    </div>
+                                    <div class="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                        <i class="bi bi-play-circle text-purple-500 text-3xl mb-2"></i>
+                                        <p class="text-sm font-medium text-gray-800">Video</p>
+                                        <p class="text-xs text-gray-500">MP4, AVI</p>
+                                    </div>
+                                    <div class="text-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                        <i class="bi bi-geo-alt text-green-500 text-3xl mb-2"></i>
+                                        <p class="text-sm font-medium text-gray-800">Lokasi</p>
+                                        <p class="text-xs text-gray-500">Maps</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Section 4: Donatur Info -->
+                    <section id="donatur-info" class="tutorial-section">
+                        <div class="section-header">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+                                    <i class="bi bi-person-circle text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">Informasi Donatur</h2>
+                                    <p class="text-sm text-gray-500">Memahami profil dan metrics donatur</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-content">
+                            
+                            <!-- Profile Section -->
+                            <div class="feature-block">
+                                <h3 class="feature-title">
+                                    <i class="bi bi-person-badge"></i>
+                                    Profile Card
+                                </h3>
+                                <p class="text-gray-700 mb-4">
+                                    Panel kanan menampilkan informasi lengkap donatur yang sedang Anda chat:
+                                </p>
+                                <ul class="space-y-3 text-sm text-gray-700">
+                                    <li class="flex items-start gap-3">
+                                        <i class="bi bi-check-circle-fill text-primary-500 mt-0.5"></i>
+                                        <div>
+                                            <strong>Nama & DID:</strong> Identitas unik donatur
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <i class="bi bi-check-circle-fill text-primary-500 mt-0.5"></i>
+                                        <div>
+                                            <strong>Kontak:</strong> Nomor HP, email
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <i class="bi bi-check-circle-fill text-primary-500 mt-0.5"></i>
+                                        <div>
+                                            <strong>Segment Badge:</strong> Status kategori donatur
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <i class="bi bi-check-circle-fill text-primary-500 mt-0.5"></i>
+                                        <div>
+                                            <strong>CS Assignment:</strong> CS yang handle donatur
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Metrics -->
+                            <div class="feature-block">
+                                <h3 class="feature-title">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                    Donation Metrics
+                                </h3>
+                                <div class="grid grid-cols-2 gap-3 mb-4">
+                                    <div class="metric-card">
+                                        <div class="metric-icon bg-primary-100">
+                                            <i class="bi bi-cash-coin text-primary-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500">Lifetime Value</p>
+                                            <p class="text-lg font-bold text-gray-800">Rp 15.5jt</p>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon bg-blue-100">
+                                            <i class="bi bi-arrow-repeat text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500">Frequency</p>
+                                            <p class="text-lg font-bold text-gray-800">12x</p>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon bg-purple-100">
+                                            <i class="bi bi-calculator text-purple-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500">Rata-rata</p>
+                                            <p class="text-lg font-bold text-gray-800">Rp 1.2jt</p>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon bg-orange-100">
+                                            <i class="bi bi-clock text-orange-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500">Last Donation</p>
+                                            <p class="text-lg font-bold text-gray-800">3 hari lalu</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Engagement Score -->
+                                <div class="bg-gradient-to-br from-primary-50 to-green-50 border border-primary-200 rounded-xl p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-sm font-semibold text-gray-700">Engagement Score</span>
+                                        <span class="score-hot px-3 py-1 rounded-lg text-sm font-bold">85 - Hot</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden mb-2">
+                                        <div class="bg-gradient-to-r from-primary-400 to-primary-600 h-3 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <p class="text-xs text-gray-600">
+                                        Score tinggi = donatur sangat engaged dan responsif
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Actions -->
+                            <div class="feature-block">
+                                <h3 class="feature-title">
+                                    <i class="bi bi-lightning-fill"></i>
+                                    Quick Actions
+                                </h3>
+                                <p class="text-gray-700 mb-4">
+                                    Akses cepat ke fitur-fitur yang sering digunakan:
+                                </p>
+                                <div class="space-y-2">
+                                    <div class="quick-action-preview">
+                                        <i class="bi bi-file-earmark-text text-blue-600"></i>
+                                        <div>
+                                            <p class="font-medium">View Full Profile</p>
+                                            <p class="text-xs text-gray-500">Lihat detail lengkap donatur</p>
+                                        </div>
+                                    </div>
+                                    <div class="quick-action-preview">
+                                        <i class="bi bi-pencil text-green-600"></i>
+                                        <div>
+                                            <p class="font-medium">Add Note</p>
+                                            <p class="text-xs text-gray-500">Tambah catatan penting</p>
+                                        </div>
+                                    </div>
+                                    <div class="quick-action-preview">
+                                        <i class="bi bi-calendar-check text-yellow-600"></i>
+                                        <div>
+                                            <p class="font-medium">Set Reminder</p>
+                                            <p class="text-xs text-gray-500">Jadwalkan follow-up</p>
+                                        </div>
+                                    </div>
+                                    <div class="quick-action-preview">
+                                        <i class="bi bi-cash-coin text-purple-600"></i>
+                                        <div>
+                                            <p class="font-medium">Log Donation</p>
+                                            <p class="text-xs text-gray-500">Catat donasi baru</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Section 5: Best Practices -->
+                    <section id="best-practices" class="tutorial-section">
+                        <div class="section-header">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+                                    <i class="bi bi-star-fill text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">Best Practices</h2>
+                                    <p class="text-sm text-gray-500">Tips untuk memaksimalkan efektivitas</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-content">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Do's -->
+                                <div class="best-practice-card do">
+                                    <div class="flex items-center gap-2 mb-4">
+                                        <i class="bi bi-check-circle-fill text-green-500 text-xl"></i>
+                                        <h3 class="font-bold text-gray-800">Yang Harus Dilakukan</h3>
+                                    </div>
+                                    <ul class="space-y-3 text-sm text-gray-700">
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-green-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Selalu cek profil donatur sebelum chat</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-green-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Gunakan template untuk efisiensi</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-green-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Personalisasi pesan dengan nama donatur</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-green-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Prioritaskan VIP dan At Risk</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-green-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Catat hasil percakapan di notes</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-check2 text-green-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Set reminder untuk follow-up</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Don'ts -->
+                                <div class="best-practice-card dont">
+                                    <div class="flex items-center gap-2 mb-4">
+                                        <i class="bi bi-x-circle-fill text-red-500 text-xl"></i>
+                                        <h3 class="font-bold text-gray-800">Yang Harus Dihindari</h3>
+                                    </div>
+                                    <ul class="space-y-3 text-sm text-gray-700">
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-x text-red-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Mengirim pesan tanpa konteks</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-x text-red-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Spam atau terlalu sering follow-up</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-x text-red-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Mengabaikan donatur yang unread</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-x text-red-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Lupa update status conversation</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-x text-red-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Tidak memanfaatkan fitur filter</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i class="bi bi-x text-red-500 mt-0.5 flex-shrink-0"></i>
+                                            <span>Mengabaikan engagement score</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <!-- Pro Tips -->
+                            <div class="mt-6 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl p-6">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <i class="bi bi-trophy-fill text-purple-600 text-xl"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-bold text-gray-800 mb-3">Pro Tips dari CS Terbaik</h3>
+                                        <ul class="space-y-2 text-sm text-gray-700">
+                                            <li>🎯 Fokus pada engagement score - donatur dengan score tinggi lebih mudah dikonversi</li>
+                                            <li>⏰ Waktu terbaik chat: Pagi (08-10) dan Malam (19-21)</li>
+                                            <li>💬 Gunakan emoji secukupnya untuk membuat chat lebih hangat</li>
+                                            <li>📊 Review metrics sebelum follow-up untuk personalisasi lebih baik</li>
+                                            <li>🔄 Rotate template agar tidak terkesan robotik</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Section 6: FAQ -->
+                    <section id="faq" class="tutorial-section">
+                        <div class="section-header">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                                    <i class="bi bi-question-circle-fill text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">FAQ</h2>
+                                    <p class="text-sm text-gray-500">Pertanyaan yang sering ditanyakan</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-content">
+                            <div class="space-y-3">
+                                <template x-for="(faq, index) in faqs" :key="index">
+                                    <div class="faq-item" 
+                                         :class="openFaq === index ? 'active' : ''">
+                                        <button @click="toggleFaq(index)"
+                                                class="w-full flex items-center justify-between p-4 text-left">
+                                            <span class="font-semibold text-gray-800" x-text="faq.question">Question</span>
+                                            <i :class="openFaq === index ? 'bi-chevron-up' : 'bi-chevron-down'"
+                                               class="bi text-primary-500 transition-transform"></i>
+                                        </button>
+                                        <div x-show="openFaq === index"
+                                             x-collapse
+                                             class="px-4 pb-4">
+                                            <p class="text-gray-700 leading-relaxed" x-text="faq.answer">Answer</p>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Completion CTA -->
+                    <div class="bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl p-8 text-center text-white shadow-xl">
+                        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="bi bi-check-circle-fill text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Tutorial Selesai! 🎉</h3>
+                        <p class="text-primary-50 mb-6 max-w-md mx-auto">
+                            Anda sudah siap menggunakan WhatsApp CRM! Jangan ragu untuk kembali ke tutorial ini kapan saja.
+                        </p>
+                        <div class="flex flex-wrap gap-3 justify-center">
+                            <a href="index.html" class="px-6 py-3 bg-white text-primary-600 rounded-xl font-semibold hover:bg-primary-50 transition shadow-lg inline-block">
+                                <i class="bi bi-rocket-takeoff-fill mr-2"></i>Mulai Gunakan App
+                            </a>
+                            <button @click="resetProgress()" class="px-6 py-3 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 rounded-xl font-semibold hover:bg-white/20 transition">
+                                <i class="bi bi-arrow-clockwise mr-2"></i>Reset Progress
+                            </button>
+                        </div>
+                    </div>
+                    
+                </main>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-200 mt-16">
+            <div class="max-w-7xl mx-auto px-6 py-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-3">WhatsApp CRM</h3>
+                        <p class="text-sm text-gray-600">
+                            Solusi terpadu untuk mengelola komunikasi dan relasi dengan donatur melalui WhatsApp.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-3">Quick Links</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="index.html" class="text-gray-600 hover:text-primary-600 transition">Dashboard</a></li>
+                            <li><a href="#overview" class="text-gray-600 hover:text-primary-600 transition">Overview</a></li>
+                            <li><a href="#faq" class="text-gray-600 hover:text-primary-600 transition">FAQ</a></li>
+                            <li><a href="preview.html" class="text-gray-600 hover:text-primary-600 transition">Preview</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-3">Butuh Bantuan?</h3>
+                        <p class="text-sm text-gray-600 mb-3">
+                            Hubungi tim support kami jika ada pertanyaan.
+                        </p>
+                        <a href="#" class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium text-sm">
+                            <i class="bi bi-whatsapp"></i>
+                            Contact Support
+                        </a>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
+                    <p>&copy; 2026 Abbarat CRM. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Tutorial JavaScript -->
+    <script src="tutorial.js"></script>
+</body>
+</html>

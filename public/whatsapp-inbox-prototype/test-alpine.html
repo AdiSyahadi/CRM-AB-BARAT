@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Alpine.js</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="app.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="p-8 bg-gray-50">
+    <div x-data="whatsappInboxApp()">
+        <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
+            <h1 class="text-2xl font-bold mb-4">Test Alpine.js Features</h1>
+            
+            <!-- Test Template Button -->
+            <button @click="showTemplateSelector = true" 
+                    class="w-full mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Open Template Selector
+            </button>
+            
+            <!-- Test Assign Button -->
+            <button @click="showAssignCS = true" 
+                    class="w-full mb-2 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
+                Open Assign CS
+            </button>
+            
+            <!-- Test Emoji Button -->
+            <button @click="showEmojiPicker = !showEmojiPicker" 
+                    class="w-full mb-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                Toggle Emoji Picker
+            </button>
+            
+            <!-- Debug Info -->
+            <div class="mt-4 p-4 bg-gray-100 rounded text-sm">
+                <p>showTemplateSelector: <span x-text="showTemplateSelector"></span></p>
+                <p>showAssignCS: <span x-text="showAssignCS"></span></p>
+                <p>showEmojiPicker: <span x-text="showEmojiPicker"></span></p>
+            </div>
+        </div>
+        
+        <!-- Template Selector Modal -->
+        <div x-show="showTemplateSelector" @click.away="showTemplateSelector = false"
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 max-w-md">
+                <h3 class="text-xl font-bold mb-4">Template Selector Works! ✅</h3>
+                <button @click="showTemplateSelector = false" 
+                        class="px-4 py-2 bg-gray-500 text-white rounded">Close</button>
+            </div>
+        </div>
+        
+        <!-- Assign CS Modal -->
+        <div x-show="showAssignCS" @click.away="showAssignCS = false"
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 max-w-md">
+                <h3 class="text-xl font-bold mb-4">Assign CS Works! ✅</h3>
+                <button @click="showAssignCS = false" 
+                        class="px-4 py-2 bg-gray-500 text-white rounded">Close</button>
+            </div>
+        </div>
+        
+        <!-- Emoji Picker -->
+        <div x-show="showEmojiPicker" @click.away="showEmojiPicker = false"
+             class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 shadow-xl z-50">
+            <h3 class="text-xl font-bold mb-4">Emoji Picker Works! ✅</h3>
+            <div class="grid grid-cols-8 gap-2">
+                <template x-for="emoji in emojis.slice(0, 32)" :key="emoji">
+                    <button class="text-2xl hover:bg-gray-100 p-2 rounded" x-text="emoji"></button>
+                </template>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

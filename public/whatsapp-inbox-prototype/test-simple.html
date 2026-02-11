@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test - Templates & Assign</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="p-8 bg-gray-50">
+    <div x-data="{
+        showTemplates: false,
+        showAssign: false,
+        templates: [
+            { id: 1, name: 'Salam', text: 'Assalamualaikum...' },
+            { id: 2, name: 'Terima Kasih', text: 'Jazakallah khairan...' }
+        ],
+        csTeam: [
+            { id: 1, name: 'CS Budi', status: 'online' },
+            { id: 2, name: 'CS Ani', status: 'online' }
+        ]
+    }" class="max-w-2xl mx-auto">
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold mb-6">Test Templates & Assign</h1>
+            
+            <!-- Test Buttons -->
+            <div class="space-y-3">
+                <button @click="showTemplates = true" 
+                        class="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium">
+                    <i class="bi bi-lightning-charge-fill mr-2"></i>
+                    Open Templates Modal
+                </button>
+                
+                <button @click="showAssign = true" 
+                        class="w-full px-4 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 font-medium">
+                    <i class="bi bi-person-check mr-2"></i>
+                    Open Assign CS Modal
+                </button>
+            </div>
+            
+            <!-- Debug Info -->
+            <div class="mt-6 p-4 bg-gray-100 rounded">
+                <p class="text-sm font-mono">showTemplates: <span x-text="showTemplates"></span></p>
+                <p class="text-sm font-mono">showAssign: <span x-text="showAssign"></span></p>
+            </div>
+        </div>
+        
+        <!-- Templates Modal -->
+        <div x-show="showTemplates" 
+             @click.away="showTemplates = false" 
+             x-cloak
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div @click.stop class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Pilih Template</h3>
+                    <button @click="showTemplates = false" class="text-gray-400 hover:text-gray-600">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="space-y-2">
+                    <template x-for="tpl in templates" :key="tpl.id">
+                        <button @click="alert('Template: ' + tpl.name); showTemplates = false" 
+                                class="w-full text-left p-3 border border-gray-200 rounded hover:border-green-500 hover:bg-green-50">
+                            <div class="font-medium" x-text="tpl.name"></div>
+                            <div class="text-sm text-gray-600" x-text="tpl.text"></div>
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Assign CS Modal -->
+        <div x-show="showAssign" 
+             @click.away="showAssign = false" 
+             x-cloak
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div @click.stop class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Assign ke CS</h3>
+                    <button @click="showAssign = false" class="text-gray-400 hover:text-gray-600">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="space-y-2">
+                    <template x-for="cs in csTeam" :key="cs.id">
+                        <button @click="alert('Assigned to: ' + cs.name); showAssign = false" 
+                                class="w-full text-left p-3 border border-gray-200 rounded hover:border-purple-500 hover:bg-purple-50">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                                    <span x-text="cs.name.split(' ')[1].charAt(0)"></span>
+                                </div>
+                                <div>
+                                    <div class="font-medium" x-text="cs.name"></div>
+                                    <div class="text-xs text-gray-500" x-text="cs.status"></div>
+                                </div>
+                            </div>
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>

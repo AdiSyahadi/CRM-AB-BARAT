@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Inbox - Preview Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #6B7280;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        .feature-list {
+            background: #F9FAFB;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .feature-list h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 1rem;
+        }
+        .feature-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #E5E7EB;
+            color: #4B5563;
+        }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        .feature-list li::before {
+            content: "✓";
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #10B981;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            margin-right: 0.75rem;
+            font-weight: 700;
+        }
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.3);
+        }
+        .alert {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .alert strong {
+            color: #92400E;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .alert p {
+            color: #78350F;
+            margin: 0;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 WhatsApp Inbox Prototype</h1>
+        <p>Prototype UI/UX untuk WhatsApp Inbox yang terintegrasi dengan Donatur CRM. Dibuat dengan design system yang selaras dengan existing CRM.</p>
+        
+        <div class="alert">
+            <strong>⚡ Prototype Mode</strong>
+            <p>Ini adalah prototype HTML/CSS/JS murni untuk review UI/UX. Belum terkoneksi dengan backend atau WhatsApp API.</p>
+        </div>
+        
+        <div class="feature-list">
+            <h2>✨ Fitur yang Sudah Ada</h2>
+            <ul>
+                <li>3-Panel Layout (Inbox List | Conversation | Donatur Info)</li>
+                <li>Search & Filter Conversations</li>
+                <li>Real-time Message Simulation</li>
+                <li>Typing Indicator Animation</li>
+                <li>Read Receipts (Checkmarks)</li>
+                <li>Segment Badges (VIP, Loyal, New, At Risk)</li>
+                <li>Donatur Metrics & Engagement Score</li>
+                <li>Quick Actions & Templates</li>
+                <li>Smooth Animations & Transitions</li>
+                <li>Responsive Design (Mobile Ready)</li>
+            </ul>
+        </div>
+        
+        <div class="feature-list">
+            <h2>🎯 Cara Menggunakan</h2>
+            <ul>
+                <li>Klik conversation di panel kiri untuk membuka chat</li>
+                <li>Ketik pesan di input box & tekan Enter untuk kirim</li>
+                <li>Klik icon bintang untuk toggle favorite</li>
+                <li>Gunakan search box untuk cari conversation</li>
+                <li>Filter dengan tab (All, Unread, VIP, dll)</li>
+                <li>Lihat info donatur lengkap di panel kanan</li>
+                <li>Tunggu 5 detik untuk simulasi pesan masuk</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="index.html" class="btn">🚀 Buka Prototype</a>
+            <a href="tutorial.html" class="btn" style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);">📚 Lihat Tutorial</a>
+        </div>
+        
+        <p style="text-align: center; margin-top: 2rem; font-size: 0.875rem;">
+            📖 Lihat <code>README.md</code> atau <code>START_HERE.md</code> untuk dokumentasi lengkap
+        </p>
+    </div>
+</body>
+</html>

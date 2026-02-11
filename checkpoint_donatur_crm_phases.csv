@@ -1,0 +1,13 @@
+phase_id,phase_name,description,status,priority,estimated_effort,dependencies,target_files,acceptance_criteria
+1,Setup Foundation,Setup routes controller dan base view dengan sidebar,completed,high,0.5 day,none,"routes/web.php, app/Http/Controllers/DonaturCrmController.php, resources/views/donatur/index.blade.php",Routes accessible dan view render dengan sidebar
+2,CRM Dashboard Stats,Stats cards dan mini charts overview,completed,high,1 day,1,"DonaturCrmController.php, index.blade.php",6 stats cards tampil dengan data real-time dari database
+3,Smart Segments,Segmentasi otomatis donatur berdasarkan perilaku,completed,high,1 day,2,"DonaturCrmController.php, index.blade.php",7 segment cards clickable dan filter tabel otomatis
+4,Donatur Table Advanced,Tabel dengan kolom CRM dan advanced filters,completed,high,1.5 days,3,"DonaturCrmController.php, index.blade.php",Tabel dengan 9 kolom + filters + sorting + pagination (mobile card pending)
+5,Donatur Detail Panel,Slide panel detail dengan tabs,completed,high,1.5 days,4,index.blade.php,Panel slide dengan 4 tabs: Overview/History/Activity/Notes
+6,Engagement Scoring,Implementasi RFM scoring untuk engagement,completed,medium,1 day,4,DonaturCrmController.php,Score 0-100 dengan badge Hot/Warm/Cold tampil di tabel
+7,Follow-up Center,Today tasks dan follow-up queue,completed,medium,1 day,5,"DonaturCrmController.php, index.blade.php",Task cards dengan priority + queue list + mark done action
+8,Form Create/Edit,Modal form dengan smart features,completed,medium,1 day,4,"DonaturCrmController.php, index.blade.php",Modal create/edit dengan validation + auto-lookup + DID auto-generate
+9,Bulk Actions,Export/WhatsApp/Assign CS/Delete bulk,completed,medium,0.5 day,4,"DonaturCrmController.php, index.blade.php",Checkbox selection + bulk action bar + 4 bulk actions working (assign modal pending)
+10,Activity Log,Tracking semua aktivitas dan notes,completed,low,1 day,5,"Migration, DonaturCrmController.php, index.blade.php",2 tabel baru + auto logging + timeline UI
+11,Smart Alerts,Notifikasi otomatis untuk CS,completed,low,0.5 day,6,"DonaturCrmController.php, index.blade.php",Alert badge + dropdown dengan 3 jenis alert
+12,Testing dan Polish,Testing semua fitur dan UI polish,completed,high,1 day,1-11,All files,Semua fitur tested + bugs fixed + UI polished - 25 tests passed

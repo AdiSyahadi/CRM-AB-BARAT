@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performa CS - CRM Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        [x-cloak] { display: none !important; }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: #1f2937; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 2px; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .skeleton { background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    
+    <div x-data="performaCsApp()" x-init="init()" class="flex min-h-screen">
+        
+        <!-- Loading Modal -->
+        <div x-show="loading" x-cloak class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="bg-gray-800 rounded-xl p-6 flex items-center space-x-4">
+                <svg class="animate-spin h-8 w-8 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-lg">Memuat data...</span>
+            </div>
+        </div>
+
+        <!-- CS Detail Modal -->
+        <div x-show="showCsDetailModal" x-cloak 
+             class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+             @click.self="showCsDetailModal = false">
+            <div class="bg-gray-800 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" @click.stop>
+                <!-- Modal Header -->
+                <div class="p-4 border-b border-gray-700 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold" x-text="csDetail?.cs?.name || 'Detail CS'"></h3>
+                        <p class="text-sm text-gray-400" x-text="csDetail?.cs?.team || ''"></p>
+                    </div>
+                    <button @click="showCsDetailModal = false" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="p-4 overflow-y-auto flex-1">
+                    <!-- Summary Cards -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                        <div class="bg-gray-700/50 rounded-lg p-3 text-center">
+                            <p class="text-2xl font-bold text-emerald-400" x-text="csDetail?.summary?.total_perolehan_formatted || 'Rp 0'"></p>
+                            <p class="text-xs text-gray-400">Total Perolehan</p>
+                        </div>
+                        <div class="bg-gray-700/50 rounded-lg p-3 text-center">
+                            <p class="text-2xl font-bold text-blue-400" x-text="csDetail?.summary?.total_donatur || 0"></p>
+                            <p class="text-xs text-gray-400">Total Donatur</p>
+                        </div>
+                        <div class="bg-gray-700/50 rounded-lg p-3 text-center">
+                            <p class="text-2xl font-bold text-purple-400" x-text="csDetail?.summary?.total_laporan || 0"></p>
+                            <p class="text-xs text-gray-400">Total Laporan</p>
+                        </div>
+                        <div class="bg-gray-700/50 rounded-lg p-3 text-center">
+                            <p class="text-2xl font-bold text-amber-400" x-text="csDetail?.summary?.active_days || 0"></p>
+                            <p class="text-xs text-gray-400">Hari Aktif</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <!-- Trend Chart -->
+                        <div class="bg-gray-700/30 rounded-lg p-4">
+                            <h4 class="font-semibold mb-3"><i class="fas fa-chart-line text-emerald-400 mr-2"></i>Trend Perolehan</h4>
+                            <canvas id="csTrendChart" height="200"></canvas>
+                        </div>
+                        
+                        <!-- Program Breakdown -->
+                        <div class="bg-gray-700/30 rounded-lg p-4">
+                            <h4 class="font-semibold mb-3"><i class="fas fa-pie-chart text-blue-400 mr-2"></i>Program Breakdown</h4>
+                            <div class="space-y-2 max-h-[200px] overflow-y-auto">
+                                <template x-for="program in (csDetail?.program_breakdown || [])" :key="program.program">
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span class="text-gray-300 truncate" x-text="program.program"></span>
+                                        <span class="text-emerald-400 font-medium" x-text="formatRupiah(program.total)"></span>
+                                    </div>
+                                </template>
+                                <template x-if="!csDetail?.program_breakdown?.length">
+                                    <p class="text-gray-500 text-sm">Tidak ada data program</p>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="mt-4 bg-gray-700/30 rounded-lg p-4">
+                        <h4 class="font-semibold mb-3"><i class="fas fa-history text-purple-400 mr-2"></i>Aktivitas Terbaru</h4>
+                        <div class="space-y-2 max-h-[200px] overflow-y-auto">
+                            <template x-for="activity in (csDetail?.recent_activity || [])" :key="activity.created_at">
+                                <div class="flex items-center justify-between text-sm bg-gray-700/50 rounded px-3 py-2">
+                                    <div>
+                                        <span class="text-gray-300" x-text="activity.nama_donatur || 'Anonymous'"></span>
+                                        <span class="text-gray-500 text-xs ml-2" x-text="activity.program || '-'"></span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-emerald-400 font-medium" x-text="formatRupiah(activity.jml_perolehan)"></span>
+                                        <span class="text-gray-500 text-xs block" x-text="formatDate(activity.tanggal)"></span>
+                                    </div>
+                                </div>
+                            </template>
+                            <template x-if="!csDetail?.recent_activity?.length">
+                                <p class="text-gray-500 text-sm">Tidak ada aktivitas</p>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 border-r border-gray-700 flex-shrink-0 hidden lg:flex flex-col">
+            <div class="p-4 border-b border-gray-700">
+                <h1 class="text-xl font-bold text-emerald-400">
+                    <i class="fas fa-chart-bar mr-2"></i>CRM Dashboard
+                </h1>
+            </div>
+            <nav class="flex-1 p-4 sidebar-scroll overflow-y-auto">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="{{ route('analisis-donatur') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                            <i class="fas fa-chart-pie w-5 mr-3"></i>Analisis Donatur
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('donatur.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                            <i class="fas fa-users w-5 mr-3"></i>Data Donatur
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('laporan-perolehan.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                            <i class="fas fa-file-invoice-dollar w-5 mr-3"></i>Laporan Perolehan
+                        </a>
+                    </li>
+                    
+                    <li class="pt-4 mt-4 border-t border-gray-700">
+                        <span class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Monitoring</span>
+                    </li>
+                    <li>
+                        <a href="{{ route('monitor-cs.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                            <i class="fas fa-desktop w-5 mr-3"></i>Monitor CS
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('performa-cs.index') }}" class="flex items-center px-4 py-2 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-600/30">
+                            <i class="fas fa-trophy w-5 mr-3"></i>Performa CS
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="p-4 border-t border-gray-700">
+                <div class="text-xs text-gray-500">
+                    <i class="fas fa-clock mr-1"></i>
+                    Update: <span x-text="lastUpdate"></span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-x-hidden">
+            <!-- Header -->
+            <header class="bg-gray-800 border-b border-gray-700 px-4 lg:px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <!-- Mobile menu button -->
+                        <button @click="showMobileMenu = !showMobileMenu" class="lg:hidden text-gray-400 hover:text-white">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-xl lg:text-2xl font-bold">Dashboard Performa CS</h2>
+                            <p class="text-sm text-gray-400">Analisis performa Customer Service secara komprehensif</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <!-- Global Filters -->
+                        <select x-model="filters.periode" @change="refreshAll()" 
+                                class="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                            <option value="hari_ini">Hari Ini</option>
+                            <option value="minggu_ini">Minggu Ini</option>
+                            <option value="bulan_ini">Bulan Ini</option>
+                        </select>
+                        <select x-model="filters.tim" @change="refreshAll()"
+                                class="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent hidden sm:block">
+                            <option value="all">Semua Tim</option>
+                            @foreach($teams as $team)
+                                <option value="{{ $team }}">{{ $team }}</option>
+                            @endforeach
+                        </select>
+                        <button @click="refreshAll()" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-lg transition hidden sm:flex items-center">
+                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="p-4 lg:p-6 space-y-6">
+                
+                <!-- Section 1: Overview Cards -->
+                <section>
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-tachometer-alt text-emerald-400 mr-2"></i>Overview Performa
+                        <span class="ml-2 text-sm font-normal text-gray-400" x-text="'(' + overview.periode_label + ')'"></span>
+                    </h3>
+                    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                        <!-- Total Perolehan -->
+                        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-400 text-sm">Total Perolehan</span>
+                                <span :class="overview.perolehan_growth >= 0 ? 'text-emerald-400' : 'text-red-400'" class="text-xs">
+                                    <i :class="overview.perolehan_growth >= 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+                                    <span x-text="Math.abs(overview.perolehan_growth) + '%'"></span>
+                                </span>
+                            </div>
+                            <p class="text-2xl lg:text-3xl font-bold text-emerald-400" x-text="overview.total_perolehan_formatted || 'Rp 0'"></p>
+                        </div>
+                        
+                        <!-- Total Donatur -->
+                        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-400 text-sm">Total Donatur</span>
+                                <span :class="overview.donatur_growth >= 0 ? 'text-emerald-400' : 'text-red-400'" class="text-xs">
+                                    <i :class="overview.donatur_growth >= 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+                                    <span x-text="Math.abs(overview.donatur_growth) + '%'"></span>
+                                </span>
+                            </div>
+                            <p class="text-2xl lg:text-3xl font-bold text-blue-400" x-text="overview.total_donatur || 0"></p>
+                        </div>
+                        
+                        <!-- Donatur Baru -->
+                        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-400 text-sm">Donatur Baru</span>
+                                <i class="fas fa-user-plus text-purple-400"></i>
+                            </div>
+                            <p class="text-2xl lg:text-3xl font-bold text-purple-400" x-text="overview.donatur_baru || 0"></p>
+                        </div>
+                        
+                        <!-- Avg Laporan/Hari -->
+                        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-400 text-sm">Avg/Hari</span>
+                                <i class="fas fa-chart-line text-amber-400"></i>
+                            </div>
+                            <p class="text-2xl lg:text-3xl font-bold text-amber-400" x-text="overview.avg_laporan_per_day || 0"></p>
+                        </div>
+                        
+                        <!-- Active CS -->
+                        <div class="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-400 text-sm">Active CS</span>
+                                <i class="fas fa-users text-cyan-400"></i>
+                            </div>
+                            <p class="text-2xl lg:text-3xl font-bold text-cyan-400">
+                                <span x-text="overview.active_cs || 0"></span>
+                                <span class="text-lg text-gray-500">/<span x-text="overview.total_cs || 0"></span></span>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2 & 3: H2H + Leaderboard -->
+                <div class="grid lg:grid-cols-3 gap-6">
+                    
+                    <!-- Section 2: Head-to-Head Comparison -->
+                    <div class="lg:col-span-2 bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                        <div class="p-4 border-b border-gray-700">
+                            <div class="flex items-center justify-between flex-wrap gap-2">
+                                <h3 class="font-semibold flex items-center">
+                                    <i class="fas fa-exchange-alt text-emerald-400 mr-2"></i>Head-to-Head Comparison
+                                </h3>
+                                <!-- Mode Tabs -->
+                                <div class="flex bg-gray-700 rounded-lg p-1">
+                                    <button @click="h2h.mode = 'harian'; fetchH2hData()" 
+                                            :class="h2h.mode === 'harian' ? 'bg-emerald-600 text-white' : 'text-gray-400 hover:text-white'"
+                                            class="px-3 py-1 text-sm rounded transition">Harian</button>
+                                    <button @click="h2h.mode = 'mingguan'; fetchH2hData()" 
+                                            :class="h2h.mode === 'mingguan' ? 'bg-emerald-600 text-white' : 'text-gray-400 hover:text-white'"
+                                            class="px-3 py-1 text-sm rounded transition">Mingguan</button>
+                                    <button @click="h2h.mode = 'bulanan'; fetchH2hData()" 
+                                            :class="h2h.mode === 'bulanan' ? 'bg-emerald-600 text-white' : 'text-gray-400 hover:text-white'"
+                                            class="px-3 py-1 text-sm rounded transition">Bulanan</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Filters Row -->
+                            <div class="flex flex-wrap items-center gap-2 mt-3">
+                                <template x-if="h2h.mode === 'harian'">
+                                    <div class="flex items-center gap-2">
+                                        <input type="date" x-model="h2h.periode1" @change="fetchH2hData()"
+                                               class="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-sm">
+                                        <span class="text-gray-400">vs</span>
+                                        <input type="date" x-model="h2h.periode2" @change="fetchH2hData()"
+                                               class="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-sm">
+                                    </div>
+                                </template>
+                                <template x-if="h2h.mode === 'mingguan'">
+                                    <div class="flex items-center gap-2">
+                                        <input type="week" x-model="h2h.periode1" @change="fetchH2hData()"
+                                               class="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-sm">
+                                        <span class="text-gray-400">vs</span>
+                                        <input type="week" x-model="h2h.periode2" @change="fetchH2hData()"
+                                               class="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-sm">
+                                    </div>
+                                </template>
+                                <template x-if="h2h.mode === 'bulanan'">
+                                    <div class="flex items-center gap-2">
+                                        <input type="month" x-model="h2h.periode1" @change="fetchH2hData()"
+                                               class="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-sm">
+                                        <span class="text-gray-400">vs</span>
+                                        <input type="month" x-model="h2h.periode2" @change="fetchH2hData()"
+                                               class="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-sm">
+                                    </div>
+                                </template>
+                                
+                                <select x-model="h2h.viewBy" @change="fetchH2hData()"
+                                        class="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-sm ml-auto">
+                                    <option value="cs">Per CS</option>
+                                    <option value="tim">Per Tim</option>
+                                </select>
+                                
+                                <button @click="exportH2h()" class="text-emerald-400 hover:text-emerald-300 text-sm">
+                                    <i class="fas fa-download mr-1"></i>Export
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Summary -->
+                        <div class="grid grid-cols-4 gap-2 p-4 bg-gray-700/30">
+                            <div class="text-center">
+                                <p class="text-xs text-gray-400" x-text="h2h.labels?.periode1 || 'Periode 1'"></p>
+                                <p class="font-bold text-emerald-400" x-text="h2h.summary?.total_periode1_formatted || 'Rp 0'"></p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs text-gray-400" x-text="h2h.labels?.periode2 || 'Periode 2'"></p>
+                                <p class="font-bold text-gray-300" x-text="h2h.summary?.total_periode2_formatted || 'Rp 0'"></p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs text-gray-400">Selisih</p>
+                                <p class="font-bold" :class="h2h.summary?.total_diff >= 0 ? 'text-emerald-400' : 'text-red-400'"
+                                   x-text="h2h.summary?.total_diff_formatted || 'Rp 0'"></p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs text-gray-400">Avg Growth</p>
+                                <p class="font-bold" :class="h2h.summary?.avg_growth >= 0 ? 'text-emerald-400' : 'text-red-400'"
+                                   x-text="(h2h.summary?.avg_growth >= 0 ? '+' : '') + (h2h.summary?.avg_growth || 0) + '%'"></p>
+                            </div>
+                        </div>
+                        
+                        <!-- Chart -->
+                        <div class="p-4 border-b border-gray-700">
+                            <canvas id="h2hChart" height="200"></canvas>
+                        </div>
+                        
+                        <!-- Table -->
+                        <div class="max-h-[300px] overflow-y-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-gray-700/50 sticky top-0">
+                                    <tr>
+                                        <th class="text-left p-3">Nama</th>
+                                        <th class="text-right p-3" x-text="h2h.labels?.periode1 || 'P1'"></th>
+                                        <th class="text-right p-3" x-text="h2h.labels?.periode2 || 'P2'"></th>
+                                        <th class="text-right p-3">Selisih</th>
+                                        <th class="text-right p-3">Growth</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="item in h2h.comparison" :key="item.name">
+                                        <tr class="border-t border-gray-700 hover:bg-gray-700/30 cursor-pointer" @click="openCsDetail(item.name)">
+                                            <td class="p-3">
+                                                <span x-text="item.name"></span>
+                                                <span x-show="item.team" class="text-xs text-gray-500 ml-1" x-text="'(' + item.team + ')'"></span>
+                                            </td>
+                                            <td class="p-3 text-right text-emerald-400" x-text="item.periode1_formatted"></td>
+                                            <td class="p-3 text-right text-gray-400" x-text="item.periode2_formatted"></td>
+                                            <td class="p-3 text-right" :class="item.diff >= 0 ? 'text-emerald-400' : 'text-red-400'" x-text="item.diff_formatted"></td>
+                                            <td class="p-3 text-right">
+                                                <span :class="{
+                                                    'text-emerald-400': item.status === 'up',
+                                                    'text-red-400': item.status === 'down',
+                                                    'text-yellow-400': item.status === 'stable'
+                                                }">
+                                                    <i :class="{
+                                                        'fas fa-arrow-up': item.status === 'up',
+                                                        'fas fa-arrow-down': item.status === 'down',
+                                                        'fas fa-minus': item.status === 'stable'
+                                                    }"></i>
+                                                    <span x-text="item.growth + '%'"></span>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <template x-if="!h2h.comparison?.length">
+                                        <tr><td colspan="5" class="p-4 text-center text-gray-500">Tidak ada data</td></tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Section 3: Leaderboard -->
+                    <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                        <div class="p-4 border-b border-gray-700">
+                            <h3 class="font-semibold flex items-center">
+                                <i class="fas fa-trophy text-amber-400 mr-2"></i>Leaderboard
+                            </h3>
+                            <!-- Leaderboard Tabs -->
+                            <div class="flex flex-wrap gap-1 mt-3">
+                                <button @click="leaderboard.type = 'top_earners'; fetchLeaderboard()"
+                                        :class="leaderboard.type === 'top_earners' ? 'bg-emerald-600 text-white' : 'bg-gray-700 text-gray-400'"
+                                        class="px-2 py-1 text-xs rounded transition">💰 Top Earners</button>
+                                <button @click="leaderboard.type = 'most_improved'; fetchLeaderboard()"
+                                        :class="leaderboard.type === 'most_improved' ? 'bg-emerald-600 text-white' : 'bg-gray-700 text-gray-400'"
+                                        class="px-2 py-1 text-xs rounded transition">🚀 Most Improved</button>
+                                <button @click="leaderboard.type = 'most_productive'; fetchLeaderboard()"
+                                        :class="leaderboard.type === 'most_productive' ? 'bg-emerald-600 text-white' : 'bg-gray-700 text-gray-400'"
+                                        class="px-2 py-1 text-xs rounded transition">📊 Productive</button>
+                                <button @click="leaderboard.type = 'consistency'; fetchLeaderboard()"
+                                        :class="leaderboard.type === 'consistency' ? 'bg-emerald-600 text-white' : 'bg-gray-700 text-gray-400'"
+                                        class="px-2 py-1 text-xs rounded transition">⭐ Consistency</button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 space-y-2 max-h-[500px] overflow-y-auto">
+                            <template x-for="(item, index) in leaderboard.data" :key="item.name">
+                                <div class="flex items-center bg-gray-700/30 rounded-lg p-3 hover:bg-gray-700/50 cursor-pointer transition"
+                                     @click="openCsDetail(item.name)">
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3"
+                                         :class="{
+                                             'bg-amber-500 text-black': item.rank === 1,
+                                             'bg-gray-400 text-black': item.rank === 2,
+                                             'bg-amber-700 text-white': item.rank === 3,
+                                             'bg-gray-600': item.rank > 3
+                                         }">
+                                        <span class="font-bold text-sm" x-text="item.rank"></span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="font-medium truncate" x-text="item.name"></p>
+                                        <p class="text-xs text-gray-400" x-text="item.team || '-'"></p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-emerald-400" x-text="item.value_formatted"></p>
+                                    </div>
+                                </div>
+                            </template>
+                            <template x-if="!leaderboard.data?.length">
+                                <p class="text-center text-gray-500 py-4">Tidak ada data</p>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4 & 5: CS List + Insights -->
+                <div class="grid lg:grid-cols-3 gap-6">
+                    
+                    <!-- Section 4: CS List -->
+                    <div class="lg:col-span-2 bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                        <div class="p-4 border-b border-gray-700">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-semibold flex items-center">
+                                    <i class="fas fa-users text-blue-400 mr-2"></i>Daftar CS
+                                </h3>
+                                <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <input type="text" x-model="csList.search" @input.debounce.300ms="fetchCsList()"
+                                               placeholder="Cari CS..."
+                                               class="bg-gray-700 border border-gray-600 rounded-lg pl-8 pr-3 py-1.5 text-sm w-40 focus:ring-2 focus:ring-emerald-500">
+                                        <i class="fas fa-search absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid sm:grid-cols-2 gap-3 p-4 max-h-[400px] overflow-y-auto">
+                            <template x-for="cs in csList.data" :key="cs.id">
+                                <div class="bg-gray-700/30 rounded-lg p-3 hover:bg-gray-700/50 cursor-pointer transition"
+                                     @click="openCsDetail(cs.name, cs.id)">
+                                    <div class="flex items-center mb-2">
+                                        <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center mr-3">
+                                            <span class="font-bold" x-text="cs.name.charAt(0).toUpperCase()"></span>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-medium truncate" x-text="cs.name"></p>
+                                            <p class="text-xs text-gray-400" x-text="cs.team || '-'"></p>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                                        <div>
+                                            <p class="text-emerald-400 font-bold" x-text="cs.total_perolehan_formatted"></p>
+                                            <p class="text-gray-500">Perolehan</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-blue-400 font-bold" x-text="cs.total_donatur"></p>
+                                            <p class="text-gray-500">Donatur</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-purple-400 font-bold" x-text="cs.total_laporan"></p>
+                                            <p class="text-gray-500">Laporan</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template x-if="!csList.data?.length">
+                                <div class="col-span-2 text-center text-gray-500 py-8">
+                                    <i class="fas fa-users text-4xl mb-2"></i>
+                                    <p>Tidak ada data CS</p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Section 5: Insights & Alerts -->
+                    <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                        <div class="p-4 border-b border-gray-700">
+                            <h3 class="font-semibold flex items-center">
+                                <i class="fas fa-lightbulb text-yellow-400 mr-2"></i>Insights & Alerts
+                            </h3>
+                        </div>
+                        
+                        <div class="p-4 space-y-4 max-h-[400px] overflow-y-auto">
+                            <!-- Alerts -->
+                            <template x-for="alert in insights.alerts" :key="alert.type">
+                                <div class="rounded-lg p-3"
+                                     :class="{
+                                         'bg-red-900/30 border border-red-700/50': alert.severity === 'danger',
+                                         'bg-yellow-900/30 border border-yellow-700/50': alert.severity === 'warning',
+                                         'bg-emerald-900/30 border border-emerald-700/50': alert.severity === 'success'
+                                     }">
+                                    <p class="font-medium text-sm mb-2"
+                                       :class="{
+                                           'text-red-400': alert.severity === 'danger',
+                                           'text-yellow-400': alert.severity === 'warning',
+                                           'text-emerald-400': alert.severity === 'success'
+                                       }"
+                                       x-text="alert.title"></p>
+                                    <div class="space-y-1">
+                                        <template x-for="item in alert.data" :key="item.name">
+                                            <div class="text-xs flex items-center justify-between text-gray-300 hover:bg-white/5 rounded px-1 cursor-pointer"
+                                                 @click="openCsDetail(item.name)">
+                                                <span x-text="item.name"></span>
+                                                <span x-text="item.change ? item.change + '%' : item.last_report"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            
+                            <!-- Best Practices -->
+                            <div x-show="insights.insights?.length" class="bg-gray-700/30 rounded-lg p-3">
+                                <p class="font-medium text-sm text-blue-400 mb-2">💡 Best Practices</p>
+                                <div class="space-y-2">
+                                    <template x-for="insight in insights.insights" :key="insight.type">
+                                        <p class="text-xs text-gray-300">
+                                            <span x-text="insight.icon" class="mr-1"></span>
+                                            <span x-text="insight.text"></span>
+                                        </p>
+                                    </template>
+                                </div>
+                            </div>
+                            
+                            <template x-if="!insights.alerts?.length && !insights.insights?.length">
+                                <div class="text-center text-gray-500 py-4">
+                                    <i class="fas fa-check-circle text-2xl mb-2"></i>
+                                    <p class="text-sm">Tidak ada alert saat ini</p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Sidebar -->
+        <div x-show="showMobileMenu" x-cloak 
+             class="fixed inset-0 bg-black/50 z-50 lg:hidden"
+             @click="showMobileMenu = false">
+            <aside class="w-64 bg-gray-800 h-full overflow-y-auto" @click.stop>
+                <div class="p-4 border-b border-gray-700 flex items-center justify-between">
+                    <h1 class="text-xl font-bold text-emerald-400">CRM Dashboard</h1>
+                    <button @click="showMobileMenu = false" class="text-gray-400">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <nav class="p-4">
+                    <ul class="space-y-2">
+                        <li><a href="{{ route('analisis-donatur') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700"><i class="fas fa-chart-pie w-5 mr-3"></i>Analisis Donatur</a></li>
+                        <li><a href="{{ route('donatur.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700"><i class="fas fa-users w-5 mr-3"></i>Data Donatur</a></li>
+                        <li><a href="{{ route('laporan-perolehan.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700"><i class="fas fa-file-invoice-dollar w-5 mr-3"></i>Laporan Perolehan</a></li>
+                        <li class="pt-4 mt-4 border-t border-gray-700"><span class="px-4 text-xs font-semibold text-gray-500 uppercase">Monitoring</span></li>
+                        <li><a href="{{ route('monitor-cs.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700"><i class="fas fa-desktop w-5 mr-3"></i>Monitor CS</a></li>
+                        <li><a href="{{ route('performa-cs.index') }}" class="flex items-center px-4 py-2 rounded-lg bg-emerald-600/20 text-emerald-400"><i class="fas fa-trophy w-5 mr-3"></i>Performa CS</a></li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        function performaCsApp() {
+            return {
+                loading: false,
+                showMobileMenu: false,
+                showCsDetailModal: false,
+                lastUpdate: '-',
+                
+                filters: {
+                    periode: 'bulan_ini',
+                    tim: 'all',
+                },
+                
+                overview: {},
+                
+                h2h: {
+                    mode: 'bulanan',
+                    periode1: '',
+                    periode2: '',
+                    viewBy: 'cs',
+                    comparison: [],
+                    summary: {},
+                    labels: {},
+                },
+                
+                leaderboard: {
+                    type: 'top_earners',
+                    data: [],
+                },
+                
+                csList: {
+                    search: '',
+                    data: [],
+                },
+                
+                insights: {
+                    alerts: [],
+                    insights: [],
+                },
+                
+                csDetail: null,
+                h2hChart: null,
+                csTrendChart: null,
+                
+                init() {
+                    // Set default periode untuk H2H
+                    const now = new Date();
+                    const lastYear = new Date(now);
+                    lastYear.setFullYear(lastYear.getFullYear() - 1);
+                    
+                    this.h2h.periode1 = now.toISOString().slice(0, 7); // 2025-12
+                    this.h2h.periode2 = lastYear.toISOString().slice(0, 7); // 2024-12
+                    
+                    this.refreshAll();
+                },
+                
+                async refreshAll() {
+                    this.loading = true;
+                    try {
+                        await Promise.all([
+                            this.fetchOverview(),
+                            this.fetchH2hData(),
+                            this.fetchLeaderboard(),
+                            this.fetchCsList(),
+                            this.fetchInsights(),
+                        ]);
+                        this.lastUpdate = new Date().toLocaleTimeString('id-ID');
+                    } catch (e) {
+                        console.error(e);
+                    }
+                    this.loading = false;
+                },
+                
+                async fetchOverview() {
+                    try {
+                        const params = new URLSearchParams({
+                            periode: this.filters.periode,
+                            tim: this.filters.tim,
+                        });
+                        const res = await fetch(`/api/performa-cs/overview-summary?${params}`);
+                        const json = await res.json();
+                        if (json.success) this.overview = json.data;
+                    } catch (e) { console.error(e); }
+                },
+                
+                async fetchH2hData() {
+                    try {
+                        const params = new URLSearchParams({
+                            mode: this.h2h.mode,
+                            periode1: this.h2h.periode1,
+                            periode2: this.h2h.periode2,
+                            tim: this.filters.tim,
+                            view_by: this.h2h.viewBy,
+                        });
+                        const res = await fetch(`/api/performa-cs/h2h-comparison?${params}`);
+                        const json = await res.json();
+                        if (json.success) {
+                            this.h2h.comparison = json.data.comparison;
+                            this.h2h.summary = json.data.summary;
+                            this.h2h.labels = json.data.labels;
+                            this.renderH2hChart();
+                        }
+                    } catch (e) { console.error(e); }
+                },
+                
+                async fetchLeaderboard() {
+                    try {
+                        const params = new URLSearchParams({
+                            type: this.leaderboard.type,
+                            periode: this.filters.periode,
+                            tim: this.filters.tim,
+                            limit: 10,
+                        });
+                        const res = await fetch(`/api/performa-cs/leaderboard?${params}`);
+                        const json = await res.json();
+                        if (json.success) this.leaderboard.data = json.data;
+                    } catch (e) { console.error(e); }
+                },
+                
+                async fetchCsList() {
+                    try {
+                        const params = new URLSearchParams({
+                            tim: this.filters.tim,
+                            search: this.csList.search,
+                            periode: this.filters.periode,
+                        });
+                        const res = await fetch(`/api/performa-cs/cs-list?${params}`);
+                        const json = await res.json();
+                        if (json.success) this.csList.data = json.data;
+                    } catch (e) { console.error(e); }
+                },
+                
+                async fetchInsights() {
+                    try {
+                        const params = new URLSearchParams({ tim: this.filters.tim });
+                        const res = await fetch(`/api/performa-cs/insights-alerts?${params}`);
+                        const json = await res.json();
+                        if (json.success) {
+                            this.insights.alerts = json.data.alerts;
+                            this.insights.insights = json.data.insights;
+                        }
+                    } catch (e) { console.error(e); }
+                },
+                
+                async openCsDetail(csName, csId = null) {
+                    try {
+                        const params = new URLSearchParams({
+                            cs_name: csName,
+                            periode: this.filters.periode,
+                        });
+                        if (csId) params.set('cs_id', csId);
+                        
+                        const res = await fetch(`/api/performa-cs/cs-detail?${params}`);
+                        const json = await res.json();
+                        if (json.success) {
+                            this.csDetail = json.data;
+                            this.showCsDetailModal = true;
+                            this.$nextTick(() => this.renderCsTrendChart());
+                        }
+                    } catch (e) { console.error(e); }
+                },
+                
+                renderH2hChart() {
+                    const ctx = document.getElementById('h2hChart');
+                    if (!ctx) return;
+                    
+                    if (this.h2hChart) this.h2hChart.destroy();
+                    
+                    const labels = this.h2h.comparison.slice(0, 10).map(i => i.name);
+                    const data1 = this.h2h.comparison.slice(0, 10).map(i => i.periode1_value);
+                    const data2 = this.h2h.comparison.slice(0, 10).map(i => i.periode2_value);
+                    
+                    this.h2hChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: this.h2h.labels?.periode1 || 'Periode 1',
+                                    data: data1,
+                                    backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                                },
+                                {
+                                    label: this.h2h.labels?.periode2 || 'Periode 2',
+                                    data: data2,
+                                    backgroundColor: 'rgba(107, 114, 128, 0.6)',
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: '#9ca3af' } }
+                            },
+                            scales: {
+                                x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
+                                y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }
+                            }
+                        }
+                    });
+                },
+                
+                renderCsTrendChart() {
+                    const ctx = document.getElementById('csTrendChart');
+                    if (!ctx || !this.csDetail?.trend) return;
+                    
+                    if (this.csTrendChart) this.csTrendChart.destroy();
+                    
+                    const labels = this.csDetail.trend.map(i => i.week_start?.slice(5, 10) || i.week);
+                    const data = this.csDetail.trend.map(i => i.total);
+                    
+                    this.csTrendChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Perolehan',
+                                data: data,
+                                borderColor: 'rgb(16, 185, 129)',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                fill: true,
+                                tension: 0.3,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
+                                y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }
+                            }
+                        }
+                    });
+                },
+                
+                exportH2h() {
+                    const params = new URLSearchParams({
+                        mode: this.h2h.mode,
+                        periode1: this.h2h.periode1,
+                        periode2: this.h2h.periode2,
+                        tim: this.filters.tim,
+                        view_by: this.h2h.viewBy,
+                    });
+                    window.open(`/api/performa-cs/export?${params}`, '_blank');
+                },
+                
+                formatRupiah(amount) {
+                    if (!amount) return 'Rp 0';
+                    if (amount >= 1000000) return 'Rp ' + (amount / 1000000).toFixed(1) + ' jt';
+                    if (amount >= 1000) return 'Rp ' + (amount / 1000).toFixed(0) + ' rb';
+                    return 'Rp ' + amount.toLocaleString('id-ID');
+                },
+                
+                formatDate(date) {
+                    if (!date) return '-';
+                    return new Date(date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                },
+            };
+        }
+    </script>
+</body>
+</html>

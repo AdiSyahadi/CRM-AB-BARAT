@@ -1,0 +1,551 @@
+/* ============================================
+   TUTORIAL PAGE - CUSTOM STYLES
+   ============================================ */
+
+/* Base Resets */
+[x-cloak] {
+    display: none !important;
+}
+
+/* ============================================
+   TUTORIAL SECTIONS
+   ============================================ */
+.tutorial-section {
+    background: white;
+    border-radius: 1.5rem;
+    border: 1px solid #E5E7EB;
+    padding: 2rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.tutorial-section:hover {
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1);
+}
+
+.section-header {
+    margin-bottom: 1.5rem;
+}
+
+.section-content {
+    color: #374151;
+    line-height: 1.75;
+}
+
+/* ============================================
+   FEATURE CARDS
+   ============================================ */
+.feature-card {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    border-color: #10B981;
+    box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.15);
+    transform: translateY(-4px);
+}
+
+/* ============================================
+   FEATURE BLOCKS
+   ============================================ */
+.feature-block {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.feature-block:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.feature-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.feature-title i {
+    color: #10B981;
+    font-size: 1.25rem;
+}
+
+/* ============================================
+   STEP BY STEP
+   ============================================ */
+.step-by-step {
+    background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid #D1FAE5;
+}
+
+.step-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem;
+    background: white;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid #E5E7EB;
+    transition: all 0.2s ease;
+}
+
+.step-item:last-child {
+    margin-bottom: 0;
+}
+
+.step-item:hover {
+    border-color: #10B981;
+    box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.15);
+    transform: translateX(4px);
+}
+
+.step-number {
+    width: 2rem;
+    height: 2rem;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+}
+
+.step-content h4 {
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 0.25rem;
+    font-size: 0.9375rem;
+}
+
+.step-content p {
+    color: #6B7280;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* ============================================
+   TIP BOX
+   ============================================ */
+.tip-box {
+    background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+    border: 2px solid #FDE68A;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.tip-box kbd {
+    background: #374151;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   FILTER BADGE DEMO
+   ============================================ */
+.filter-badge-demo {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.filter-badge-demo:hover {
+    border-color: #10B981;
+    box-shadow: 0 4px 8px -2px rgba(16, 185, 129, 0.2);
+    transform: scale(1.05);
+}
+
+/* ============================================
+   METRIC CARDS
+   ============================================ */
+.metric-card {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.metric-card:hover {
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.metric-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.metric-icon i {
+    font-size: 1.25rem;
+}
+
+/* ============================================
+   QUICK ACTION PREVIEW
+   ============================================ */
+.quick-action-preview {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.quick-action-preview:hover {
+    border-color: #10B981;
+    box-shadow: 0 4px 8px -2px rgba(16, 185, 129, 0.15);
+    transform: translateX(4px);
+    cursor: pointer;
+}
+
+.quick-action-preview i {
+    font-size: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F9FAFB;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+}
+
+.quick-action-preview p {
+    margin: 0;
+}
+
+.quick-action-preview .font-medium {
+    color: #1F2937;
+    font-size: 0.9375rem;
+}
+
+/* ============================================
+   BEST PRACTICE CARDS
+   ============================================ */
+.best-practice-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 2px solid;
+}
+
+.best-practice-card.do {
+    border-color: #D1FAE5;
+    background: linear-gradient(135deg, #ECFDF5 0%, white 100%);
+}
+
+.best-practice-card.dont {
+    border-color: #FEE2E2;
+    background: linear-gradient(135deg, #FEF2F2 0%, white 100%);
+}
+
+/* ============================================
+   FAQ ITEMS
+   ============================================ */
+.faq-item {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.faq-item:hover {
+    border-color: #10B981;
+}
+
+.faq-item.active {
+    border-color: #10B981;
+    box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.15);
+}
+
+.faq-item button {
+    transition: all 0.2s ease;
+}
+
+.faq-item button:hover {
+    background: #F9FAFB;
+}
+
+.faq-item.active button {
+    background: #ECFDF5;
+}
+
+/* ============================================
+   BADGE STYLES (from main app)
+   ============================================ */
+.badge-vip {
+    background: #FEF3C7;
+    color: #92400E;
+    display: inline-block;
+}
+
+.badge-loyal {
+    background: #D1FAE5;
+    color: #065F46;
+    display: inline-block;
+}
+
+.badge-new {
+    background: #DBEAFE;
+    color: #1E40AF;
+    display: inline-block;
+}
+
+.badge-at-risk {
+    background: #FFEDD5;
+    color: #9A3412;
+    display: inline-block;
+}
+
+.score-hot {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F3F4F6;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #10B981;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide-in {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+.smooth-scroll {
+    scroll-behavior: smooth;
+}
+
+/* Keyboard shortcut styling */
+kbd {
+    background: #374151;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+}
+
+/* Link hover effects */
+a {
+    transition: all 0.2s ease;
+}
+
+/* Button hover effects */
+button {
+    transition: all 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .tutorial-section {
+        padding: 1.5rem;
+    }
+    
+    .step-by-step {
+        padding: 1rem;
+    }
+    
+    .step-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .step-number {
+        margin: 0 auto 0.5rem;
+    }
+    
+    .feature-card {
+        padding: 1rem;
+    }
+    
+    .best-practice-card {
+        padding: 1rem;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    .tutorial-section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    
+    button {
+        display: none;
+    }
+    
+    .faq-item {
+        border: 1px solid #E5E7EB !important;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT (Optional)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    /* Can be implemented later if needed */
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.focus-visible:focus {
+    outline: 2px solid #10B981;
+    outline-offset: 2px;
+}
+
+/* Skip to content link for accessibility */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #10B981;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.skip-to-content:focus {
+    top: 0;
+}
+
+/* ============================================
+   CUSTOM HIGHLIGHT
+   ============================================ */
+::selection {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+::-moz-selection {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #F3F4F6 0%,
+        #E5E7EB 50%,
+        #F3F4F6 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ============================================
+   SMOOTH TRANSITIONS
+   ============================================ */
+* {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
