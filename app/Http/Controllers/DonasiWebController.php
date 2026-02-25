@@ -530,6 +530,164 @@ class DonasiWebController extends Controller
         ]);
     }
 
+    /**
+     * TEMPORARY DIAGNOSTIC: Compare different calculation methods against WordPress
+     * WordPress shows: Rp 814,994,475 | 5,681 Jumlah Donasi | 202 Donatur | 56 Program
+     */
+    public function apiDiagnostic()
+    {
+        $t = $this->table;
+        $conn = $this->conn();
+
+        // Test 1: SUM(main_donate) WHERE status=1 (no maxDonate filter)
+        $test1 = DB::connection($this->connection)->table($t)
+            ->where('status', 1)
+            ->selectRaw('COUNT(*) as cnt, SUM(main_donate) as total')
+            ->first();
+
+        // Test 2: SUM(main_donate) WHERE status=1 AND main_donate <= 10M
+        $test2 = DB::connection($this->connection)->table($t)
+            ->where('status', 1)
+            ->where('main_donate', '<=', 10000000)
+            ->selectRaw('COUNT(*) as cnt, SUM(main_donate) as total')
+            ->first();
+
+        // Test 3: SUM(nominal) WHERE status=1 AND nominal <= 10M
+        $test3 = DB::connection($this->connection)->table($t)
+            ->where('status', 1)
+            ->where('nominal', '<=', 10000000)
+            ->selectRaw('COUNT(*) as cnt, SUM(nominal) as total')
+            ->first();
+
+        // Test 4: SUM(nominal) WHERE status=1 (no filter)
+        $test4 = DB::connection($this->connection)->table($t)
+            ->where('status', 1)
+            ->selectRaw('COUNT(*) as cnt, SUM(nominal) as total')
+            ->first();
+
+        // Test 5: All statuses - SUM(main_donate) no filter
+        $test5 = DB::connection($this->connection)->table($t)
+            ->selectRaw('COUNT(*) as cnt, SUM(main_donate) as total')
+            ->first();
+
+        // Test 6: All statuses - SUM(main_donate) <= 10M
+        $test6 = DB::connection($this->connection)->table($t)
+            ->where('main_donate', '<=', 10000000)
+            ->selectRaw('COUNT(*) as cnt, SUM(main_donate) as total')
+            ->first();
+
+        // Test 7: Records with main_donate > 10M
+        $bigRecords = DB::connection($this->connection)->table($t)
+            ->where('main_donate', '>', 10000000)
+            ->select('id', 'campaign_id', 'name', 'nominal', 'main_donate', 'status', 'created_at')
+            ->orderByDesc('main_donate')
+            ->limit(20)
+            ->get();
+
+        // Test 8: Status distribution
+        $statusDist = DB::connection($this->connection)->table($t)
+            ->selectRaw('status, COUNT(*) as cnt, SUM(main_donate) as total')
+            ->groupBy('status')
+            ->get();
+
+        // Test 9: Unique donatur count methods
+        $donaturByWa = DB::connection($this->connection)->table($t)
+            ->where('status', 1)
+            ->whereNotNull('whatsapp')
+            ->where('whatsapp', '!=', '')
+            ->distinct()->count('whatsapp');
+
+        $donaturByEmail = DB::connection($this->connection)->table($t)
+            ->where('status', 1)
+            ->whereNotNull('email')
+            ->where('email', '!=', '')
+            ->distinct()->count('email');
+
+        $donaturByName = DB::connection($this->connection)->table($t)
+            ->where('status', 1)
+            ->whereNotNull('name')
+            ->where('name', '!=', '')
+            ->distinct()->count('name');
+
+        // Test 10: Active campaigns count
+        $activeCampaigns = DB::connection($this->connection)->table($this->campaignTable)
+            ->where('publish_status', 1)
+            ->count();
+
+        $allCampaigns = DB::connection($this->connection)->table($this->campaignTable)
+            ->count();
+
+        // Test 11: Check if trash table exists and has records
+        $trashCount = 0;
+        $trashTotal = 0;
+        try {
+            $trash = DB::connection($this->connection)->table('wp_dja_donate_trash')
+                ->where('status', 1)
+                ->selectRaw('COUNT(*) as cnt, SUM(main_donate) as total')
+                ->first();
+            $trashCount = $trash->cnt ?? 0;
+            $trashTotal = $trash->total ?? 0;
+        } catch (\Exception $e) {
+            $trashCount = 'error: ' . $e->getMessage();
+        }
+
+        // Test 12: SUM(main_donate) WHERE status=1 including trash
+        $test12Total = (float)($test1->total ?? 0) + (float)($trashTotal ?? 0);
+        $test12Count = (int)($test1->cnt ?? 0) + (int)(is_numeric($trashCount) ? $trashCount : 0);
+
+        return response()->json([
+            'wordpress_reference' => [
+                'donasi_terkumpul' => 814994475,
+                'jumlah_donasi' => 5681,
+                'donatur_tergabung' => 202,
+                'program_aktif' => 56,
+            ],
+            'test1_main_donate_status1_no_filter' => [
+                'count' => $test1->cnt,
+                'total' => (float) $test1->total,
+            ],
+            'test2_main_donate_status1_max10M' => [
+                'count' => $test2->cnt,
+                'total' => (float) $test2->total,
+            ],
+            'test3_nominal_status1_max10M' => [
+                'count' => $test3->cnt,
+                'total' => (float) $test3->total,
+            ],
+            'test4_nominal_status1_no_filter' => [
+                'count' => $test4->cnt,
+                'total' => (float) $test4->total,
+            ],
+            'test5_main_donate_all_status_no_filter' => [
+                'count' => $test5->cnt,
+                'total' => (float) $test5->total,
+            ],
+            'test6_main_donate_all_status_max10M' => [
+                'count' => $test6->cnt,
+                'total' => (float) $test6->total,
+            ],
+            'test7_big_records_main_donate_gt_10M' => $bigRecords,
+            'test8_status_distribution' => $statusDist,
+            'test9_unique_donatur' => [
+                'by_whatsapp' => $donaturByWa,
+                'by_email' => $donaturByEmail,
+                'by_name' => $donaturByName,
+            ],
+            'test10_campaigns' => [
+                'active' => $activeCampaigns,
+                'total' => $allCampaigns,
+            ],
+            'test11_trash_table' => [
+                'count' => $trashCount,
+                'total' => $trashTotal,
+            ],
+            'test12_main_donate_status1_plus_trash' => [
+                'count' => $test12Count,
+                'total' => $test12Total,
+            ],
+        ]);
+    }
+
     // ============================================================
     // HELPER METHODS
     // ============================================================

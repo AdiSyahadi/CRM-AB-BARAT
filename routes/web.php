@@ -249,6 +249,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/traffic-utm', [DonasiWebController::class, 'apiTrafficUtm'])->name('traffic-utm');
         Route::get('/program-packages', [DonasiWebController::class, 'apiProgramPackages'])->name('program-packages');
         Route::get('/time-patterns', [DonasiWebController::class, 'apiTimePatterns'])->name('time-patterns');
+        Route::get('/diagnostic', [DonasiWebController::class, 'apiDiagnostic'])->name('diagnostic');
     });
 
     // ============================================
