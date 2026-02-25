@@ -1,0 +1,2 @@
+patch_id,objective,files_changed,status,verification_note
+012,Implement Penyebaran Toko menu - controller routes view sidebar,PenyebaranTokoCrmController.php + penyebaran-toko/index.blade.php + web.php + sidebar.blade.php,done,7 CRM routes registered - view compiles - 210 rows confirmed - reused PenyebaranToko model - sidebar link with active state

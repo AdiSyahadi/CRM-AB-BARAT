@@ -1,0 +1,848 @@
+{
+  "_meta": {
+    "title": "Website Donasi Analytics Dashboard",
+    "description": "Dashboard visualisasi data donasi dari website lazalbahjahbarat.id (WordPress donation system). Menampilkan insight komprehensif dari tabel wp_dja_donate di database kedua (mysql_second).",
+    "version": "1.0.0",
+    "created_at": "2026-02-11",
+    "author": "AI Blueprint Generator",
+    "route_prefix": "donasi-web",
+    "sidebar_key": "donasi-web",
+    "sidebar_label": "Donasi Website",
+    "sidebar_icon": "bi-globe2",
+    "sidebar_section": "Laporan",
+    "sidebar_badge": { "text": "NEW", "color": "bg-blue-500" }
+  },
+
+  "data_source": {
+    "connection": "mysql_second",
+    "database": "u494923179_fh5sd",
+    "table": "wp_dja_donate",
+    "total_records": 5874,
+    "date_range": "2024-12-05 to present",
+    "data_quality_notes": [
+      "13 records memiliki nominal corrupt (nomor HP masuk ke kolom nominal, nominal > 10jt)",
+      "Filter WHERE nominal <= 10000000 untuk data valid (5861 records, total Rp 744.5jt)",
+      "cs_id = 0 untuk 99.7% records (CS tidak di-assign di sistem WP)",
+      "f0 selalu NULL, f1 selalu 1 — flag dimulai dari f2"
+    ],
+    "nominal_filter": "nominal <= 10000000",
+    "valid_records": 5861,
+    "valid_total": 744524968,
+    "valid_avg": 127030
+  },
+
+  "architecture": {
+    "pattern": "Controller + Blade + Alpine.js + API (fetch)",
+    "matches_existing": true,
+    "files_to_create": [
+      {
+        "type": "controller",
+        "path": "app/Http/Controllers/DonasiWebController.php",
+        "description": "Controller dengan method index() untuk view dan 8 API endpoints"
+      },
+      {
+        "type": "blade_view",
+        "path": "resources/views/donasi-web/index.blade.php",
+        "description": "Halaman utama menggunakan <x-layouts.app> + Alpine.js",
+        "layout_props": {
+          "active": "donasi-web",
+          "title": "Donasi Website - Abbarat Dashboard",
+          "xData": "donasiWebApp()",
+          "chartjs": true
+        }
+      }
+    ],
+    "files_to_modify": [
+      {
+        "path": "resources/views/components/sidebar.blade.php",
+        "change": "Tambah menu 'Donasi Website' di section Laporan, setelah Realtime Perolehan"
+      },
+      {
+        "path": "routes/web.php",
+        "change": "Tambah route group /donasi-web dengan 8 API endpoints"
+      }
+    ]
+  },
+
+  "routes": {
+    "view": {
+      "method": "GET",
+      "uri": "/donasi-web",
+      "name": "donasi-web.index",
+      "controller": "DonasiWebController@index"
+    },
+    "api": [
+      {
+        "method": "GET",
+        "uri": "/api/donasi-web/overview-stats",
+        "name": "donasi-web.api.overview-stats",
+        "handler": "apiOverviewStats",
+        "params": ["period=all|today|7d|30d|90d|custom", "start_date?", "end_date?"],
+        "description": "Statistik utama: total donasi, jumlah transaksi, avg, donor unik, conversion rate"
+      },
+      {
+        "method": "GET",
+        "uri": "/api/donasi-web/trend-data",
+        "name": "donasi-web.api.trend-data",
+        "handler": "apiTrendData",
+        "params": ["group_by=daily|weekly|monthly", "period=all|7d|30d|90d|custom", "start_date?", "end_date?"],
+        "description": "Data trend donasi untuk line/bar chart — jumlah & nominal per periode"
+      },
+      {
+        "method": "GET",
+        "uri": "/api/donasi-web/campaign-breakdown",
+        "name": "donasi-web.api.campaign-breakdown",
+        "handler": "apiCampaignBreakdown",
+        "params": ["period?"],
+        "description": "Breakdown per campaign_id — jumlah, nominal, avg, trend"
+      },
+      {
+        "method": "GET",
+        "uri": "/api/donasi-web/payment-analytics",
+        "name": "donasi-web.api.payment-analytics",
+        "handler": "apiPaymentAnalytics",
+        "params": ["period?"],
+        "description": "Breakdown payment method + payment code (bank) + gateway + confirmation status"
+      },
+      {
+        "method": "GET",
+        "uri": "/api/donasi-web/donor-insights",
+        "name": "donasi-web.api.donor-insights",
+        "handler": "apiDonorInsights",
+        "params": ["period?", "sort=total|count|recent"],
+        "description": "Donor analytics: top donors, repeat rate, new vs returning, sapaan, anonim ratio"
+      },
+      {
+        "method": "GET",
+        "uri": "/api/donasi-web/traffic-utm",
+        "name": "donasi-web.api.traffic-utm",
+        "handler": "apiTrafficUtm",
+        "params": ["period?"],
+        "description": "UTM source/medium breakdown, device/OS/browser stats, conversion by source"
+      },
+      {
+        "method": "GET",
+        "uri": "/api/donasi-web/program-packages",
+        "name": "donasi-web.api.program-packages",
+        "handler": "apiProgramPackages",
+        "params": ["period?"],
+        "description": "Breakdown program/paket dari info_package2 JSON field"
+      },
+      {
+        "method": "GET",
+        "uri": "/api/donasi-web/time-patterns",
+        "name": "donasi-web.api.time-patterns",
+        "handler": "apiTimePatterns",
+        "params": ["period?"],
+        "description": "Heatmap jam x hari, peak hours, peak days, seasonal pattern"
+      }
+    ]
+  },
+
+  "page_layout": {
+    "structure": "Single page with tabbed sections + global filter bar",
+    "total_sections": 7,
+    "global_filters": {
+      "position": "sticky top di bawah header",
+      "filters": [
+        {
+          "id": "period",
+          "type": "preset-buttons",
+          "options": ["Hari Ini", "7 Hari", "30 Hari", "90 Hari", "Semua"],
+          "default": "30 Hari"
+        },
+        {
+          "id": "date_range",
+          "type": "date-range-picker",
+          "description": "Custom date range, muncul saat pilih 'Custom'"
+        },
+        {
+          "id": "campaign",
+          "type": "select",
+          "options": "dynamic from API",
+          "default": "Semua Campaign"
+        },
+        {
+          "id": "status",
+          "type": "select",
+          "options": ["Semua", "Berhasil (1)", "Pending (0)"],
+          "default": "Berhasil (1)"
+        }
+      ]
+    },
+
+    "sections": [
+      {
+        "id": "overview",
+        "order": 1,
+        "title": null,
+        "description": "Hero stats cards — selalu visible di atas",
+        "always_visible": true,
+        "components": [
+          {
+            "id": "stat-cards",
+            "type": "stat-card-grid",
+            "layout": "grid grid-cols-2 lg:grid-cols-5 gap-4",
+            "cards": [
+              {
+                "label": "Total Donasi",
+                "value_key": "total_amount",
+                "format": "currency_short",
+                "icon": "bi-cash-stack",
+                "color": "emerald",
+                "subtitle": "vs bulan lalu",
+                "trend": true
+              },
+              {
+                "label": "Jumlah Transaksi",
+                "value_key": "total_transactions",
+                "format": "number",
+                "icon": "bi-receipt",
+                "color": "blue",
+                "subtitle": "donasi masuk",
+                "trend": true
+              },
+              {
+                "label": "Rata-rata Donasi",
+                "value_key": "avg_amount",
+                "format": "currency_short",
+                "icon": "bi-calculator",
+                "color": "violet",
+                "subtitle": "per transaksi",
+                "trend": true
+              },
+              {
+                "label": "Donor Unik",
+                "value_key": "unique_donors",
+                "format": "number",
+                "icon": "bi-people",
+                "color": "amber",
+                "subtitle": "by phone",
+                "trend": true
+              },
+              {
+                "label": "Conversion Rate",
+                "value_key": "conversion_rate",
+                "format": "percentage",
+                "icon": "bi-funnel",
+                "color": "rose",
+                "subtitle": "paid / total",
+                "trend": true
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        "id": "trend",
+        "order": 2,
+        "tab_label": "📈 Trend",
+        "title": "Trend Donasi",
+        "description": "Visualisasi trend donasi over time",
+        "api": "trend-data",
+        "components": [
+          {
+            "id": "trend-chart",
+            "type": "chart",
+            "chart_type": "line",
+            "layout": "col-span-full",
+            "height": "350px",
+            "datasets": [
+              { "label": "Jumlah Donasi", "yAxisID": "y", "borderColor": "#10B981", "fill": true, "backgroundColor": "rgba(16,185,129,0.1)" },
+              { "label": "Total Nominal", "yAxisID": "y1", "borderColor": "#3B82F6", "borderDash": [5,5] }
+            ],
+            "options": {
+              "dual_y_axis": true,
+              "y_left": "Jumlah Transaksi",
+              "y_right": "Nominal (Rp)",
+              "toggle_group_by": ["Harian", "Mingguan", "Bulanan"]
+            }
+          },
+          {
+            "id": "trend-summary-cards",
+            "type": "mini-stat-row",
+            "layout": "grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4",
+            "cards": [
+              { "label": "Bulan Terbaik", "value_key": "best_month", "sub_key": "best_month_amount" },
+              { "label": "Hari Terbaik", "value_key": "best_day", "sub_key": "best_day_amount" },
+              { "label": "Growth Rate", "value_key": "mom_growth", "format": "percentage_signed" },
+              { "label": "Prediksi Bulan Ini", "value_key": "predicted_this_month", "format": "currency_short" }
+            ]
+          }
+        ]
+      },
+
+      {
+        "id": "campaign",
+        "order": 3,
+        "tab_label": "🎯 Campaign",
+        "title": "Performa Campaign",
+        "description": "Breakdown performa per campaign/program",
+        "api": "campaign-breakdown",
+        "components": [
+          {
+            "id": "campaign-chart",
+            "type": "chart",
+            "chart_type": "doughnut",
+            "layout": "lg:col-span-1",
+            "description": "Pie/doughnut chart proporsi campaign by nominal"
+          },
+          {
+            "id": "campaign-table",
+            "type": "table",
+            "layout": "lg:col-span-2",
+            "columns": [
+              { "key": "campaign_id", "label": "Campaign" },
+              { "key": "total_donations", "label": "Donasi", "format": "number" },
+              { "key": "total_amount", "label": "Total", "format": "currency" },
+              { "key": "avg_amount", "label": "Rata-rata", "format": "currency" },
+              { "key": "unique_donors", "label": "Donor", "format": "number" },
+              { "key": "trend_sparkline", "label": "Trend", "type": "sparkline" }
+            ],
+            "sortable": true,
+            "highlight_top": true
+          },
+          {
+            "id": "program-packages",
+            "type": "horizontal-bar-chart",
+            "layout": "col-span-full mt-4",
+            "title": "Program / Paket Donasi",
+            "description": "Breakdown dari info_package2 — Paket Bekal Hafalan, Mushaf Harapan, dll.",
+            "data_source": "program-packages API",
+            "known_programs": [
+              "Paket Bekal Hafalan (137 donasi terbanyak)",
+              "Paket Mushaf Harapan (29)",
+              "Paket Fasilitas Ilmu (16)",
+              "Paket Beasiswa Santri Qur'ani (9)",
+              "Paket Penopang Pesantren (3)",
+              "Sedekah Daging (4)",
+              "Kelas Parenting ala Rasulullah (1)"
+            ]
+          }
+        ]
+      },
+
+      {
+        "id": "payment",
+        "order": 4,
+        "tab_label": "💳 Pembayaran",
+        "title": "Analisis Pembayaran",
+        "description": "Breakdown metode pembayaran & bank",
+        "api": "payment-analytics",
+        "components": [
+          {
+            "id": "payment-method-chart",
+            "type": "chart",
+            "chart_type": "doughnut",
+            "layout": "lg:col-span-1",
+            "title": "Metode Pembayaran",
+            "description": "VA vs Instant (QRIS/e-wallet) vs Transfer Manual",
+            "known_data": {
+              "VA": "3207 (54.6%)",
+              "Instant (QRIS/e-wallet)": "1903 (32.4%)",
+              "Transfer Manual": "764 (13%)"
+            }
+          },
+          {
+            "id": "bank-breakdown",
+            "type": "horizontal-bar-chart",
+            "layout": "lg:col-span-1",
+            "title": "Bank / Channel",
+            "description": "QRIS, BRI, BSI, Mandiri, BNI, DANA, GoPay, Permata, Danamon",
+            "known_data": {
+              "QRIS": 1661,
+              "BRI": 1202,
+              "BSI": 1028,
+              "Mandiri": 980,
+              "BNI": 705,
+              "DANA": 155,
+              "GoPay": 87,
+              "Permata": 41,
+              "Danamon": 15
+            }
+          },
+          {
+            "id": "payment-confirmation",
+            "type": "stat-row",
+            "layout": "lg:col-span-1",
+            "title": "Status Konfirmasi",
+            "cards": [
+              { "label": "Via Flip (auto)", "value_key": "flip_count", "known": 2863, "icon": "bi-robot" },
+              { "label": "Via Admin (manual)", "value_key": "admin_count", "known": 2735, "icon": "bi-person-badge" },
+              { "label": "Pending", "value_key": "pending_count", "known": 276, "icon": "bi-hourglass-split" },
+              { "label": "Bukti Transfer", "value_key": "img_confirmed", "known": 320, "icon": "bi-image" }
+            ]
+          },
+          {
+            "id": "nominal-distribution",
+            "type": "chart",
+            "chart_type": "bar",
+            "layout": "col-span-full mt-4",
+            "title": "Distribusi Nominal Donasi",
+            "description": "Histogram range nominal: 0, 1-50K, 50K-100K, 100K-200K, 200K-500K, 500K-1M, 1M-5M, 5M+",
+            "known_data": {
+              "Rp 0": 1,
+              "Rp 1-50K": 1072,
+              "Rp 50K-100K": 1598,
+              "Rp 100K-200K": 2415,
+              "Rp 200K-500K": 537,
+              "Rp 500K-1M": 168,
+              "Rp 1M-5M": 64,
+              "Rp 5M-10M": 6
+            },
+            "insight": "Mayoritas donasi di range Rp 100K-200K (41.2%)"
+          }
+        ]
+      },
+
+      {
+        "id": "donors",
+        "order": 5,
+        "tab_label": "👥 Donatur",
+        "title": "Analisis Donatur",
+        "description": "Profil dan segmentasi donatur",
+        "api": "donor-insights",
+        "components": [
+          {
+            "id": "donor-summary",
+            "type": "stat-card-grid",
+            "layout": "grid grid-cols-2 lg:grid-cols-4 gap-3",
+            "cards": [
+              { "label": "Total Donor Unik", "value_key": "unique_donors", "known": 4797, "icon": "bi-person-check" },
+              { "label": "Repeat Donors", "value_key": "repeat_donors", "known": 144, "icon": "bi-arrow-repeat", "subtitle": "2+ donasi" },
+              { "label": "Anonim Rate", "value_key": "anonim_rate", "known": "44.6%", "icon": "bi-incognito" },
+              { "label": "Dengan Doa", "value_key": "with_comment", "known": 3133, "icon": "bi-chat-heart", "subtitle": "53.3%" }
+            ]
+          },
+          {
+            "id": "top-donors-table",
+            "type": "leaderboard-table",
+            "layout": "lg:col-span-2 mt-4",
+            "title": "Top Donatur",
+            "columns": [
+              { "key": "rank", "label": "#" },
+              { "key": "name", "label": "Nama" },
+              { "key": "whatsapp", "label": "WhatsApp", "masked": true },
+              { "key": "total_donations", "label": "Donasi", "format": "number" },
+              { "key": "total_amount", "label": "Total", "format": "currency" },
+              { "key": "last_donation", "label": "Terakhir", "format": "relative_date" }
+            ],
+            "limit": 15,
+            "privacy_note": "Nama & nomor partial masked untuk privasi"
+          },
+          {
+            "id": "sapaan-chart",
+            "type": "chart",
+            "chart_type": "doughnut",
+            "layout": "lg:col-span-1 mt-4",
+            "title": "Demografi (Sapaan)",
+            "known_data": {
+              "Bapak": 3233,
+              "Ibu": 1694,
+              "Kak": 939
+            }
+          },
+          {
+            "id": "donor-retention-funnel",
+            "type": "funnel",
+            "layout": "col-span-full mt-4",
+            "title": "Funnel Follow-up",
+            "description": "Visualisasi conversion rate dari f1 (invoice) sampai f5 (final follow-up)",
+            "stages": [
+              { "label": "Invoice Created (f1)", "value_key": "f1_count", "known": 5874, "percentage": "100%" },
+              { "label": "Follow-up 1 (f2)", "value_key": "f2_count", "known": 686, "percentage": "11.7%" },
+              { "label": "Follow-up 2 (f3)", "value_key": "f3_count", "known": 342, "percentage": "5.8%" },
+              { "label": "Follow-up 3 (f4)", "value_key": "f4_count", "known": 343, "percentage": "5.8%" },
+              { "label": "Final (f5)", "value_key": "f5_count", "known": 410, "percentage": "7.0%" }
+            ],
+            "insight": "Hanya 11.7% yang di-follow-up. Potensi besar untuk improve retention."
+          }
+        ]
+      },
+
+      {
+        "id": "traffic",
+        "order": 6,
+        "tab_label": "📱 Traffic",
+        "title": "Traffic & UTM Analytics",
+        "description": "Sumber traffic, device, dan atribusi",
+        "api": "traffic-utm",
+        "components": [
+          {
+            "id": "utm-source-chart",
+            "type": "chart",
+            "chart_type": "doughnut",
+            "layout": "lg:col-span-1",
+            "title": "Sumber Traffic (UTM Source)",
+            "known_data": {
+              "Instagram": "2022 (53.4%)",
+              "Facebook": "1747 (46.2%)",
+              "Lainnya": "~35"
+            }
+          },
+          {
+            "id": "utm-performance-table",
+            "type": "table",
+            "layout": "lg:col-span-2",
+            "title": "Performa per Sumber",
+            "columns": [
+              { "key": "source", "label": "Sumber" },
+              { "key": "donations", "label": "Donasi" },
+              { "key": "total", "label": "Total Nominal" },
+              { "key": "avg", "label": "Avg Donasi" },
+              { "key": "conversion", "label": "Conversion Rate" }
+            ],
+            "description": "Bandingkan IG vs FB — mana yang lebih efektif?"
+          },
+          {
+            "id": "device-stats",
+            "type": "stat-row",
+            "layout": "col-span-full mt-4",
+            "title": "Device & Platform",
+            "cards": [
+              { "label": "Mobile", "value": "98.6%", "count": 5793, "icon": "bi-phone" },
+              { "label": "Desktop", "value": "1.4%", "count": 81, "icon": "bi-laptop" },
+              { "label": "Android", "value": "84%", "count": 4939, "icon": "bi-android2" },
+              { "label": "iPhone", "value": "15%", "count": 883, "icon": "bi-apple" }
+            ]
+          },
+          {
+            "id": "utm-campaign-trend",
+            "type": "chart",
+            "chart_type": "stacked-bar",
+            "layout": "col-span-full mt-4",
+            "title": "Trend Traffic per Sumber (Monthly)",
+            "description": "Stacked bar chart showing IG vs FB contribution per bulan"
+          }
+        ]
+      },
+
+      {
+        "id": "time-patterns",
+        "order": 7,
+        "tab_label": "⏰ Waktu",
+        "title": "Pola Waktu Donasi",
+        "description": "Kapan donasi paling banyak masuk?",
+        "api": "time-patterns",
+        "components": [
+          {
+            "id": "heatmap",
+            "type": "heatmap",
+            "layout": "col-span-full",
+            "title": "Heatmap Donasi: Jam × Hari",
+            "description": "Grid 24 jam × 7 hari, warna intensity berdasarkan jumlah donasi. Implementasi: div grid with dynamic bg-color opacity based on count.",
+            "x_axis": "Jam (0-23)",
+            "y_axis": "Hari (Senin-Minggu)",
+            "color_scale": "white → emerald-100 → emerald-300 → emerald-500 → emerald-700",
+            "tooltip": "Show count + total nominal on hover",
+            "insight": "Peak subuh (04-06) dan malam (19-21), Jumat paling banyak"
+          },
+          {
+            "id": "hourly-chart",
+            "type": "chart",
+            "chart_type": "bar",
+            "layout": "lg:col-span-1 mt-4",
+            "title": "Distribusi per Jam",
+            "description": "Bar chart 0-23 jam",
+            "highlight_peak": true,
+            "known_peaks": ["04:00-06:00 (subuh)", "19:00-21:00 (malam)"]
+          },
+          {
+            "id": "daily-chart",
+            "type": "chart",
+            "chart_type": "bar",
+            "layout": "lg:col-span-1 mt-4",
+            "title": "Distribusi per Hari",
+            "description": "Bar chart Senin-Minggu",
+            "highlight_peak": true,
+            "known_peaks": ["Jumat (1161 donasi, hari sedekah)"]
+          },
+          {
+            "id": "time-insights",
+            "type": "insight-cards",
+            "layout": "col-span-full mt-4",
+            "cards": [
+              {
+                "icon": "bi-sunrise",
+                "title": "Peak Subuh",
+                "description": "04:00-06:00 — 1.464 donasi (24.9%). Donatur aktif setelah sholat subuh.",
+                "color": "amber"
+              },
+              {
+                "icon": "bi-moon-stars",
+                "title": "Peak Malam",
+                "description": "19:00-21:00 — 910 donasi (15.5%). Setelah maghrib & isya.",
+                "color": "indigo"
+              },
+              {
+                "icon": "bi-calendar-event",
+                "title": "Hari Jumat",
+                "description": "1.161 donasi — 19.8% dari total. Hari sedekah paling populer.",
+                "color": "emerald"
+              },
+              {
+                "icon": "bi-calendar-heart",
+                "title": "Efek Ramadhan",
+                "description": "Maret 2025 (Ramadhan) — 655 donasi, Rp 80jt. Peak bulanan tertinggi.",
+                "color": "rose"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "ui_design": {
+    "color_palette": {
+      "primary": "emerald (consistent with existing pages)",
+      "secondary_accents": ["blue-500 for transactions", "violet-500 for averages", "amber-500 for donors", "rose-500 for conversion"],
+      "chart_colors": ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EF4444", "#06B6D4", "#EC4899"],
+      "background": "bg-gray-50"
+    },
+    "typography": {
+      "font": "Inter (already loaded in shared layout)",
+      "stat_value": "text-2xl lg:text-3xl font-bold",
+      "stat_label": "text-xs font-semibold text-gray-500 uppercase tracking-wider",
+      "section_title": "text-lg font-bold text-gray-800",
+      "card_border": "rounded-2xl border border-gray-100 shadow-sm bg-white"
+    },
+    "animations": {
+      "counter_up": "Angka stat naik dari 0 ke value saat load (Alpine.js x-init)",
+      "chart_appear": "Fade in saat data loaded",
+      "tab_transition": "Smooth content swap dengan Alpine x-show + x-transition",
+      "loading_skeleton": "Pulse skeleton placeholder saat API loading"
+    },
+    "responsive": {
+      "mobile": "Stat cards 2 cols, charts full width, tables horizontal scroll",
+      "tablet": "3 cols untuk stat cards, side-by-side charts",
+      "desktop": "5 cols stat cards, 3 col grid for charts section"
+    },
+    "tab_navigation": {
+      "type": "Horizontal scrollable tabs (pill style)",
+      "style": "bg-white rounded-xl p-1 shadow-sm border border-gray-100",
+      "active_tab": "bg-primary-500 text-white rounded-lg shadow-sm",
+      "inactive_tab": "text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg",
+      "tabs": ["📈 Trend", "🎯 Campaign", "💳 Pembayaran", "👥 Donatur", "📱 Traffic", "⏰ Waktu"]
+    }
+  },
+
+  "alpine_app_structure": {
+    "function_name": "donasiWebApp()",
+    "state": {
+      "loading": "boolean — global loading state",
+      "activeTab": "string — current active tab id (trend|campaign|payment|donors|traffic|time-patterns)",
+      "period": "string — selected period filter (today|7d|30d|90d|all)",
+      "startDate": "string|null — custom start date",
+      "endDate": "string|null — custom end date",
+      "campaignFilter": "string — selected campaign_id or 'all'",
+      "statusFilter": "number — 1 (success) or null (all)",
+      "overview": "object — overview stats data",
+      "trendData": "object — trend chart data",
+      "trendGroupBy": "string — daily|weekly|monthly",
+      "campaignData": "object — campaign breakdown data",
+      "paymentData": "object — payment analytics data",
+      "donorData": "object — donor insights data",
+      "trafficData": "object — traffic UTM data",
+      "timeData": "object — time pattern data",
+      "charts": "object — Chart.js instances { trendChart, campaignChart, paymentChart, etc. }"
+    },
+    "methods": [
+      "init() — load overview + default tab data",
+      "switchTab(tabId) — switch tab & lazy-load data if not loaded",
+      "setPeriod(period) — change period filter & refresh all loaded data",
+      "fetchOverview() — GET /api/donasi-web/overview-stats",
+      "fetchTrend() — GET /api/donasi-web/trend-data",
+      "fetchCampaign() — GET /api/donasi-web/campaign-breakdown",
+      "fetchPayment() — GET /api/donasi-web/payment-analytics",
+      "fetchDonors() — GET /api/donasi-web/donor-insights",
+      "fetchTraffic() — GET /api/donasi-web/traffic-utm",
+      "fetchTimePatterns() — GET /api/donasi-web/time-patterns",
+      "fetchPrograms() — GET /api/donasi-web/program-packages",
+      "renderTrendChart(data) — create/update Chart.js line chart",
+      "renderCampaignChart(data) — create/update doughnut chart",
+      "renderPaymentCharts(data) — create/update payment charts",
+      "renderHeatmap(data) — render CSS grid heatmap",
+      "renderHourlyChart(data) — bar chart per jam",
+      "renderDailyChart(data) — bar chart per hari",
+      "formatCurrency(val) — Rp formatter",
+      "formatNumber(val) — number formatter with separator",
+      "formatCurrencyShort(val) — 744.5jt, 1.2M format",
+      "getPercentageChange(current, previous) — trend calculation",
+      "destroyChart(chartKey) — properly destroy Chart.js instance before re-render"
+    ]
+  },
+
+  "controller_structure": {
+    "class": "DonasiWebController",
+    "namespace": "App\\Http\\Controllers",
+    "connection": "mysql_second",
+    "table": "wp_dja_donate",
+    "nominal_filter": "WHERE nominal <= 10000000",
+    "methods": {
+      "index": {
+        "description": "Return view donasi-web.index",
+        "returns": "view('donasi-web.index')"
+      },
+      "apiOverviewStats": {
+        "description": "Statistik overview",
+        "query_logic": [
+          "Total donasi (SUM nominal WHERE nominal <= 10jt AND status=1)",
+          "Jumlah transaksi (COUNT)",
+          "Rata-rata donasi (AVG)",
+          "Donor unik (COUNT DISTINCT whatsapp)",
+          "Conversion rate (status=1 / total * 100)",
+          "Compare with previous period for trend arrows"
+        ],
+        "response": {
+          "total_amount": "number",
+          "total_transactions": "number",
+          "avg_amount": "number",
+          "unique_donors": "number",
+          "conversion_rate": "number",
+          "trends": {
+            "amount_change": "percentage",
+            "transactions_change": "percentage",
+            "avg_change": "percentage",
+            "donors_change": "percentage"
+          }
+        }
+      },
+      "apiTrendData": {
+        "description": "Trend data grouped by day/week/month",
+        "query_logic": [
+          "GROUP BY DATE_FORMAT(created_at, format)",
+          "Calculate count, sum nominal, avg nominal per period",
+          "Include best_month, best_day, MoM growth",
+          "Prediction: based on current month pace"
+        ]
+      },
+      "apiCampaignBreakdown": {
+        "description": "Campaign performance breakdown",
+        "query_logic": [
+          "GROUP BY campaign_id",
+          "Count, sum, avg, unique donors per campaign",
+          "Monthly trend per campaign for sparklines"
+        ]
+      },
+      "apiPaymentAnalytics": {
+        "description": "Payment method & bank breakdown",
+        "query_logic": [
+          "GROUP BY payment_method → VA, instant, transfer",
+          "GROUP BY payment_code → BRI, BSI, QRIS, Mandiri, etc.",
+          "GROUP BY payment_gateway → flip vs manual",
+          "Confirmation stats: process_by distribution, img_confirmation_status"
+        ]
+      },
+      "apiDonorInsights": {
+        "description": "Donor analytics",
+        "query_logic": [
+          "Top donors: GROUP BY name, whatsapp ORDER BY SUM(nominal) DESC",
+          "Repeat analysis: HAVING COUNT(*) > 1",
+          "Sapaan distribution: GROUP BY sapaan",
+          "Anonim rate: COUNT WHERE anonim=1 / total",
+          "Comment/doa rate: COUNT WHERE comment IS NOT NULL AND comment != ''",
+          "New vs returning: first donation date vs period"
+        ]
+      },
+      "apiTrafficUtm": {
+        "description": "UTM source & device analytics",
+        "query_logic": [
+          "GROUP BY utm_source → ig, fb, etc.",
+          "Per source: count, sum, avg, conversion rate",
+          "Device: GROUP BY mobdesktop",
+          "OS: GROUP BY os",
+          "Monthly trend per source for stacked chart"
+        ]
+      },
+      "apiProgramPackages": {
+        "description": "Program/package breakdown from JSON field",
+        "query_logic": [
+          "Query ALL info_package2 WHERE NOT NULL AND != ''",
+          "PHP: json_decode each, extract 'package' names",
+          "Aggregate: count & total nominal per package name",
+          "Return sorted by count desc"
+        ],
+        "note": "info_package2 is a JSON text field, needs PHP-side parsing"
+      },
+      "apiTimePatterns": {
+        "description": "Time pattern analysis — heatmap data",
+        "query_logic": [
+          "Heatmap: GROUP BY HOUR(created_at), DAYOFWEEK(created_at)",
+          "Hourly: GROUP BY HOUR(created_at)",
+          "Daily: GROUP BY DAYOFWEEK(created_at)",
+          "Return grid[day][hour] = { count, total_nominal }"
+        ]
+      }
+    }
+  },
+
+  "implementation_phases": {
+    "phase_1": {
+      "name": "Backend (Controller + Routes)",
+      "tasks": [
+        "Create DonasiWebController.php with all 9 methods",
+        "Add routes to web.php (1 view route + 8 API routes)",
+        "Test each API endpoint returns correct JSON"
+      ],
+      "estimated_complexity": "medium"
+    },
+    "phase_2": {
+      "name": "Frontend (Blade + Alpine)",
+      "tasks": [
+        "Create resources/views/donasi-web/index.blade.php",
+        "Build Alpine.js donasiWebApp() function",
+        "Implement all UI sections: stat cards, tabs, charts",
+        "Add responsive design & loading states"
+      ],
+      "estimated_complexity": "high"
+    },
+    "phase_3": {
+      "name": "Sidebar Integration",
+      "tasks": [
+        "Add 'Donasi Website' menu to sidebar.blade.php",
+        "Update sidebar active state options"
+      ],
+      "estimated_complexity": "low"
+    },
+    "phase_4": {
+      "name": "Polish & Test",
+      "tasks": [
+        "Test all tabs and filters",
+        "Verify Chart.js renders correctly",
+        "Test wire:navigate from/to this page",
+        "Mobile responsiveness check"
+      ],
+      "estimated_complexity": "low"
+    }
+  },
+
+  "special_considerations": [
+    {
+      "issue": "Data corrupt — nomor HP di kolom nominal",
+      "solution": "SEMUA query harus include WHERE nominal <= 10000000 untuk filter data valid. 13 records corrupt di-exclude.",
+      "filter": "->where('nominal', '<=', 10000000)"
+    },
+    {
+      "issue": "info_package2 adalah JSON text, bukan relational",
+      "solution": "Parse di PHP side, bukan MySQL. Cache result jika perlu karena harus iterate semua rows."
+    },
+    {
+      "issue": "campaign_id berupa hash string, bukan human-readable",
+      "solution": "Tampilkan campaign_id as-is, mungkin buat mapping table/config di kemudian hari. Untuk sekarang show ID + stats."
+    },
+    {
+      "issue": "Chart.js instance cleanup saat tab switch",
+      "solution": "Destroy chart instance sebelum re-render. Store instances di this.charts object, call .destroy() sebelum new Chart()."
+    },
+    {
+      "issue": "wire:navigate compatibility",
+      "solution": "Pastikan Chart.js instances di-cleanup saat navigasi. Gunakan document.addEventListener('livewire:navigating', cleanupCharts)"
+    },
+    {
+      "issue": "Heatmap bukan native Chart.js",
+      "solution": "Implementasi dengan CSS Grid + dynamic background colors. Lebih ringan dan fleksibel daripada external library."
+    }
+  ]
+}

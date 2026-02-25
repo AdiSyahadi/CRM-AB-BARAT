@@ -322,7 +322,7 @@
                         </div>
                         
                         <!-- Chart -->
-                        <div class="p-4 border-b border-gray-200 bg-white" style="height: 280px;">
+                        <div class="p-4 border-b border-gray-200 bg-white" style="position: relative; height: 280px;">
                             <canvas id="h2hChart"></canvas>
                         </div>
                         
@@ -686,7 +686,7 @@
                 async refreshAll() {
                     this.loading = true;
                     try {
-                        await Promise.all([
+                        await Promise.allSettled([
                             this.fetchOverview(),
                             this.fetchH2hData(),
                             this.fetchLeaderboard(),
@@ -695,9 +695,10 @@
                         ]);
                         this.lastUpdate = new Date().toLocaleTimeString('id-ID');
                     } catch (e) {
-                        console.error(e);
+                        console.error('refreshAll error:', e);
+                    } finally {
+                        this.loading = false;
                     }
-                    this.loading = false;
                 },
                 
                 async fetchOverview() {

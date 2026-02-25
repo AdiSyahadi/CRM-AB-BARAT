@@ -1,0 +1,4 @@
+patch,file,action,detail,status
+013,app/Http/Controllers/PenyebaranTokoCrmController.php,MODIFIED,Added apiMapData() method - returns 210 records with valid lat/lng (lightweight fields),DONE
+013,routes/web.php,MODIFIED,Added GET /api/penyebaran-toko/map-data route,DONE
+013,resources/views/penyebaran-toko/index.blade.php,MODIFIED,Added Leaflet.js CDN (CSS+JS) and map visualization with toggle Peta/Tabel view,DONE

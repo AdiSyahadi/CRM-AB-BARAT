@@ -5,9 +5,14 @@
     Active options:
     - 'dashboard' = Analisis Donatur / Dashboard
     - 'donatur' = Donatur
+    - 'daftar-cs' = Daftar CS
+    - 'performa-bulanan' = Performa Bulanan
     - 'performa-cs' = Performa CS (H2H)
     - 'monitor-cs' = Monitor CS
     - 'laporan-perolehan' = Realtime Perolehan
+    - 'donasi-web' = Donasi Website
+    - 'kwitansi-v1' = Kwitansi v1
+    - 'laporan-ramadhan' = Laporan Ramadhan
 --}}
 
 @props(['active' => 'dashboard'])
@@ -73,7 +78,7 @@
         </a>
         
         <!-- Customer Service -->
-        <div x-data="{ open: {{ in_array($active, ['performa-cs']) ? 'true' : 'false' }} }">
+        <div x-data="{ open: {{ in_array($active, ['daftar-cs', 'performa-bulanan', 'performa-cs']) ? 'true' : 'false' }} }">
             <button @click="open = !open" 
                     class="menu-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-gray-600 hover:text-primary-700 hover:bg-primary-50 transition mb-1">
                 <div class="flex items-center gap-3">
@@ -83,15 +88,21 @@
                 <i class="bi bi-chevron-down text-xs transition-transform" :class="open ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="open" x-collapse class="ml-4 mt-1 space-y-1 border-l-2 border-primary-100 pl-4">
-                <a href="{{ route('coming-soon', ['menu' => 'Daftar CS']) }}" wire:navigate
-                   class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-primary-700 hover:bg-primary-50 transition">
+                <a href="{{ route('daftar-cs.index') }}" wire:navigate
+                   class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm {{ $active === 'daftar-cs' ? 'text-primary-700 bg-primary-50 font-medium' : 'text-gray-500 hover:text-primary-700 hover:bg-primary-50' }} transition">
                     <i class="bi bi-list-ul text-xs"></i>
                     <span>Daftar CS</span>
+                    @if($active === 'daftar-cs')
+                    <span class="ml-auto w-1.5 h-1.5 bg-primary-500 rounded-full"></span>
+                    @endif
                 </a>
-                <a href="{{ route('coming-soon', ['menu' => 'Performa Bulanan']) }}" wire:navigate
-                   class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-primary-700 hover:bg-primary-50 transition">
+                <a href="{{ route('performa-bulanan.index') }}" wire:navigate
+                   class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm {{ $active === 'performa-bulanan' ? 'text-primary-700 bg-primary-50 font-medium' : 'text-gray-500 hover:text-primary-700 hover:bg-primary-50' }} transition">
                     <i class="bi bi-bar-chart-line text-xs"></i>
                     <span>Performa Bulanan</span>
+                    @if($active === 'performa-bulanan')
+                    <span class="ml-auto w-1.5 h-1.5 bg-primary-500 rounded-full"></span>
+                    @endif
                 </a>
                 <a href="{{ route('performa-cs.index') }}" wire:navigate
                    class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm {{ $active === 'performa-cs' ? 'text-primary-700 bg-primary-50 font-medium' : 'text-gray-500 hover:text-primary-700 hover:bg-primary-50' }} transition">
@@ -133,11 +144,23 @@
             <span class="ml-auto px-1.5 py-0.5 text-[9px] font-bold bg-red-500 text-white rounded-full animate-pulse">LIVE</span>
             @endif
         </a>
+
+        <!-- Donasi Website Analytics -->
+        <a href="{{ route('donasi-web.index') }}" wire:navigate
+           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition mb-1 {{ $active === 'donasi-web' ? 'bg-primary-100 text-primary-700 font-semibold' : 'text-gray-600 hover:text-primary-700 hover:bg-primary-50' }}">
+            <i class="bi bi-globe2 text-lg"></i>
+            <span class="font-medium">Donasi Website</span>
+            @if($active === 'donasi-web')
+            <span class="ml-auto w-2 h-2 bg-primary-500 rounded-full"></span>
+            @else
+            <span class="ml-auto px-1.5 py-0.5 text-[9px] font-bold bg-blue-500 text-white rounded-full">NEW</span>
+            @endif
+        </a>
         
         <!-- Laporan Lainnya -->
-        <div x-data="{ open: false }">
+        <div x-data="{ open: {{ in_array($active, ['input-laporan', 'laporan-ramadhan']) ? 'true' : 'false' }} }">
             <button @click="open = !open" 
-                    class="menu-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-gray-600 hover:text-primary-700 hover:bg-primary-50 transition mb-1">
+                    class="menu-item w-full flex items-center justify-between px-4 py-3 rounded-xl {{ in_array($active, ['input-laporan', 'laporan-ramadhan']) ? 'text-primary-700 bg-primary-50 font-semibold' : 'text-gray-600 hover:text-primary-700 hover:bg-primary-50' }} transition mb-1">
                 <div class="flex items-center gap-3">
                     <i class="bi bi-file-earmark-text-fill text-lg"></i>
                     <span class="font-medium">Laporan Lainnya</span>
@@ -145,25 +168,30 @@
                 <i class="bi bi-chevron-down text-xs transition-transform" :class="open ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="open" x-collapse class="ml-4 mt-1 space-y-1 border-l-2 border-primary-100 pl-4">
-                <a href="{{ route('coming-soon', ['menu' => 'Input Laporan']) }}" wire:navigate class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-primary-700 hover:bg-primary-50 transition">
+                <a href="{{ route('input-laporan.index') }}" wire:navigate
+                   class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm {{ $active === 'input-laporan' ? 'text-primary-700 bg-primary-50 font-medium' : 'text-gray-500 hover:text-primary-700 hover:bg-primary-50' }} transition">
                     <i class="bi bi-cash-coin text-xs"></i>
                     <span>Input Laporan</span>
+                    @if($active === 'input-laporan')
+                    <span class="ml-auto w-1.5 h-1.5 bg-primary-500 rounded-full"></span>
+                    @endif
                 </a>
                 <a href="{{ route('coming-soon', ['menu' => 'Laporan Bulanan']) }}" wire:navigate class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-primary-700 hover:bg-primary-50 transition">
                     <i class="bi bi-calendar3 text-xs"></i>
                     <span>Laporan Bulanan</span>
                 </a>
-                <a href="{{ route('coming-soon', ['menu' => 'Laporan Ramadhan']) }}" wire:navigate class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-primary-700 hover:bg-primary-50 transition">
+                <a href="{{ route('laporan-ramadhan.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm {{ $active === 'laporan-ramadhan' ? 'text-primary-700 bg-primary-50 font-medium' : 'text-gray-500 hover:text-primary-700 hover:bg-primary-50' }} transition">
                     <i class="bi bi-moon-stars text-xs"></i>
+                    @if($active === 'laporan-ramadhan') <div class="w-1.5 h-1.5 rounded-full bg-primary-500 mr-1"></div> @endif
                     <span>Laporan Ramadhan</span>
                 </a>
             </div>
         </div>
         
         <!-- Kwitansi -->
-        <div x-data="{ open: false }">
+        <div x-data="{ open: {{ in_array($active, ['kwitansi-v1', 'kwitansi-v2']) ? 'true' : 'false' }} }">
             <button @click="open = !open" 
-                    class="menu-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-gray-600 hover:text-primary-700 hover:bg-primary-50 transition mb-1">
+                    class="menu-item w-full flex items-center justify-between px-4 py-3 rounded-xl {{ in_array($active, ['kwitansi-v1', 'kwitansi-v2']) ? 'text-primary-700 bg-primary-50 font-semibold' : 'text-gray-600 hover:text-primary-700 hover:bg-primary-50' }} transition mb-1">
                 <div class="flex items-center gap-3">
                     <i class="bi bi-receipt text-lg"></i>
                     <span class="font-medium">Kwitansi</span>
@@ -171,11 +199,12 @@
                 <i class="bi bi-chevron-down text-xs transition-transform" :class="open ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="open" x-collapse class="ml-4 mt-1 space-y-1 border-l-2 border-primary-100 pl-4">
-                <a href="{{ route('coming-soon', ['menu' => 'Kwitansi v1']) }}" wire:navigate class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-primary-700 hover:bg-primary-50 transition">
+                <a href="{{ route('kwitansi-v1.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm {{ $active === 'kwitansi-v1' ? 'text-primary-700 bg-primary-50 font-medium' : 'text-gray-500 hover:text-primary-700 hover:bg-primary-50' }} transition">
                     <i class="bi bi-receipt text-xs"></i>
+                    @if($active === 'kwitansi-v1') <div class="w-1.5 h-1.5 rounded-full bg-primary-500 mr-1"></div> @endif
                     <span>Kwitansi v1</span>
                 </a>
-                <a href="{{ route('coming-soon', ['menu' => 'Kwitansi v2']) }}" wire:navigate class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-primary-700 hover:bg-primary-50 transition">
+                <a href="{{ route('coming-soon', ['menu' => 'Kwitansi v2']) }}" wire:navigate class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm {{ $active === 'kwitansi-v2' ? 'text-primary-700 bg-primary-50 font-medium' : 'text-gray-500 hover:text-primary-700 hover:bg-primary-50' }} transition">
                     <i class="bi bi-receipt-cutoff text-xs"></i>
                     <span>Kwitansi v2</span>
                 </a>
@@ -187,15 +216,15 @@
         <p class="px-4 mb-2 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">HRD</p>
         
         <!-- Data Pegawai -->
-        <a href="{{ route('coming-soon', ['menu' => 'Data Pegawai']) }}" wire:navigate
-           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:text-primary-700 hover:bg-primary-50 transition mb-1">
+        <a href="{{ route('data-pegawai.index') }}" wire:navigate
+           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition mb-1 {{ $active === 'data-pegawai' ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-gray-600 hover:text-primary-700 hover:bg-primary-50' }}">
             <i class="bi bi-person-badge-fill text-lg"></i>
             <span class="font-medium">Data Pegawai</span>
         </a>
         
         <!-- Absensi -->
-        <a href="{{ route('coming-soon', ['menu' => 'Absensi']) }}" wire:navigate
-           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:text-primary-700 hover:bg-primary-50 transition mb-1">
+        <a href="{{ route('absensi.index') }}" wire:navigate
+           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition mb-1 {{ $active === 'absensi' ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-gray-600 hover:text-primary-700 hover:bg-primary-50' }}">
             <i class="bi bi-calendar-check-fill text-lg"></i>
             <span class="font-medium">Absensi</span>
         </a>
@@ -205,22 +234,22 @@
         <p class="px-4 mb-2 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Lainnya</p>
         
         <!-- Partnership -->
-        <a href="{{ route('coming-soon', ['menu' => 'Partnership']) }}" wire:navigate
-           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:text-primary-700 hover:bg-primary-50 transition mb-1">
+        <a href="{{ route('partnership.index') }}" wire:navigate
+           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition mb-1 {{ $active === 'partnership' ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-gray-600 hover:text-primary-700 hover:bg-primary-50' }}">
             <i class="bi bi-building text-lg"></i>
             <span class="font-medium">Partnership</span>
         </a>
         
         <!-- Penyebaran Toko -->
-        <a href="{{ route('coming-soon', ['menu' => 'Penyebaran Toko']) }}" wire:navigate
-           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:text-primary-700 hover:bg-primary-50 transition mb-1">
+        <a href="{{ route('penyebaran-toko.index') }}" wire:navigate
+           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition mb-1 {{ $active === 'penyebaran-toko' ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-gray-600 hover:text-primary-700 hover:bg-primary-50' }}">
             <i class="bi bi-geo-alt-fill text-lg"></i>
             <span class="font-medium">Penyebaran Toko</span>
         </a>
         
         <!-- User Management -->
-        <a href="{{ route('coming-soon', ['menu' => 'Manajemen User']) }}" wire:navigate
-           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:text-primary-700 hover:bg-primary-50 transition mb-1">
+        <a href="{{ route('manajemen-user.index') }}" wire:navigate
+           class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition mb-1 {{ $active === 'manajemen-user' ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-gray-600 hover:text-primary-700 hover:bg-primary-50' }}">
             <i class="bi bi-person-gear text-lg"></i>
             <span class="font-medium">Manajemen User</span>
         </a>

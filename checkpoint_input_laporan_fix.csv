@@ -1,0 +1,9 @@
+No,Task,Status,File,Detail
+1,Fix Alpine crash (this.emptyForm()),DONE,resources/views/input-laporan/index.blade.php,"Replaced form: this.emptyForm() with inline object literal in Alpine data. this is undefined during object construction — crashed entire component preventing data fetch & render."
+2,Add sticky header with hamburger menu,DONE,resources/views/input-laporan/index.blade.php,"Added standard <header class=sticky top-0 z-40> with hamburger button (@click=sidebarOpen=true) for mobile sidebar toggle. Matches daftar.blade.php and laporan-perolehan patterns."
+3,Fix content padding,DONE,resources/views/input-laporan/index.blade.php,"Replaced <div class=max-w-full> with <div class=p-4 md:p-6 space-y-5> matching other pages' standard layout."
+4,Move modals to @push(before-sidebar),DONE,resources/views/input-laporan/index.blade.php,"Moved loading overlay + form modal (z-[80]) + delete modal (z-[90]) + toast (z-[100]) from main slot to @push('before-sidebar'). Proper z-index layering above sidebar."
+5,Remove duplicate CSS,DONE,resources/views/input-laporan/index.blade.php,"Removed .stat-card duplicate (already in shared.css). Removed .growth-up/.growth-down classes (replaced with inline Tailwind classes for growth indicators)."
+6,Improve stats cards design,DONE,resources/views/input-laporan/index.blade.php,"Redesigned to match rounded-2xl pattern. Added growth indicators with x-if templates for positive/negative/stable states using nullish coalescing."
+7,Improve number formatting,DONE,resources/views/input-laporan/index.blade.php,"Changed toLocaleString() to toLocaleString('id-ID') for proper Indonesian number formatting throughout."
+8,View compilation verified,DONE,Blade cache,"php artisan view:cache — SUCCESS"

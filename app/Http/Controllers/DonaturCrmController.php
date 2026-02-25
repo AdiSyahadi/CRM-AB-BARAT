@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Donatur;
+use App\Models\CustomerService;
 use App\Models\DonaturNote;
 use App\Models\DonaturActivityLog;
 use App\Models\LaporanPerolehan;
@@ -21,13 +22,9 @@ class DonaturCrmController extends Controller
      */
     public function index(Request $request)
     {
-        // Get list of CS for dropdown
-        $csList = DB::table('donaturs')
-            ->whereNotNull('nama_cs')
-            ->where('nama_cs', '!=', '')
-            ->distinct()
-            ->pluck('nama_cs')
-            ->sort()
+        // Get list of CS for dropdown (from customer_services table)
+        $csList = CustomerService::orderBy('name')
+            ->pluck('name')
             ->values();
         
         // Get list of kategori donatur

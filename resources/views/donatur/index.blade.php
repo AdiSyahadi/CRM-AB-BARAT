@@ -1149,10 +1149,10 @@
                                                 class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition bg-white text-sm appearance-none">
                                             <option value="">Pilih CS</option>
                                             @php
-                                                $csListForm = \App\Models\Donatur::select('nama_cs')->distinct()->whereNotNull('nama_cs')->where('nama_cs', '!=', '')->orderBy('nama_cs')->pluck('nama_cs');
+                                                $csListForm = \App\Models\CustomerService::orderBy('name')->get();
                                             @endphp
                                             @foreach($csListForm as $cs)
-                                                <option value="{{ $cs }}">{{ $cs }}</option>
+                                                <option value="{{ $cs->name }}">{{ $cs->name }}</option>
                                             @endforeach
                                         </select>
                                         <i class="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
