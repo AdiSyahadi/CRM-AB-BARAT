@@ -1,0 +1,2 @@
+No,Patch,File,Aksi,Keterangan
+1,015,resources/views/donasi-web/index.blade.php,EDIT,Ubah default period dari '30d' ke 'all' agar semua data donasi ditampilkan saat pertama kali dashboard dibuka

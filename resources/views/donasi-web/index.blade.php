@@ -675,7 +675,7 @@ function donasiWebApp() {
         dataLoaded: false,
         sidebarOpen: false,
         activeTab: 'trend',
-        period: '30d',
+        period: 'all',
         campaignFilter: 'all',
         statusFilter: '1',
         trendGroupBy: 'monthly',

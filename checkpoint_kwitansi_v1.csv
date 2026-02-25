@@ -1,4 +1,0 @@
-Patch,Objective,Files Changed,Status,Notes
-1,Controller + Routes,app/Http/Controllers/KwitansiCrmController.php; routes/web.php,Done,"Created KwitansiCrmController with index/apiList/apiStats/apiStore/apiShow/apiUpdate/apiDelete/apiBulkDelete. Added view route kwitansi-v1 and API prefix group."
-2,Blade View,resources/views/kwitansi/index.blade.php,Done,"Full CRUD UI: stats cards (total/nominal/today), search + date filter, sortable table with pagination, create/edit modal, delete confirm modal, bulk delete, print PDF link, Alpine.js component with fetch-based API calls."
-3,Sidebar Link,resources/views/components/sidebar.blade.php,Done,"Updated Kwitansi v1 link from coming-soon to route('kwitansi-v1.index'). Added active state support with auto-open on kwitansi-v1/kwitansi-v2. Added active indicator dot."

@@ -1,2 +1,0 @@
-patch_id,objective,files_changed,status,verification_note
-014,Implement Manajemen User CRM menu,app/Models/User.php; app/Http/Controllers/ManajemenUserCrmController.php; resources/views/manajemen-user/index.blade.php; routes/web.php; resources/views/components/sidebar.blade.php,done,7 routes registered - views compile - 6 users in DB - existing routes unaffected - self-delete protection added

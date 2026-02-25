@@ -1,2 +1,0 @@
-patch_id,objective,files_changed,status,verification_note
-011,Implement Partnership menu - controller routes view sidebar,PartnershipCrmController.php + partnership/index.blade.php + web.php + sidebar.blade.php,done,7 routes registered - view compiles - 11 rows confirmed via tinker - sidebar link updated with active state

@@ -1,8 +1,0 @@
-Patch,File,Perubahan,Status,Catatan
-1,database/migrations/2026_02_23_031459_add_customer_service_id_to_donaturs_table.php,Hapus file migration kosong yang tidak diperlukan,Done,Table customer_services sudah ada di DB - tidak perlu migration
-2,app/Http/Controllers/DonaturCrmController.php,Tambah import CustomerService model,Done,use App\Models\CustomerService
-3,app/Http/Controllers/DonaturCrmController.php,Ubah sumber dropdown CS di index() dari DISTINCT nama_cs donaturs ke CustomerService::orderBy('name'),Done,"Sebelum: DB::table('donaturs')->distinct()->pluck('nama_cs'). Sesudah: CustomerService::orderBy('name')->pluck('name')"
-4,resources/views/donatur/index.blade.php,Ubah sumber dropdown CS di form Create/Edit dari Donatur::select('nama_cs') ke CustomerService::orderBy('name'),Done,"Sebelum: Donatur::select('nama_cs')->distinct(). Sesudah: CustomerService::orderBy('name')->get(). Value tetap $cs->name"
-5,Tidak diubah - formatDonaturData(),Field nama_cs di API response tetap baca dari kolom donaturs.nama_cs,N/A,"Kolom nama_cs menyimpan nama CS yg sama dgn customer_services.name - display sudah benar"
-6,Tidak diubah - detailPanel display,x-text detailPanel.donatur?.nama_cs tetap sama,N/A,Karena value nama_cs di donaturs = name di customer_services - tidak perlu lookup tambahan
-7,Tidak diubah - filters.nama_cs di JS,Filter tetap kirim nama_cs string ke API,N/A,Controller filter where('nama_cs' == value) masih match karena value dari dropdown customer_services.name
