@@ -46,9 +46,9 @@ class DonasiWebController extends Controller
 
         // Current period stats
         $current = $query->selectRaw('
-            COALESCE(SUM(nominal), 0) as total_amount,
+            COALESCE(SUM(main_donate), 0) as total_amount,
             COUNT(*) as total_transactions,
-            COALESCE(AVG(nominal), 0) as avg_amount,
+            COALESCE(AVG(main_donate), 0) as avg_amount,
             COUNT(DISTINCT whatsapp) as unique_donors
         ')->first();
 
@@ -60,9 +60,9 @@ class DonasiWebController extends Controller
 
         // Previous period stats for trend comparison
         $previous = $prevQuery->selectRaw('
-            COALESCE(SUM(nominal), 0) as total_amount,
+            COALESCE(SUM(main_donate), 0) as total_amount,
             COUNT(*) as total_transactions,
-            COALESCE(AVG(nominal), 0) as avg_amount,
+            COALESCE(AVG(main_donate), 0) as avg_amount,
             COUNT(DISTINCT whatsapp) as unique_donors
         ')->first();
 
@@ -98,7 +98,7 @@ class DonasiWebController extends Controller
         };
 
         $data = $this->baseQuery($period, $status, $campaign, $request)
-            ->selectRaw("DATE_FORMAT(created_at, ?) as period_label, COUNT(*) as count, SUM(nominal) as total, AVG(nominal) as avg_nominal", [$format])
+            ->selectRaw("DATE_FORMAT(created_at, ?) as period_label, COUNT(*) as count, SUM(main_donate) as total, AVG(main_donate) as avg_nominal", [$format])
             ->groupBy('period_label')
             ->orderBy('period_label')
             ->get();
@@ -106,12 +106,12 @@ class DonasiWebController extends Controller
         // Best month & best day
         $bestMonth = $this->conn()
             ->where('status', 1)
-            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as m, COUNT(*) as cnt, SUM(nominal) as total")
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as m, COUNT(*) as cnt, SUM(main_donate) as total")
             ->groupBy('m')->orderByDesc('total')->first();
 
         $bestDay = $this->conn()
             ->where('status', 1)
-            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m-%d') as d, COUNT(*) as cnt, SUM(nominal) as total")
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m-%d') as d, COUNT(*) as cnt, SUM(main_donate) as total")
             ->groupBy('d')->orderByDesc('total')->first();
 
         // MoM growth
@@ -119,13 +119,13 @@ class DonasiWebController extends Controller
             ->where('status', 1)
             ->whereYear('created_at', now()->year)
             ->whereMonth('created_at', now()->month)
-            ->sum('nominal');
+            ->sum('main_donate');
 
         $lastMonth = $this->conn()
             ->where('status', 1)
             ->whereYear('created_at', now()->subMonth()->year)
             ->whereMonth('created_at', now()->subMonth()->month)
-            ->sum('nominal');
+            ->sum('main_donate');
 
         // Prediction for this month
         $dayOfMonth = now()->day;
@@ -158,7 +158,7 @@ class DonasiWebController extends Controller
         $campaigns = $this->baseQuery($period, $status, 'all', $request)
             ->leftJoin($this->campaignTable . ' as c', $this->table . '.campaign_id', '=', 'c.campaign_id')
             ->leftJoin($this->categoryTable . ' as cat', 'c.category_id', '=', 'cat.id')
-            ->selectRaw($this->table . '.campaign_id, c.title as campaign_title, cat.category as category_name, c.image_url, COUNT(*) as total_donations, SUM(' . $this->table . '.nominal) as total_amount, AVG(' . $this->table . '.nominal) as avg_amount, COUNT(DISTINCT ' . $this->table . '.whatsapp) as unique_donors')
+            ->selectRaw($this->table . '.campaign_id, c.title as campaign_title, cat.category as category_name, c.image_url, COUNT(*) as total_donations, SUM(' . $this->table . '.main_donate) as total_amount, AVG(' . $this->table . '.main_donate) as avg_amount, COUNT(DISTINCT ' . $this->table . '.whatsapp) as unique_donors')
             ->groupBy($this->table . '.campaign_id', 'c.title', 'cat.category', 'c.image_url')
             ->orderByDesc('total_amount')
             ->get()
@@ -174,7 +174,7 @@ class DonasiWebController extends Controller
         $campaignTrends = [];
         foreach ($topCampaignIds as $cid) {
             $trend = $this->baseQuery($period, $status, $cid, $request)
-                ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count, SUM(nominal) as total")
+                ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count, SUM(main_donate) as total")
                 ->groupBy('month')
                 ->orderBy('month')
                 ->get();
@@ -200,7 +200,7 @@ class DonasiWebController extends Controller
         $base = fn() => $this->baseQuery($period, $status, $campaign, $request);
 
         // Payment method breakdown
-        $methods = (clone $base())->selectRaw('payment_method, COUNT(*) as count, SUM(nominal) as total')
+        $methods = (clone $base())->selectRaw('payment_method, COUNT(*) as count, SUM(main_donate) as total')
             ->groupBy('payment_method')
             ->orderByDesc('count')
             ->get()
@@ -215,7 +215,7 @@ class DonasiWebController extends Controller
             });
 
         // Bank/channel breakdown
-        $banks = (clone $base())->selectRaw('payment_code, COUNT(*) as count, SUM(nominal) as total')
+        $banks = (clone $base())->selectRaw('payment_code, COUNT(*) as count, SUM(main_donate) as total')
             ->groupBy('payment_code')
             ->orderByDesc('count')
             ->get()
@@ -225,7 +225,7 @@ class DonasiWebController extends Controller
             });
 
         // Gateway breakdown
-        $gateways = (clone $base())->selectRaw("COALESCE(NULLIF(payment_gateway,''), 'manual') as gateway, COUNT(*) as count, SUM(nominal) as total")
+        $gateways = (clone $base())->selectRaw("COALESCE(NULLIF(payment_gateway,''), 'manual') as gateway, COUNT(*) as count, SUM(main_donate) as total")
             ->groupBy('gateway')
             ->orderByDesc('count')
             ->get();
@@ -310,7 +310,7 @@ class DonasiWebController extends Controller
             ->get();
 
         // Top donors (masked for privacy)
-        $topDonors = (clone $base())->selectRaw('name, whatsapp, email, COUNT(*) as total_donations, SUM(nominal) as total_amount, MAX(created_at) as last_donation')
+        $topDonors = (clone $base())->selectRaw('name, whatsapp, email, COUNT(*) as total_donations, SUM(main_donate) as total_amount, MAX(created_at) as last_donation')
             ->whereNotNull('name')->where('name', '!=', '')
             ->groupBy('name', 'whatsapp', 'email')
             ->orderByDesc('total_amount')
@@ -363,7 +363,7 @@ class DonasiWebController extends Controller
 
         // UTM Source breakdown
         $utmSources = (clone $base())
-            ->selectRaw("COALESCE(NULLIF(utm_source,''), 'direct') as source, COUNT(*) as count, SUM(nominal) as total, AVG(nominal) as avg_amount, COUNT(DISTINCT whatsapp) as unique_donors")
+            ->selectRaw("COALESCE(NULLIF(utm_source,''), 'direct') as source, COUNT(*) as count, SUM(main_donate) as total, AVG(main_donate) as avg_amount, COUNT(DISTINCT whatsapp) as unique_donors")
             ->groupBy('source')
             ->orderByDesc('count')
             ->get()
@@ -379,7 +379,7 @@ class DonasiWebController extends Controller
 
         // UTM Medium breakdown
         $utmMediums = (clone $base())
-            ->selectRaw("COALESCE(NULLIF(utm_medium,''), 'none') as medium, COUNT(*) as count, SUM(nominal) as total")
+            ->selectRaw("COALESCE(NULLIF(utm_medium,''), 'none') as medium, COUNT(*) as count, SUM(main_donate) as total")
             ->groupBy('medium')
             ->orderByDesc('count')
             ->get();
@@ -401,7 +401,7 @@ class DonasiWebController extends Controller
         // Monthly trend per source (top 3 sources)
         $sourceTrend = (clone $base())
             ->whereIn('utm_source', ['ig', 'fb'])
-            ->selectRaw("utm_source as source, DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count, SUM(nominal) as total")
+            ->selectRaw("utm_source as source, DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count, SUM(main_donate) as total")
             ->groupBy('source', 'month')
             ->orderBy('month')
             ->get()
@@ -472,7 +472,7 @@ class DonasiWebController extends Controller
 
         // Heatmap: hour x day-of-week
         $heatmap = (clone $base())
-            ->selectRaw('HOUR(created_at) as hour, DAYOFWEEK(created_at) as dow, COUNT(*) as count, SUM(nominal) as total')
+            ->selectRaw('HOUR(created_at) as hour, DAYOFWEEK(created_at) as dow, COUNT(*) as count, SUM(main_donate) as total')
             ->groupBy('hour', 'dow')
             ->orderBy('dow')
             ->orderBy('hour')
@@ -495,14 +495,14 @@ class DonasiWebController extends Controller
 
         // Hourly aggregation
         $hourly = (clone $base())
-            ->selectRaw('HOUR(created_at) as hour, COUNT(*) as count, SUM(nominal) as total')
+            ->selectRaw('HOUR(created_at) as hour, COUNT(*) as count, SUM(main_donate) as total')
             ->groupBy('hour')
             ->orderBy('hour')
             ->get();
 
         // Daily aggregation (day of week)
         $daily = (clone $base())
-            ->selectRaw('DAYOFWEEK(created_at) as dow, COUNT(*) as count, SUM(nominal) as total')
+            ->selectRaw('DAYOFWEEK(created_at) as dow, COUNT(*) as count, SUM(main_donate) as total')
             ->groupBy('dow')
             ->orderBy('dow')
             ->get()
