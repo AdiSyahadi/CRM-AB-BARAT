@@ -16,12 +16,6 @@ class DonasiWebController extends Controller
     protected $campaignTable = 'wp_dja_campaign';
     protected $categoryTable = 'wp_dja_category';
 
-    /**
-     * Max nominal threshold — filter out corrupt records (phone numbers in nominal field)
-     * Phone numbers stored as int are typically 8-81 billion, so 1 billion is safe
-     */
-    protected $maxNominal = 1000000000;
-
     // ============================================================
     // VIEW
     // ============================================================
@@ -110,24 +104,24 @@ class DonasiWebController extends Controller
             ->get();
 
         // Best month & best day
-        $bestMonth = $this->conn()->where('nominal', '<=', $this->maxNominal)
+        $bestMonth = $this->conn()
             ->where('status', 1)
             ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as m, COUNT(*) as cnt, SUM(nominal) as total")
             ->groupBy('m')->orderByDesc('total')->first();
 
-        $bestDay = $this->conn()->where('nominal', '<=', $this->maxNominal)
+        $bestDay = $this->conn()
             ->where('status', 1)
             ->selectRaw("DATE_FORMAT(created_at, '%Y-%m-%d') as d, COUNT(*) as cnt, SUM(nominal) as total")
             ->groupBy('d')->orderByDesc('total')->first();
 
         // MoM growth
-        $thisMonth = $this->conn()->where('nominal', '<=', $this->maxNominal)
+        $thisMonth = $this->conn()
             ->where('status', 1)
             ->whereYear('created_at', now()->year)
             ->whereMonth('created_at', now()->month)
             ->sum('nominal');
 
-        $lastMonth = $this->conn()->where('nominal', '<=', $this->maxNominal)
+        $lastMonth = $this->conn()
             ->where('status', 1)
             ->whereYear('created_at', now()->subMonth()->year)
             ->whereMonth('created_at', now()->subMonth()->month)
@@ -298,7 +292,7 @@ class DonasiWebController extends Controller
 
         // Repeat donors
         $repeatDonors = DB::connection($this->connection)
-            ->select("SELECT COUNT(*) as cnt FROM (SELECT whatsapp FROM {$this->table} WHERE whatsapp IS NOT NULL AND whatsapp != '' AND nominal <= ? " . ($status !== null ? "AND status = {$status} " : '') . "GROUP BY whatsapp HAVING COUNT(*) > 1) t", [$this->maxNominal]);
+            ->select("SELECT COUNT(*) as cnt FROM (SELECT whatsapp FROM {$this->table} WHERE whatsapp IS NOT NULL AND whatsapp != '' " . ($status !== null ? "AND status = {$status} " : '') . "GROUP BY whatsapp HAVING COUNT(*) > 1) t");
         $repeatCount = $repeatDonors[0]->cnt ?? 0;
 
         // Anonim rate
@@ -336,7 +330,7 @@ class DonasiWebController extends Controller
         // Follow-up funnel (f1 - f5)
         $funnel = [];
         for ($i = 1; $i <= 5; $i++) {
-            $count = $this->conn()->where('nominal', '<=', $this->maxNominal)
+            $count = $this->conn()
                 ->where("f{$i}", 1)->count();
             $funnel["f{$i}"] = $count;
         }
@@ -541,7 +535,7 @@ class DonasiWebController extends Controller
     private function baseQuery(string $period, ?string $status, string $campaign, Request $request, bool $previous = false)
     {
         $t = $this->table;
-        $query = $this->conn()->where("{$t}.nominal", '<=', $this->maxNominal);
+        $query = $this->conn();
 
         // Status filter
         if ($status !== null && $status !== 'all') {
