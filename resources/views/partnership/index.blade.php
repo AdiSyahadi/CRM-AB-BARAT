@@ -214,7 +214,7 @@
 {{-- Sticky Header --}}
 <div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
-        <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600"><i class="bi bi-list text-xl"></i></button>
+        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden text-gray-600"><i class="bi bi-list text-xl"></i></button>
         <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-building text-purple-600 mr-1"></i> Partnership</h1>
     </div>
     <button @click="openCreateModal()" class="ps-btn-primary" style="font-size:12px">
@@ -430,6 +430,7 @@
 <script>
 function partnershipApp() {
     return {
+        sidebarOpen: false,
         loading: true,
         loadingTable: false,
         saving: false,
