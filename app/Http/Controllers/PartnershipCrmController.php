@@ -42,12 +42,18 @@ class PartnershipCrmController extends Controller
         $order   = (string) ($request->get('order') ?? 'desc');
         $dateFrom = $request->get('date_from');
         $dateTo   = $request->get('date_to');
+        $year     = $request->get('year');
 
         $allowed = ['tanggal', 'nama_cs', 'jml_perolehan', 'nama_donatur', 'nama_bank', 'keterangan', 'created_at'];
         if (!in_array($sort, $allowed)) $sort = 'tanggal';
         if (!in_array($order, ['asc', 'desc'])) $order = 'desc';
 
         $query = $this->baseQuery();
+
+        // Filter by year
+        if ($year !== null && $year !== '' && $year !== 'all') {
+            $query->whereYear('tanggal', (int) $year);
+        }
 
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
@@ -65,12 +71,6 @@ class PartnershipCrmController extends Controller
 
         if ($dateTo !== null && $dateTo !== '') {
             $query->where('tanggal', '<=', $dateTo);
-        }
-
-        // Year filter
-        $year = $request->get('year');
-        if ($year && $year !== 'all') {
-            $query->whereYear('tanggal', (int) $year);
         }
 
         $data = $query->orderBy($sort, $order)->paginate($perPage);
@@ -97,13 +97,13 @@ class PartnershipCrmController extends Controller
     public function apiStats(Request $request)
     {
         $year = $request->get('year');
-        $query = $this->baseQuery();
 
-        if ($year && $year !== 'all') {
+        $query = $this->baseQuery();
+        if ($year !== null && $year !== '' && $year !== 'all') {
             $query->whereYear('tanggal', (int) $year);
         }
 
-        $total = $query->count();
+        $total = (clone $query)->count();
         $totalPerolehan = (clone $query)->sum('jml_perolehan');
 
         // Count distinct CS names
@@ -116,60 +116,11 @@ class PartnershipCrmController extends Controller
         // Latest entry date
         $latestDate = (clone $query)->max('tanggal');
 
-        // Available years for filter
-        $years = $this->baseQuery()
-            ->selectRaw('YEAR(tanggal) as y')
-            ->whereNotNull('tanggal')
-            ->groupBy('y')
-            ->orderByDesc('y')
-            ->pluck('y');
-
         return response()->json([
             'total_data'      => $total,
             'total_perolehan' => 'Rp ' . number_format($totalPerolehan ?? 0, 0, ',', '.'),
             'total_cs'        => $totalCs,
             'latest_date'     => $latestDate ? Carbon::parse($latestDate)->format('d M Y') : '-',
-            'years'           => $years,
-        ]);
-    }
-
-    /**
-     * Yearly comparison data
-     */
-    public function apiYearlyComparison()
-    {
-        // Per-year summary
-        $yearly = $this->baseQuery()
-            ->selectRaw('YEAR(tanggal) as year, COUNT(*) as total_data, SUM(jml_perolehan) as total_perolehan, COUNT(DISTINCT nama_cs) as total_cs')
-            ->whereNotNull('tanggal')
-            ->groupByRaw('YEAR(tanggal)')
-            ->orderByDesc('year')
-            ->get()
-            ->map(function ($row) {
-                $row->total_perolehan_fmt = 'Rp ' . number_format($row->total_perolehan ?? 0, 0, ',', '.');
-                $row->total_perolehan = (float) $row->total_perolehan;
-                return $row;
-            });
-
-        // Per-month breakdown for each year (for chart)
-        $years = $yearly->pluck('year');
-        $monthlyBreakdown = [];
-        foreach ($years as $y) {
-            $monthlyBreakdown[$y] = $this->baseQuery()
-                ->selectRaw('MONTH(tanggal) as month, COUNT(*) as total_data, SUM(jml_perolehan) as total_perolehan')
-                ->whereYear('tanggal', $y)
-                ->groupByRaw('MONTH(tanggal)')
-                ->orderBy('month')
-                ->get()
-                ->map(function ($row) {
-                    $row->total_perolehan = (float) $row->total_perolehan;
-                    return $row;
-                });
-        }
-
-        return response()->json([
-            'yearly' => $yearly,
-            'monthly_breakdown' => $monthlyBreakdown,
         ]);
     }
 
@@ -279,5 +230,96 @@ class PartnershipCrmController extends Controller
         $item->delete();
 
         return response()->json(['message' => 'Data partnership berhasil dihapus']);
+    }
+
+    /**
+     * Get list of available years from data
+     */
+    public function apiAvailableYears()
+    {
+        $years = $this->baseQuery()
+            ->selectRaw('YEAR(tanggal) as year')
+            ->whereNotNull('tanggal')
+            ->groupBy('year')
+            ->orderByDesc('year')
+            ->pluck('year')
+            ->filter()
+            ->values();
+
+        return response()->json($years);
+    }
+
+    /**
+     * Year-over-year comparison data
+     */
+    public function apiYearComparison()
+    {
+        $years = $this->baseQuery()
+            ->selectRaw('YEAR(tanggal) as year')
+            ->whereNotNull('tanggal')
+            ->groupBy('year')
+            ->orderByDesc('year')
+            ->pluck('year')
+            ->filter()
+            ->values();
+
+        $comparison = [];
+
+        foreach ($years as $year) {
+            $query = $this->baseQuery()->whereYear('tanggal', $year);
+
+            $totalData = (clone $query)->count();
+            $totalPerolehan = (clone $query)->sum('jml_perolehan');
+            $totalCs = (clone $query)
+                ->whereNotNull('nama_cs')
+                ->where('nama_cs', '!=', '')
+                ->distinct('nama_cs')
+                ->count('nama_cs');
+
+            // Monthly breakdown for the year
+            $monthly = $this->baseQuery()
+                ->whereYear('tanggal', $year)
+                ->selectRaw('MONTH(tanggal) as bulan, SUM(jml_perolehan) as total, COUNT(*) as jumlah')
+                ->groupBy('bulan')
+                ->orderBy('bulan')
+                ->get()
+                ->keyBy('bulan');
+
+            $monthlyData = [];
+            $namaBulan = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            for ($m = 1; $m <= 12; $m++) {
+                $monthlyData[] = [
+                    'bulan'  => $namaBulan[$m],
+                    'total'  => (int) ($monthly->get($m)->total ?? 0),
+                    'jumlah' => (int) ($monthly->get($m)->jumlah ?? 0),
+                ];
+            }
+
+            $comparison[] = [
+                'year'            => (int) $year,
+                'total_data'      => $totalData,
+                'total_perolehan' => $totalPerolehan,
+                'total_perolehan_fmt' => 'Rp ' . number_format($totalPerolehan ?? 0, 0, ',', '.'),
+                'total_cs'        => $totalCs,
+                'monthly'         => $monthlyData,
+            ];
+        }
+
+        // Calculate growth percentages
+        for ($i = 0; $i < count($comparison); $i++) {
+            if ($i < count($comparison) - 1) {
+                $current = $comparison[$i]['total_perolehan'];
+                $previous = $comparison[$i + 1]['total_perolehan'];
+                if ($previous > 0) {
+                    $comparison[$i]['growth_pct'] = round((($current - $previous) / $previous) * 100, 1);
+                } else {
+                    $comparison[$i]['growth_pct'] = $current > 0 ? 100 : 0;
+                }
+            } else {
+                $comparison[$i]['growth_pct'] = null; // No previous year to compare
+            }
+        }
+
+        return response()->json($comparison);
     }
 }

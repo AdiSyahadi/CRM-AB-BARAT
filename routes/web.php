@@ -308,7 +308,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('api/partnership')->name('partnership.api.')->group(function () {
         Route::get('/list', [PartnershipCrmController::class, 'apiList'])->name('list');
         Route::get('/stats', [PartnershipCrmController::class, 'apiStats'])->name('stats');
-        Route::get('/yearly-comparison', [PartnershipCrmController::class, 'apiYearlyComparison'])->name('yearly-comparison');
+        Route::get('/years', [PartnershipCrmController::class, 'apiAvailableYears'])->name('years');
+        Route::get('/year-comparison', [PartnershipCrmController::class, 'apiYearComparison'])->name('year-comparison');
         Route::get('/{id}', [PartnershipCrmController::class, 'apiShow'])->where('id', '[0-9]+')->name('show');
         Route::post('/', [PartnershipCrmController::class, 'apiStore'])->name('store');
         Route::put('/{id}', [PartnershipCrmController::class, 'apiUpdate'])->where('id', '[0-9]+')->name('update');
