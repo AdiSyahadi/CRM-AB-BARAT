@@ -18,8 +18,9 @@ class DonasiWebController extends Controller
 
     /**
      * Max nominal threshold — filter out corrupt records (phone numbers in nominal field)
+     * Phone numbers stored as int are typically 8-81 billion, so 1 billion is safe
      */
-    protected $maxNominal = 10000000;
+    protected $maxNominal = 1000000000;
 
     // ============================================================
     // VIEW
