@@ -35,6 +35,34 @@
     .ps-spin { animation: ps-spin 1s linear infinite; }
     @keyframes ps-spin { to { transform: rotate(360deg); } }
     @keyframes ps-fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Yearly Comparison */
+    .ps-year-section { background: white; border-radius: 12px; border: 1px solid #F3F4F6; overflow: hidden; }
+    .ps-year-section-header {
+        padding: 14px 16px; border-bottom: 1px solid #F3F4F6; display: flex; align-items: center;
+        justify-content: space-between; gap: 8px;
+    }
+    .ps-year-table { width: 100%; font-size: 14px; border-collapse: collapse; }
+    .ps-year-table thead { background: #F9FAFB; font-size: 11px; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ps-year-table th, .ps-year-table td { padding: 12px 16px; text-align: left; }
+    .ps-year-table tbody tr { border-top: 1px solid #F3F4F6; transition: background 0.15s; }
+    .ps-year-table tbody tr:hover { background: #FAFAFE; }
+    .ps-growth-badge {
+        display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px;
+        border-radius: 20px; font-size: 12px; font-weight: 600;
+    }
+    .ps-growth-up { background: #DCFCE7; color: #16A34A; }
+    .ps-growth-down { background: #FEE2E2; color: #DC2626; }
+    .ps-growth-neutral { background: #F3F4F6; color: #6B7280; }
+    .ps-year-filter {
+        padding: 6px 10px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 13px;
+        background: white; outline: none; cursor: pointer; color: #374151;
+    }
+    .ps-year-filter:focus { border-color: #8B5CF6; box-shadow: 0 0 0 2px rgba(139,92,246,0.15); }
+    .ps-tab { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; border: none; cursor: pointer; transition: all 0.2s; }
+    .ps-tab-active { background: #7C3AED; color: white; }
+    .ps-tab-inactive { background: #F3F4F6; color: #6B7280; }
+    .ps-tab-inactive:hover { background: #E5E7EB; }
 </style>
 @endpush
 
@@ -200,6 +228,14 @@
 
     {{-- Filter Bar --}}
     <div class="bg-white rounded-xl border p-3 flex flex-wrap items-center gap-2">
+        {{-- Year Filter --}}
+        <select x-model="filters.year" @change="onYearChange()" class="ps-year-filter" title="Filter Tahun">
+            <option value="all">Semua Tahun</option>
+            <template x-for="y in availableYears" :key="y">
+                <option :value="y" x-text="y"></option>
+            </template>
+        </select>
+        <div style="width:1px;height:24px;background:#E5E7EB" class="hidden sm:block"></div>
         <div class="relative flex-1" style="min-width:180px">
             <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" style="font-size:13px"></i>
             <input type="text" x-model="filters.search" @input.debounce.500ms="resetAndLoad()"
@@ -212,8 +248,119 @@
         </button>
     </div>
 
+    {{-- View Tabs --}}
+    <div class="flex items-center gap-2">
+        <button @click="activeView = 'data'" class="ps-tab" :class="activeView === 'data' ? 'ps-tab-active' : 'ps-tab-inactive'">
+            <i class="bi bi-table"></i> Data
+        </button>
+        <button @click="activeView = 'yearly'; loadYearlyComparison()" class="ps-tab" :class="activeView === 'yearly' ? 'ps-tab-active' : 'ps-tab-inactive'">
+            <i class="bi bi-bar-chart-line"></i> Perbandingan Tahunan
+        </button>
+    </div>
+
+    {{-- ============ YEARLY COMPARISON VIEW ============ --}}
+    <template x-if="activeView === 'yearly'">
+        <div class="space-y-4">
+            {{-- Yearly Summary Table --}}
+            <div class="ps-year-section">
+                <div class="ps-year-section-header">
+                    <div class="flex items-center gap-2">
+                        <i class="bi bi-bar-chart-line text-purple-600"></i>
+                        <h3 style="font-weight:600;font-size:15px;color:#1F2937">Perbandingan Perolehan Tahunan</h3>
+                    </div>
+                </div>
+                <div x-show="loadingYearly" style="padding:40px;text-align:center;color:#9CA3AF">
+                    <i class="bi bi-arrow-repeat ps-spin" style="margin-right:4px"></i> Memuat data tahunan...
+                </div>
+                <div x-show="!loadingYearly" class="overflow-x-auto">
+                    <table class="ps-year-table">
+                        <thead>
+                            <tr>
+                                <th>Tahun</th>
+                                <th style="text-align:right">Total Data</th>
+                                <th style="text-align:right">Total Perolehan</th>
+                                <th style="text-align:right">CS Aktif</th>
+                                <th style="text-align:center">Pertumbuhan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(row, idx) in yearlyData" :key="row.year">
+                                <tr>
+                                    <td>
+                                        <span style="font-weight:700;font-size:16px;color:#7C3AED" x-text="row.year"></span>
+                                    </td>
+                                    <td style="text-align:right;font-weight:500" x-text="row.total_data.toLocaleString('id-ID')"></td>
+                                    <td style="text-align:right;font-weight:700;color:#1F2937" x-text="row.total_perolehan_fmt"></td>
+                                    <td style="text-align:right" x-text="row.total_cs"></td>
+                                    <td style="text-align:center">
+                                        <template x-if="idx < yearlyData.length - 1">
+                                            <span class="ps-growth-badge"
+                                                  :class="yearlyGrowth(idx) > 0 ? 'ps-growth-up' : yearlyGrowth(idx) < 0 ? 'ps-growth-down' : 'ps-growth-neutral'">
+                                                <i class="bi" :class="yearlyGrowth(idx) > 0 ? 'bi-arrow-up-short' : yearlyGrowth(idx) < 0 ? 'bi-arrow-down-short' : 'bi-dash'"></i>
+                                                <span x-text="Math.abs(yearlyGrowth(idx)).toFixed(1) + '%'"></span>
+                                            </span>
+                                        </template>
+                                        <template x-if="idx === yearlyData.length - 1">
+                                            <span class="ps-growth-badge ps-growth-neutral">—</span>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr x-show="yearlyData.length === 0 && !loadingYearly">
+                                <td colspan="5" style="text-align:center;padding:24px;color:#9CA3AF">Tidak ada data</td>
+                            </tr>
+                        </tbody>
+                        {{-- Totals row --}}
+                        <tfoot x-show="yearlyData.length > 0">
+                            <tr style="background:#F9FAFB;border-top:2px solid #E5E7EB;font-weight:700">
+                                <td>Total</td>
+                                <td style="text-align:right" x-text="yearlyData.reduce((s,r) => s + r.total_data, 0).toLocaleString('id-ID')"></td>
+                                <td style="text-align:right;color:#7C3AED" x-text="'Rp ' + yearlyData.reduce((s,r) => s + r.total_perolehan, 0).toLocaleString('id-ID')"></td>
+                                <td style="text-align:right">—</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            {{-- Monthly Breakdown per Year --}}
+            <template x-for="yearRow in yearlyData" :key="'detail-' + yearRow.year">
+                <div class="ps-year-section" x-show="yearlyMonthly[yearRow.year]">
+                    <div class="ps-year-section-header" style="cursor:pointer" @click="toggleYearExpand(yearRow.year)">
+                        <div class="flex items-center gap-2">
+                            <i class="bi text-purple-600" :class="expandedYears.includes(yearRow.year) ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
+                            <span style="font-weight:600;font-size:14px;color:#1F2937" x-text="'Detail Bulanan ' + yearRow.year"></span>
+                        </div>
+                        <span style="font-size:12px;color:#6B7280" x-text="yearRow.total_perolehan_fmt"></span>
+                    </div>
+                    <div x-show="expandedYears.includes(yearRow.year)" x-collapse class="overflow-x-auto">
+                        <table class="ps-year-table">
+                            <thead>
+                                <tr>
+                                    <th>Bulan</th>
+                                    <th style="text-align:right">Total Data</th>
+                                    <th style="text-align:right">Total Perolehan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="m in yearlyMonthly[yearRow.year] || []" :key="m.month">
+                                    <tr>
+                                        <td x-text="monthName(m.month)"></td>
+                                        <td style="text-align:right" x-text="m.total_data.toLocaleString('id-ID')"></td>
+                                        <td style="text-align:right;font-weight:600;color:#7C3AED" x-text="'Rp ' + m.total_perolehan.toLocaleString('id-ID')"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+
     {{-- Data Table --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
+    <div x-show="activeView === 'data'" class="bg-white rounded-xl border overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full" style="font-size:14px">
                 <thead style="background:#F9FAFB;font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em">
@@ -293,6 +440,7 @@ function partnershipApp() {
     return {
         loading: true,
         loadingTable: false,
+        loadingYearly: false,
         saving: false,
         showFormModal: false,
         showDeleteModal: false,
@@ -300,13 +448,20 @@ function partnershipApp() {
         editingId: null,
         deletingId: null,
         detailData: null,
+        activeView: 'data',
 
         stats: {},
         tableData: [],
         pagination: { current_page: 1, last_page: 1, from: 0, to: 0, total: 0, prev_page_url: null, next_page_url: null },
-        filters: { search: '', date_from: '', date_to: '', sort: 'tanggal', order: 'desc' },
+        filters: { search: '', date_from: '', date_to: '', sort: 'tanggal', order: 'desc', year: 'all' },
         form: { tanggal: '', nama_cs: '', jml_perolehan: '', nama_donatur: '', nama_bank: '', no_rek: '', keterangan: '' },
         formErrors: {},
+
+        // Yearly comparison
+        availableYears: [],
+        yearlyData: [],
+        yearlyMonthly: {},
+        expandedYears: [],
 
         async init() {
             try {
@@ -317,8 +472,13 @@ function partnershipApp() {
 
         async loadStats() {
             try {
-                var res = await fetch('/api/partnership/stats', { headers: { 'Accept': 'application/json' } });
-                if (res.ok) this.stats = await res.json();
+                var qs = '?year=' + encodeURIComponent(this.filters.year);
+                var res = await fetch('/api/partnership/stats' + qs, { headers: { 'Accept': 'application/json' } });
+                if (res.ok) {
+                    var data = await res.json();
+                    this.stats = data;
+                    if (data.years) this.availableYears = data.years;
+                }
             } catch (e) { console.error('Stats error', e); }
         },
 
@@ -332,6 +492,7 @@ function partnershipApp() {
                 qs += '&date_to=' + encodeURIComponent(this.filters.date_to);
                 qs += '&sort=' + encodeURIComponent(this.filters.sort);
                 qs += '&order=' + encodeURIComponent(this.filters.order);
+                qs += '&year=' + encodeURIComponent(this.filters.year);
 
                 var res = await fetch('/api/partnership/list?' + qs, { headers: { 'Accept': 'application/json' } });
                 if (!res.ok) { console.error('List API error', res.status); this.loadingTable = false; return; }
@@ -351,8 +512,8 @@ function partnershipApp() {
         },
 
         resetAndLoad: function() { this.loadTable(1); },
-        clearFilters: function() {
-            this.filters = { search: '', date_from: '', date_to: '', sort: 'tanggal', order: 'desc' };
+        clearFilters: function() {, year: 'all' };
+            Promise.all([this.loadStats(), this.loadTable(1)] search: '', date_from: '', date_to: '', sort: 'tanggal', order: 'desc' };
             this.loadTable(1);
         },
         sortBy: function(col) {
@@ -457,6 +618,48 @@ function partnershipApp() {
                 this.detailData = data;
                 this.showDetailModal = true;
             } catch (e) { this.showToast('Gagal memuat detail', 'error'); }
+        },
+
+        // Year filter change handler
+        onYearChange: function() {
+            Promise.all([this.loadStats(), this.loadTable(1)]);
+        },
+
+        // Load yearly comparison data
+        loadYearlyComparison: async function() {
+            if (this.yearlyData.length > 0) return; // already loaded
+            this.loadingYearly = true;
+            try {
+                var res = await fetch('/api/partnership/yearly-comparison', { headers: { 'Accept': 'application/json' } });
+                if (res.ok) {
+                    var json = await res.json();
+                    this.yearlyData = json.yearly || [];
+                    this.yearlyMonthly = json.monthly_breakdown || {};
+                }
+            } catch (e) { console.error('Yearly comparison error', e); }
+            this.loadingYearly = false;
+        },
+
+        // Calculate YoY growth percentage (idx is current year row, idx+1 is previous year)
+        yearlyGrowth: function(idx) {
+            if (idx >= this.yearlyData.length - 1) return 0;
+            var current = this.yearlyData[idx].total_perolehan;
+            var previous = this.yearlyData[idx + 1].total_perolehan;
+            if (previous === 0) return current > 0 ? 100 : 0;
+            return ((current - previous) / previous) * 100;
+        },
+
+        // Month name helper
+        monthName: function(m) {
+            var names = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            return names[m] || 'Bulan ' + m;
+        },
+
+        // Toggle year detail expansion
+        toggleYearExpand: function(year) {
+            var idx = this.expandedYears.indexOf(year);
+            if (idx === -1) { this.expandedYears.push(year); }
+            else { this.expandedYears.splice(idx, 1); }
         },
 
         showToast: function(message, type) {

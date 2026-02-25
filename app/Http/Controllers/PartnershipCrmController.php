@@ -67,6 +67,12 @@ class PartnershipCrmController extends Controller
             $query->where('tanggal', '<=', $dateTo);
         }
 
+        // Year filter
+        $year = $request->get('year');
+        if ($year && $year !== 'all') {
+            $query->whereYear('tanggal', (int) $year);
+        }
+
         $data = $query->orderBy($sort, $order)->paginate($perPage);
 
         $data->getCollection()->transform(function ($item) {
@@ -88,26 +94,82 @@ class PartnershipCrmController extends Controller
     /**
      * Stats for dashboard cards
      */
-    public function apiStats()
+    public function apiStats(Request $request)
     {
-        $total = $this->baseQuery()->count();
-        $totalPerolehan = $this->baseQuery()->sum('jml_perolehan');
+        $year = $request->get('year');
+        $query = $this->baseQuery();
+
+        if ($year && $year !== 'all') {
+            $query->whereYear('tanggal', (int) $year);
+        }
+
+        $total = $query->count();
+        $totalPerolehan = (clone $query)->sum('jml_perolehan');
 
         // Count distinct CS names
-        $totalCs = $this->baseQuery()
+        $totalCs = (clone $query)
             ->whereNotNull('nama_cs')
             ->where('nama_cs', '!=', '')
             ->distinct('nama_cs')
             ->count('nama_cs');
 
         // Latest entry date
-        $latestDate = $this->baseQuery()->max('tanggal');
+        $latestDate = (clone $query)->max('tanggal');
+
+        // Available years for filter
+        $years = $this->baseQuery()
+            ->selectRaw('YEAR(tanggal) as y')
+            ->whereNotNull('tanggal')
+            ->groupBy('y')
+            ->orderByDesc('y')
+            ->pluck('y');
 
         return response()->json([
             'total_data'      => $total,
             'total_perolehan' => 'Rp ' . number_format($totalPerolehan ?? 0, 0, ',', '.'),
             'total_cs'        => $totalCs,
             'latest_date'     => $latestDate ? Carbon::parse($latestDate)->format('d M Y') : '-',
+            'years'           => $years,
+        ]);
+    }
+
+    /**
+     * Yearly comparison data
+     */
+    public function apiYearlyComparison()
+    {
+        // Per-year summary
+        $yearly = $this->baseQuery()
+            ->selectRaw('YEAR(tanggal) as year, COUNT(*) as total_data, SUM(jml_perolehan) as total_perolehan, COUNT(DISTINCT nama_cs) as total_cs')
+            ->whereNotNull('tanggal')
+            ->groupByRaw('YEAR(tanggal)')
+            ->orderByDesc('year')
+            ->get()
+            ->map(function ($row) {
+                $row->total_perolehan_fmt = 'Rp ' . number_format($row->total_perolehan ?? 0, 0, ',', '.');
+                $row->total_perolehan = (float) $row->total_perolehan;
+                return $row;
+            });
+
+        // Per-month breakdown for each year (for chart)
+        $years = $yearly->pluck('year');
+        $monthlyBreakdown = [];
+        foreach ($years as $y) {
+            $monthlyBreakdown[$y] = $this->baseQuery()
+                ->selectRaw('MONTH(tanggal) as month, COUNT(*) as total_data, SUM(jml_perolehan) as total_perolehan')
+                ->whereYear('tanggal', $y)
+                ->groupByRaw('MONTH(tanggal)')
+                ->orderBy('month')
+                ->get()
+                ->map(function ($row) {
+                    $row->total_perolehan = (float) $row->total_perolehan;
+                    return $row;
+                });
+        }
+
+        return response()->json([
+            'yearly' => $yearly,
+            'monthly_breakdown' => $monthlyBreakdown,
         ]);
     }
 
