@@ -14,7 +14,7 @@ class KwitansiController extends Controller
         $kwitansi = Kwitansi::find($id);
 
         // Path ke template PDF
-        $templatePath = storage_path('app/public/kwitansi_template/kwitansi_01.pdf');
+        $templatePath = public_path('templates/kwitansi/kwitansi_01.pdf');
 
         // Konversi ukuran pixel ke milimeter (misalnya, 72 DPI)
         $width = 155.22;  // 440 pixels = 155.22 mm
