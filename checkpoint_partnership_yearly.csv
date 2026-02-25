@@ -1,0 +1,15 @@
+Aspek,Detail
+Patch,016 - Filter Tahun + Perbandingan YoY Partnership
+Tanggal,2025-01-20
+Status,Selesai - Siap Deploy
+Objektif,"Filter perolehan partnership per tahun dan perbandingan tahun ke tahun (YoY)"
+File Diubah,"app/Http/Controllers/PartnershipCrmController.php, resources/views/partnership/index.blade.php, routes/web.php"
+Fitur Baru - Filter Tahun,"Dropdown filter tahun di atas stat cards, memfilter stat cards + tabel data sekaligus"
+Fitur Baru - YoY Comparison,"Tabel perbandingan antar tahun: total data, total perolehan, CS aktif, % pertumbuhan"
+Fitur Baru - Grafik Bulanan,"Bar chart visual perolehan per bulan untuk setiap tahun"
+Endpoint Baru 1,"GET /api/partnership/years — daftar tahun yang memiliki data"
+Endpoint Baru 2,"GET /api/partnership/year-comparison — data lengkap per tahun + monthly breakdown + growth %"
+Perubahan apiStats,"Accept ?year= parameter, filter by YEAR(tanggal)"
+Perubahan apiList,"Accept ?year= parameter, filter by YEAR(tanggal)"
+Auto Refresh,"CRUD (tambah/edit/hapus) otomatis refresh YoY + years data"
+Regresi,Tidak ada — fitur existing tetap berfungsi (default year='all' = tampil semua)
