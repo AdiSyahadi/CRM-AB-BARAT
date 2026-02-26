@@ -1386,7 +1386,7 @@
                                 <div class="flex gap-2">
                                     <!-- Status Filter - Realtime -->
                                     <select x-model="tableFilterInputs.status"
-                                            @change="tableFilterInputs.from_date = ''; tableFilterInputs.to_date = ''; drp.startDate = null; drp.endDate = null; drp.step = 1; applyStatusFilter()"
+                                            @change="tableFilterInputs.from_date = ''; tableFilterInputs.to_date = ''; drp.startDate = null; drp.endDate = null; drp.step = 0; applyStatusFilter()"
                                             class="flex-1 px-3 py-2 bg-gray-50 border rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
                                             :class="tableFilterInputs.status !== 'all' ? 'border-primary-300 bg-primary-50' : 'border-gray-200'">
                                         <option value="all">Semua Status</option>
@@ -1744,21 +1744,21 @@
 
 @push('scripts')
     <script>
-        // Initial data from backend
-        const initialCharts = @json($charts);
-        const initialStats = @json($stats);
-        const initialTable = @json($initialTableData);
+        // Initial data from backend (var to prevent redeclaration on Livewire SPA navigation)
+        var initialCharts = @json($charts);
+        var initialStats = @json($stats);
+        var initialTable = @json($initialTableData);
         
         // Chart instances - Desktop
-        let trendChart, trendJumatChart, performaHarianChart, timChart, csChart, topDonaturChart, retentionChart, repeatChart;
+        var trendChart, trendJumatChart, performaHarianChart, timChart, csChart, topDonaturChart, retentionChart, repeatChart, segmentasiChart;
         // Chart instances - Mobile
-        let timChartMobile, csChartMobile, topDonaturChartMobile, retentionChartMobile, repeatChartMobile;
+        var timChartMobile, csChartMobile, topDonaturChartMobile, retentionChartMobile, repeatChartMobile, segmentasiChartMobile;
         
         // Month names
-        const bulanNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        var bulanNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         
         // Colors
-        const colors = {
+        var colors = {
             primary: '#10B981',
             primaryLight: '#34D399',
             primaryDark: '#059669',
@@ -1945,7 +1945,7 @@
                     this.filters.to_date = '';
                     this.drp.startDate = null;
                     this.drp.endDate = null;
-                    this.drp.step = 1;
+                    this.drp.step = 0;
                     await this.applyTableFilters();
                 },
                 
