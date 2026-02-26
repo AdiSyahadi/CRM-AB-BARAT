@@ -499,10 +499,67 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <!-- Header Date Range Picker (stats only) -->
+                        <div class="relative">
+                            <div @click="hdrDrp.open = !hdrDrp.open"
+                                 class="flex items-center gap-2 rounded-lg px-3 py-1.5 cursor-pointer transition-colors text-sm font-medium"
+                                 :class="hdrDrp.startDate && hdrDrp.endDate ? 'bg-primary-50 hover:bg-primary-100 border border-primary-200 text-primary-700' : 'bg-gray-50 hover:bg-gray-100 text-gray-700'">
+                                <i class="bi bi-calendar-range text-primary-500 text-sm"></i>
+                                <span x-text="hdrDrpDisplayText()" class="max-w-[160px] truncate"></span>
+                                <template x-if="hdrDrp.startDate && hdrDrp.endDate">
+                                    <button @click.stop="hdrDrpClear()" class="text-gray-400 hover:text-red-500 transition ml-0.5">
+                                        <i class="bi bi-x-circle-fill text-xs"></i>
+                                    </button>
+                                </template>
+                                <i class="bi text-gray-400 text-[10px]" :class="hdrDrp.open ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                            </div>
+                            {{-- Calendar Popover --}}
+                            <div x-show="hdrDrp.open" x-cloak
+                                 x-transition:enter="transition ease-out duration-150"
+                                 x-transition:enter-start="opacity-0 translate-y-1"
+                                 x-transition:enter-end="opacity-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-100"
+                                 x-transition:leave-start="opacity-100 translate-y-0"
+                                 x-transition:leave-end="opacity-0 translate-y-1"
+                                 @click.outside="hdrDrp.open = false"
+                                 class="drp-popover" style="left:auto;right:0;">
+                                <div class="drp-nav">
+                                    <button @click="hdrDrpPrevMonth()" type="button"><i class="bi bi-chevron-left"></i></button>
+                                    <span style="font-size:14px;font-weight:700;color:#1F2937" x-text="hdrDrpMonthYear()"></span>
+                                    <button @click="hdrDrpNextMonth()" type="button"><i class="bi bi-chevron-right"></i></button>
+                                </div>
+                                <div class="drp-weekdays">
+                                    <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
+                                </div>
+                                <div class="drp-grid">
+                                    <template x-for="cell in hdrDrpGetDays()" :key="cell.key">
+                                        <div @click="hdrDrpSelectDate(cell)"
+                                             @mouseenter="hdrDrpHover(cell)"
+                                             :class="hdrDrpCellClass(cell)"
+                                             class="drp-cell"
+                                             x-text="cell.d || ''"></div>
+                                    </template>
+                                </div>
+                                <div class="drp-presets">
+                                    <button type="button" @click="hdrDrpPreset('7d')" class="drp-preset-btn">7 Hari</button>
+                                    <button type="button" @click="hdrDrpPreset('30d')" class="drp-preset-btn">30 Hari</button>
+                                    <button type="button" @click="hdrDrpPreset('bulan')" class="drp-preset-btn">Bulan Ini</button>
+                                    <button type="button" @click="hdrDrpPreset('3bulan')" class="drp-preset-btn">3 Bulan</button>
+                                    <button type="button" @click="hdrDrpPreset('tahun')" class="drp-preset-btn">Tahun Ini</button>
+                                </div>
+                                <p style="font-size:11px;color:#9CA3AF;text-align:center;margin-top:8px" x-show="hdrDrp.step === 1">
+                                    <i class="bi bi-hand-index"></i> Klik tanggal akhir
+                                </p>
+                                <p style="font-size:10px;color:#6B7280;text-align:center;margin-top:6px">
+                                    <i class="bi bi-info-circle"></i> Hanya mempengaruhi stat card
+                                </p>
+                            </div>
+                        </div>
                         
                         <!-- Active Filters Indicator -->
-                        <template x-if="filters.tim !== 'all' || filters.cs !== 'all' || filters.kategori !== 'all'">
-                            <button @click="filters.tim = 'all'; filters.cs = 'all'; filters.kategori = 'all'; applyHeaderFilters()" 
+                        <template x-if="filters.tim !== 'all' || filters.cs !== 'all' || filters.kategori !== 'all' || (hdrDrp.startDate && hdrDrp.endDate)">
+                            <button @click="filters.tim = 'all'; filters.cs = 'all'; filters.kategori = 'all'; hdrDrpClear(); applyHeaderFilters()" 
                                     class="flex items-center gap-1 text-xs text-red-500 hover:text-red-600 bg-red-50 px-2 py-1 rounded-full">
                                 <i class="bi bi-x-circle"></i>
                                 <span>Reset Filter</span>
@@ -598,6 +655,61 @@
                                 <option value="{{ $k }}">{{ Str::limit($k, 12) }}</option>
                                 @endforeach
                             </select>
+                        </div>
+
+                        <!-- Date Range Pill (stats only) -->
+                        <div class="flex-shrink-0 relative">
+                            <div @click="hdrDrp.open = !hdrDrp.open"
+                                 class="flex items-center gap-1 rounded-full px-3 py-1.5 cursor-pointer transition-colors"
+                                 :class="hdrDrp.startDate && hdrDrp.endDate ? 'bg-primary-50 border border-primary-200' : 'bg-gray-50 border border-gray-200'">
+                                <i class="bi bi-calendar-range text-xs" :class="hdrDrp.startDate ? 'text-primary-600' : 'text-gray-500'"></i>
+                                <span class="text-xs font-medium max-w-[100px] truncate"
+                                      :class="hdrDrp.startDate ? 'text-primary-700' : 'text-gray-600'"
+                                      x-text="hdrDrp.startDate && hdrDrp.endDate ? hdrDrpShortText() : 'Tanggal'"></span>
+                                <template x-if="hdrDrp.startDate && hdrDrp.endDate">
+                                    <button @click.stop="hdrDrpClear()" class="text-gray-400 hover:text-red-500 ml-0.5">
+                                        <i class="bi bi-x-circle-fill text-[10px]"></i>
+                                    </button>
+                                </template>
+                            </div>
+                            {{-- Calendar Popover (mobile) --}}
+                            <div x-show="hdrDrp.open" x-cloak
+                                 x-transition:enter="transition ease-out duration-150"
+                                 x-transition:enter-start="opacity-0 translate-y-1"
+                                 x-transition:enter-end="opacity-100 translate-y-0"
+                                 @click.outside="hdrDrp.open = false"
+                                 class="drp-popover" style="right:0;left:auto;">
+                                <div class="drp-nav">
+                                    <button @click="hdrDrpPrevMonth()" type="button"><i class="bi bi-chevron-left"></i></button>
+                                    <span style="font-size:14px;font-weight:700;color:#1F2937" x-text="hdrDrpMonthYear()"></span>
+                                    <button @click="hdrDrpNextMonth()" type="button"><i class="bi bi-chevron-right"></i></button>
+                                </div>
+                                <div class="drp-weekdays">
+                                    <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
+                                </div>
+                                <div class="drp-grid">
+                                    <template x-for="cell in hdrDrpGetDays()" :key="cell.key">
+                                        <div @click="hdrDrpSelectDate(cell)"
+                                             @mouseenter="hdrDrpHover(cell)"
+                                             :class="hdrDrpCellClass(cell)"
+                                             class="drp-cell"
+                                             x-text="cell.d || ''"></div>
+                                    </template>
+                                </div>
+                                <div class="drp-presets">
+                                    <button type="button" @click="hdrDrpPreset('7d')" class="drp-preset-btn">7 Hari</button>
+                                    <button type="button" @click="hdrDrpPreset('30d')" class="drp-preset-btn">30 Hari</button>
+                                    <button type="button" @click="hdrDrpPreset('bulan')" class="drp-preset-btn">Bulan Ini</button>
+                                    <button type="button" @click="hdrDrpPreset('3bulan')" class="drp-preset-btn">3 Bulan</button>
+                                    <button type="button" @click="hdrDrpPreset('tahun')" class="drp-preset-btn">Tahun Ini</button>
+                                </div>
+                                <p style="font-size:11px;color:#9CA3AF;text-align:center;margin-top:8px" x-show="hdrDrp.step === 1">
+                                    <i class="bi bi-hand-index"></i> Klik tanggal akhir
+                                </p>
+                                <p style="font-size:10px;color:#6B7280;text-align:center;margin-top:6px">
+                                    <i class="bi bi-info-circle"></i> Hanya mempengaruhi stat card
+                                </p>
+                            </div>
                         </div>
                         
                         <!-- Export Dropdown -->
@@ -1814,7 +1926,7 @@
                     table_cs: '{{ $cs ?? "all" }}'
                 },
 
-                // Date Range Picker state
+                // Date Range Picker state (table filter)
                 drp: {
                     open: false,
                     month: new Date().getMonth(),
@@ -1823,6 +1935,16 @@
                     endDate: null,
                     hoverDate: null,
                     step: 0,  // 0=pick start, 1=pick end
+                },
+                // Header Date Range Picker state (stats only)
+                hdrDrp: {
+                    open: false,
+                    month: new Date().getMonth(),
+                    year: new Date().getFullYear(),
+                    startDate: null,
+                    endDate: null,
+                    hoverDate: null,
+                    step: 0,
                 },
                 stats: initialStats,
                 charts: initialCharts,
@@ -2095,6 +2217,140 @@
                     this.applyDateRangeFilter();
                 },
                 // ===== End Date Range Picker =====
+
+                // ===== Header Date Range Picker Methods (stats only) =====
+                _hdrDrpMonths: ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'],
+                hdrDrpMonthYear() {
+                    return this._hdrDrpMonths[this.hdrDrp.month] + ' ' + this.hdrDrp.year;
+                },
+                hdrDrpPrevMonth() {
+                    if (this.hdrDrp.month === 0) { this.hdrDrp.month = 11; this.hdrDrp.year--; }
+                    else { this.hdrDrp.month--; }
+                },
+                hdrDrpNextMonth() {
+                    if (this.hdrDrp.month === 11) { this.hdrDrp.month = 0; this.hdrDrp.year++; }
+                    else { this.hdrDrp.month++; }
+                },
+                hdrDrpGetDays() {
+                    var y = this.hdrDrp.year, m = this.hdrDrp.month;
+                    var firstDay = new Date(y, m, 1).getDay();
+                    var offset = firstDay === 0 ? 6 : firstDay - 1;
+                    var daysInMonth = new Date(y, m + 1, 0).getDate();
+                    var cells = [];
+                    for (var i = 0; i < offset; i++) cells.push({ key: 'e' + i, d: null, date: null, empty: true });
+                    var today = new Date(); today.setHours(0,0,0,0);
+                    for (var d = 1; d <= daysInMonth; d++) {
+                        var dt = new Date(y, m, d);
+                        var iso = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+                        cells.push({ key: iso, d: d, date: iso, empty: false, isToday: dt.getTime() === today.getTime() });
+                    }
+                    return cells;
+                },
+                hdrDrpSelectDate(cell) {
+                    if (!cell.date || cell.empty) return;
+                    if (this.hdrDrp.step === 0) {
+                        this.hdrDrp.startDate = cell.date;
+                        this.hdrDrp.endDate = null;
+                        this.hdrDrp.hoverDate = null;
+                        this.hdrDrp.step = 1;
+                    } else {
+                        var s = this.hdrDrp.startDate, e = cell.date;
+                        if (e < s) { var tmp = s; s = e; e = tmp; }
+                        this.hdrDrp.startDate = s;
+                        this.hdrDrp.endDate = e;
+                        this.hdrDrp.step = 0;
+                        this.hdrDrp.open = false;
+                        this.applyHeaderDateRange();
+                    }
+                },
+                hdrDrpHover(cell) {
+                    if (this.hdrDrp.step === 1 && cell.date) this.hdrDrp.hoverDate = cell.date;
+                },
+                hdrDrpCellClass(cell) {
+                    if (cell.empty) return 'drp-empty';
+                    var cls = [];
+                    if (cell.isToday) cls.push('drp-today');
+                    var s = this.hdrDrp.startDate, e = this.hdrDrp.endDate, h = this.hdrDrp.hoverDate, dt = cell.date;
+                    if (s && e) {
+                        if (dt === s && dt === e) cls.push('drp-start drp-end');
+                        else if (dt === s) cls.push('drp-start');
+                        else if (dt === e) cls.push('drp-end');
+                        else if (dt > s && dt < e) cls.push('drp-in-range');
+                    } else if (s && !e && this.hdrDrp.step === 1) {
+                        var rs = s, re = h || s;
+                        if (re < rs) { var t = rs; rs = re; re = t; }
+                        if (dt === rs && dt === re) cls.push('drp-start drp-end');
+                        else if (dt === rs) cls.push('drp-start');
+                        else if (dt === re) cls.push('drp-hover-end');
+                        else if (dt > rs && dt < re) cls.push('drp-in-range');
+                    }
+                    return cls.join(' ');
+                },
+                hdrDrpDisplayText() {
+                    var s = this.hdrDrp.startDate, e = this.hdrDrp.endDate;
+                    if (s && e) return this._drpFmtShort(s) + ' — ' + this._drpFmtShort(e);
+                    if (s) return this._drpFmtShort(s) + ' — ...';
+                    return 'Rentang Tanggal';
+                },
+                hdrDrpShortText() {
+                    var s = this.hdrDrp.startDate, e = this.hdrDrp.endDate;
+                    if (s && e) {
+                        var sp = s.split('-'), ep = e.split('-');
+                        var mn = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                        return parseInt(sp[2]) + ' ' + mn[parseInt(sp[1])-1] + ' - ' + parseInt(ep[2]) + ' ' + mn[parseInt(ep[1])-1];
+                    }
+                    return 'Tanggal';
+                },
+                async hdrDrpClear() {
+                    this.hdrDrp.startDate = null;
+                    this.hdrDrp.endDate = null;
+                    this.hdrDrp.hoverDate = null;
+                    this.hdrDrp.step = 0;
+                    // Re-fetch stats without date range
+                    await this.applyHeaderDateRange();
+                },
+                hdrDrpPreset(key) {
+                    var now = new Date();
+                    var end = now.toISOString().slice(0, 10);
+                    var start;
+                    if (key === '7d') start = new Date(now.getTime() - 6 * 86400000).toISOString().slice(0, 10);
+                    else if (key === '30d') start = new Date(now.getTime() - 29 * 86400000).toISOString().slice(0, 10);
+                    else if (key === 'bulan') start = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-01';
+                    else if (key === '3bulan') { var d3 = new Date(now.getFullYear(), now.getMonth() - 2, 1); start = d3.toISOString().slice(0, 10); }
+                    else if (key === 'tahun') start = now.getFullYear() + '-01-01';
+                    this.hdrDrp.startDate = start;
+                    this.hdrDrp.endDate = end;
+                    this.hdrDrp.step = 0;
+                    this.hdrDrp.open = false;
+                    var sp = start.split('-');
+                    this.hdrDrp.month = parseInt(sp[1]) - 1;
+                    this.hdrDrp.year = parseInt(sp[0]);
+                    this.applyHeaderDateRange();
+                },
+                // Fetch stats only using header date range
+                async applyHeaderDateRange() {
+                    this.isLoading = true;
+                    this.loadingMessage = 'Memuat statistik...';
+                    try {
+                        var params = new URLSearchParams({
+                            tahun: this.filters.tahun,
+                            tim: this.filters.tim,
+                            cs: this.filters.cs,
+                            kategori: this.filters.kategori
+                        });
+                        if (this.hdrDrp.startDate && this.hdrDrp.endDate) {
+                            params.set('from_date', this.hdrDrp.startDate);
+                            params.set('to_date', this.hdrDrp.endDate);
+                        }
+                        var response = await fetch('/analisis-donatur/stats-data?' + params.toString());
+                        var data = await response.json();
+                        this.stats = data.stats;
+                    } catch (error) {
+                        console.error('Error fetching stats:', error);
+                    }
+                    this.isLoading = false;
+                },
+                // ===== End Header Date Range Picker =====
                 
                 // Apply search filter (manual - button/enter)
                 async applySearchFilter() {
@@ -2173,11 +2429,14 @@
                     this.filters.from_date = '';
                     this.filters.to_date = '';
                     this.filters.search = '';
-                    // Also reset inputs
+                    // Also reset table inputs & table drp
                     this.tableFilterInputs.status = 'all';
                     this.tableFilterInputs.from_date = '';
                     this.tableFilterInputs.to_date = '';
                     this.tableFilterInputs.search = '';
+                    this.drp.startDate = null;
+                    this.drp.endDate = null;
+                    this.drp.step = 0;
                     
                     try {
                         const chartParams = new URLSearchParams({ 
@@ -2187,16 +2446,30 @@
                             kategori: this.filters.kategori
                         });
                         const tableParams = new URLSearchParams(this.filters);
+
+                        // Build stats params (include header date range if set)
+                        const statsParams = new URLSearchParams({
+                            tahun: this.filters.tahun,
+                            tim: this.filters.tim,
+                            cs: this.filters.cs,
+                            kategori: this.filters.kategori
+                        });
+                        if (this.hdrDrp.startDate && this.hdrDrp.endDate) {
+                            statsParams.set('from_date', this.hdrDrp.startDate);
+                            statsParams.set('to_date', this.hdrDrp.endDate);
+                        }
                         
-                        const [chartResponse, tableResponse] = await Promise.all([
+                        const [chartResponse, tableResponse, statsResponse] = await Promise.all([
                             fetch('/analisis-donatur/chart-data?' + chartParams.toString()),
-                            fetch('/analisis-donatur/donatur-list?' + tableParams.toString() + '&page=1')
+                            fetch('/analisis-donatur/donatur-list?' + tableParams.toString() + '&page=1'),
+                            fetch('/analisis-donatur/stats-data?' + statsParams.toString())
                         ]);
                         
                         const chartData = await chartResponse.json();
                         const tableData = await tableResponse.json();
+                        const statsData = await statsResponse.json();
                         
-                        this.stats = chartData.stats;
+                        this.stats = statsData.stats;
                         this.charts = chartData.charts;
                         this.updateCharts();
                         this.table = tableData;

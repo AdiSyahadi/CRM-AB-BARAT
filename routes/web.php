@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/analisis-donatur/export', [AnalisisDonaturController::class, 'export'])->name('analisis-donatur.export');
     Route::get('/analisis-donatur/export-pdf', [AnalisisDonaturController::class, 'exportPdf'])->name('analisis-donatur.export-pdf');
     Route::get('/analisis-donatur/chart-data', [AnalisisDonaturController::class, 'chartData'])->name('analisis-donatur.chart-data');
+    Route::get('/analisis-donatur/stats-data', [AnalisisDonaturController::class, 'statsData'])->name('analisis-donatur.stats-data');
     Route::get('/analisis-donatur/donatur-list', [AnalisisDonaturController::class, 'donaturList'])->name('analisis-donatur.donatur-list');
 
     // ============================================

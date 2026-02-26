@@ -124,10 +124,11 @@ class AnalisisDonaturController extends Controller
     /**
      * Get statistics data
      */
-    private function getStats($tahun, $tim = 'all', $cs = 'all', $kategori = 'all')
+    private function getStats($tahun, $tim = 'all', $cs = 'all', $kategori = 'all', $fromDate = null, $toDate = null)
     {
         // Handle 'all' tahun - default to current year for calculations
         $tahunInt = ($tahun === 'all') ? (int) date('Y') : (int) $tahun;
+        $hasDateRange = $fromDate && $toDate;
         
         // Base filter closure for tim, cs & kategori
         $applyTeamCsFilter = function($query) use ($tim, $cs, $kategori) {
@@ -142,14 +143,22 @@ class AnalisisDonaturController extends Controller
             }
             return $query;
         };
+
+        // Helper: apply date filter (date range OR year)
+        $applyDateFilter = function($query) use ($tahun, $tahunInt, $hasDateRange, $fromDate, $toDate) {
+            if ($hasDateRange) {
+                $query->whereBetween('tanggal', [$fromDate, $toDate]);
+            } elseif ($tahun !== 'all') {
+                $query->whereYear('tanggal', $tahunInt);
+            }
+            return $query;
+        };
         
-        // Total donatur unik (filter by tahun)
+        // Total donatur unik
         $totalDonaturQuery = $applyTeamCsFilter(DB::table('laporans')
             ->whereNotNull('no_hp')
             ->where('no_hp', '!=', ''));
-        if ($tahun !== 'all') {
-            $totalDonaturQuery->whereYear('tanggal', $tahunInt);
-        }
+        $applyDateFilter($totalDonaturQuery);
         $totalDonatur = $totalDonaturQuery->distinct()->count('no_hp');
 
         // Donatur aktif bulan ini
@@ -195,9 +204,7 @@ class AnalisisDonaturController extends Controller
 
         // Total perolehan
         $totalPerolehanQuery = $applyTeamCsFilter(DB::table('laporans'));
-        if ($tahun !== 'all') {
-            $totalPerolehanQuery->whereYear('tanggal', $tahunInt);
-        }
+        $applyDateFilter($totalPerolehanQuery);
         $totalPerolehan = $totalPerolehanQuery->sum('jml_perolehan');
 
         // Tidak aktif 30 hari
@@ -227,9 +234,7 @@ class AnalisisDonaturController extends Controller
         $totalTransaksiQuery = $applyTeamCsFilter(DB::table('laporans')
             ->whereNotNull('no_hp')
             ->where('no_hp', '!=', ''));
-        if ($tahun !== 'all') {
-            $totalTransaksiQuery->whereYear('tanggal', $tahunInt);
-        }
+        $applyDateFilter($totalTransaksiQuery);
         $totalTransaksi = $totalTransaksiQuery->count();
         $avgPerTransaksi = $totalTransaksi > 0 ? $totalPerolehan / $totalTransaksi : 0;
 
@@ -247,9 +252,7 @@ class AnalisisDonaturController extends Controller
             ->select('no_hp')
             ->whereNotNull('no_hp')
             ->where('no_hp', '!=', ''));
-        if ($tahun !== 'all') {
-            $repeatDonorQuery->whereYear('tanggal', $tahunInt);
-        }
+        $applyDateFilter($repeatDonorQuery);
         $repeatDonor = $repeatDonorQuery
             ->groupBy('no_hp')
             ->havingRaw('COUNT(*) > 1')
@@ -1184,6 +1187,23 @@ class AnalisisDonaturController extends Controller
             'charts' => $charts,
             'stats' => $stats
         ]);
+    }
+
+    /**
+     * API endpoint for stats only (AJAX) - used by header date range filter
+     */
+    public function statsData(Request $request)
+    {
+        $tahun = $request->get('tahun', date('Y'));
+        $tim = $request->get('tim', 'all');
+        $cs = $request->get('cs', 'all');
+        $kategori = $request->get('kategori', 'all');
+        $fromDate = $request->get('from_date');
+        $toDate = $request->get('to_date');
+        
+        $stats = $this->getStats($tahun, $tim, $cs, $kategori, $fromDate, $toDate);
+        
+        return response()->json(['stats' => $stats]);
     }
 
     /**
