@@ -103,7 +103,7 @@ class AbsensiCrmController extends Controller
                 : '-';
             $item->jam_fmt = $item->jam ? substr($item->jam, 0, 5) : '-';
             $item->foto_url = $item->foto
-                ? (str_starts_with($item->foto, 'http') ? $item->foto : asset('storage/' . $item->foto))
+                ? (str_starts_with($item->foto, 'http') ? $item->foto : 'https://abbarat.abdashboard.com/' . $item->foto)
                 : null;
             $item->status_color = match ($item->status) {
                 'Hadir' => 'green',
@@ -246,7 +246,7 @@ class AbsensiCrmController extends Controller
                 : '-';
             $item->jam_fmt = $item->jam ? Carbon::parse($item->jam)->format('H:i') : '-';
             $item->foto_url = $item->foto
-                ? asset('absen_foto/' . $item->foto)
+                ? 'https://abbarat.abdashboard.com/' . $item->foto
                 : null;
             $item->tipe_color = $item->tipe_absen === 'Masuk' ? 'green' : 'orange';
             $item->status_label = $item->status_kehadiran ?: '-';
@@ -264,7 +264,7 @@ class AbsensiCrmController extends Controller
         $item = AbsenCs::find($id);
         if (!$item) return response()->json(['message' => 'Data tidak ditemukan'], 404);
 
-        $item->foto_url = $item->foto ? asset('absen_foto/' . $item->foto) : null;
+        $item->foto_url = $item->foto ? 'https://abbarat.abdashboard.com/' . $item->foto : null;
 
         return response()->json($item);
     }
