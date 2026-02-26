@@ -302,9 +302,7 @@ class AnalisisDonaturController extends Controller
         
         // 1. Trend donasi bulanan (affected by tim & cs filter)
         $trendQuery = DB::table('laporans')
-            ->selectRaw('MONTH(tanggal) as bulan, SUM(jml_perolehan) as total, COUNT(DISTINCT no_hp) as donatur')
-            ->whereNotNull('no_hp')
-            ->where('no_hp', '!=', '');
+            ->selectRaw('MONTH(tanggal) as bulan, SUM(jml_perolehan) as total, COUNT(DISTINCT CASE WHEN no_hp IS NOT NULL AND no_hp != \'\' THEN no_hp END) as donatur');
         
         // Apply tim & cs filter
         $applyTeamCsFilter($trendQuery);
@@ -321,9 +319,7 @@ class AnalisisDonaturController extends Controller
 
         // 1b. Trend tahun lalu untuk YoY comparison
         $trendTahunLaluQuery = DB::table('laporans')
-            ->selectRaw('MONTH(tanggal) as bulan, SUM(jml_perolehan) as total, COUNT(DISTINCT no_hp) as donatur')
-            ->whereNotNull('no_hp')
-            ->where('no_hp', '!=', '')
+            ->selectRaw('MONTH(tanggal) as bulan, SUM(jml_perolehan) as total, COUNT(DISTINCT CASE WHEN no_hp IS NOT NULL AND no_hp != \'\' THEN no_hp END) as donatur')
             ->whereYear('tanggal', $tahunInt - 1);
         $applyTeamCsFilter($trendTahunLaluQuery);
         $trendTahunLalu = $trendTahunLaluQuery->groupByRaw('MONTH(tanggal)')
