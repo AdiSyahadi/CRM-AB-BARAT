@@ -202,10 +202,8 @@ class AnalisisDonaturController extends Controller
             ->distinct()
             ->count('no_hp');
 
-        // Total perolehan (only records with no_hp to match chart data)
-        $totalPerolehanQuery = $applyTeamCsFilter(DB::table('laporans')
-            ->whereNotNull('no_hp')
-            ->where('no_hp', '!=', ''));
+        // Total perolehan (semua record termasuk offline tanpa no_hp)
+        $totalPerolehanQuery = $applyTeamCsFilter(DB::table('laporans'));
         $applyDateFilter($totalPerolehanQuery);
         $totalPerolehan = $totalPerolehanQuery->sum('jml_perolehan');
 
@@ -240,10 +238,8 @@ class AnalisisDonaturController extends Controller
         $totalTransaksi = $totalTransaksiQuery->count();
         $avgPerTransaksi = $totalTransaksi > 0 ? $totalPerolehan / $totalTransaksi : 0;
 
-        // Growth YoY (perbandingan dengan tahun lalu, only records with no_hp)
-        $perolehanTahunLaluQuery = $applyTeamCsFilter(DB::table('laporans')
-            ->whereNotNull('no_hp')
-            ->where('no_hp', '!=', ''));
+        // Growth YoY (perbandingan dengan tahun lalu)
+        $perolehanTahunLaluQuery = $applyTeamCsFilter(DB::table('laporans'));
         $perolehanTahunLaluQuery->whereYear('tanggal', $tahunInt - 1);
         $perolehanTahunLalu = $perolehanTahunLaluQuery->sum('jml_perolehan');
         
