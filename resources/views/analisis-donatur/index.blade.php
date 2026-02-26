@@ -120,6 +120,58 @@
         .tab-btn.active { background: #10B981; color: white; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        /* ===== Date Range Picker ===== */
+        .drp-trigger {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 12px; background: #F9FAFB; border: 1px solid #E5E7EB;
+            border-radius: 8px; cursor: pointer; transition: all 0.15s;
+            font-size: 13px; color: #374151; width: 100%;
+        }
+        .drp-trigger:hover { border-color: #A7F3D0; background: #ECFDF5; }
+        .drp-trigger.drp-active { border-color: #10B981; background: #ECFDF5; box-shadow: 0 0 0 2px rgba(16,185,129,0.15); }
+        .drp-popover {
+            position: absolute; top: calc(100% + 6px); left: 0; z-index: 60;
+            background: white; border-radius: 16px; border: 1px solid #E5E7EB;
+            box-shadow: 0 20px 40px -8px rgba(0,0,0,0.12); padding: 16px; width: 320px;
+        }
+        .drp-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .drp-nav button {
+            width: 32px; height: 32px; border-radius: 8px; border: none;
+            background: #F3F4F6; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; color: #6B7280; transition: all 0.15s;
+        }
+        .drp-nav button:hover { background: #E5E7EB; color: #374151; }
+        .drp-weekdays {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            text-align: center; font-size: 11px; color: #9CA3AF;
+            font-weight: 600; margin-bottom: 4px; text-transform: uppercase;
+        }
+        .drp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px 0; }
+        .drp-cell {
+            height: 36px; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; cursor: pointer; position: relative; transition: all 0.08s;
+            border-radius: 0;
+        }
+        .drp-cell:hover:not(.drp-disabled):not(.drp-empty) { background: #D1FAE5; }
+        .drp-cell.drp-today { font-weight: 700; color: #059669; }
+        .drp-cell.drp-disabled { opacity: 0.25; cursor: default; pointer-events: none; }
+        .drp-cell.drp-empty { cursor: default; }
+        .drp-cell.drp-in-range { background: #ECFDF5; }
+        .drp-cell.drp-start { background: #10B981; color: white; border-radius: 50% 0 0 50%; font-weight: 600; }
+        .drp-cell.drp-end { background: #10B981; color: white; border-radius: 0 50% 50% 0; font-weight: 600; }
+        .drp-cell.drp-start.drp-end { border-radius: 50%; }
+        .drp-cell.drp-hover-end { background: #A7F3D0; border-radius: 0 50% 50% 0; }
+        .drp-presets { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 12px; border-top: 1px solid #F3F4F6; margin-top: 12px; }
+        .drp-preset-btn {
+            padding: 5px 12px; border-radius: 20px; border: 1px solid #E5E7EB;
+            background: white; font-size: 12px; color: #6B7280; cursor: pointer;
+            transition: all 0.15s; font-weight: 500;
+        }
+        .drp-preset-btn:hover { border-color: #10B981; color: #059669; background: #ECFDF5; }
+        @media (max-width: 640px) {
+            .drp-popover { width: calc(100vw - 32px); left: 50%; transform: translateX(-50%); }
+        }
         
     </style>
 @endpush
@@ -1334,7 +1386,7 @@
                                 <div class="flex gap-2">
                                     <!-- Status Filter - Realtime -->
                                     <select x-model="tableFilterInputs.status"
-                                            @change="tableFilterInputs.from_date = ''; tableFilterInputs.to_date = ''; applyStatusFilter()"
+                                            @change="tableFilterInputs.from_date = ''; tableFilterInputs.to_date = ''; drp.startDate = null; drp.endDate = null; drp.step = 1; applyStatusFilter()"
                                             class="flex-1 px-3 py-2 bg-gray-50 border rounded-lg text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
                                             :class="tableFilterInputs.status !== 'all' ? 'border-primary-300 bg-primary-50' : 'border-gray-200'">
                                         <option value="all">Semua Status</option>
@@ -1356,7 +1408,7 @@
                                     </select>
                                 </div>
                                 
-                                <!-- Date Range Row -->
+                                <!-- Date Range Picker -->
                                 <div x-show="tableFilterInputs.status === 'all'" 
                                      x-transition:enter="transition ease-out duration-200"
                                      x-transition:enter-start="opacity-0 scale-95"
@@ -1364,21 +1416,61 @@
                                      x-transition:leave="transition ease-in duration-150"
                                      x-transition:leave-start="opacity-100 scale-100"
                                      x-transition:leave-end="opacity-0 scale-95"
-                                     class="flex items-center gap-1.5 sm:gap-2">
-                                    <div class="flex-1 flex items-center gap-1 px-2 py-2 bg-gray-50 border rounded-lg" :class="tableFilterInputs.from_date ? 'border-primary-300 bg-primary-50' : 'border-gray-200'">
-                                        <i class="bi bi-calendar3 text-gray-400 text-xs"></i>
-                                        <input type="date" x-model="tableFilterInputs.from_date"
-                                               @change="applyDateRangeFilter()"
-                                               class="flex-1 bg-transparent text-gray-700 text-sm focus:outline-none"
-                                               title="Dari Tanggal">
+                                     class="relative">
+                                    {{-- Trigger --}}
+                                    <div @click="drp.open = !drp.open" 
+                                         class="drp-trigger" :class="{ 'drp-active': drp.open || (tableFilterInputs.from_date && tableFilterInputs.to_date) }">
+                                        <i class="bi bi-calendar-range text-primary-500"></i>
+                                        <span x-text="drpDisplayText()" class="flex-1 truncate"></span>
+                                        <template x-if="tableFilterInputs.from_date || tableFilterInputs.to_date">
+                                            <button @click.stop="drpClear()" class="text-gray-400 hover:text-red-500 transition">
+                                                <i class="bi bi-x-circle-fill text-sm"></i>
+                                            </button>
+                                        </template>
+                                        <i class="bi text-gray-400 text-xs transition-transform" :class="drp.open ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
                                     </div>
-                                    <span class="text-gray-400 text-xs">-</span>
-                                    <div class="flex-1 flex items-center gap-1 px-2 py-2 bg-gray-50 border rounded-lg" :class="tableFilterInputs.to_date ? 'border-primary-300 bg-primary-50' : 'border-gray-200'">
-                                        <i class="bi bi-calendar3 text-gray-400 text-xs"></i>
-                                        <input type="date" x-model="tableFilterInputs.to_date"
-                                               @change="applyDateRangeFilter()"
-                                               class="flex-1 bg-transparent text-gray-700 text-sm focus:outline-none"
-                                               title="Sampai Tanggal">
+                                    {{-- Calendar Popover --}}
+                                    <div x-show="drp.open" x-cloak
+                                         x-transition:enter="transition ease-out duration-150"
+                                         x-transition:enter-start="opacity-0 translate-y-1"
+                                         x-transition:enter-end="opacity-100 translate-y-0"
+                                         x-transition:leave="transition ease-in duration-100"
+                                         x-transition:leave-start="opacity-100 translate-y-0"
+                                         x-transition:leave-end="opacity-0 translate-y-1"
+                                         @click.outside="drp.open = false"
+                                         class="drp-popover">
+                                        {{-- Navigation --}}
+                                        <div class="drp-nav">
+                                            <button @click="drpPrevMonth()" type="button"><i class="bi bi-chevron-left"></i></button>
+                                            <span style="font-size:14px;font-weight:700;color:#1F2937" x-text="drpMonthYear()"></span>
+                                            <button @click="drpNextMonth()" type="button"><i class="bi bi-chevron-right"></i></button>
+                                        </div>
+                                        {{-- Weekday Headers --}}
+                                        <div class="drp-weekdays">
+                                            <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
+                                        </div>
+                                        {{-- Days Grid --}}
+                                        <div class="drp-grid">
+                                            <template x-for="cell in drpGetDays()" :key="cell.key">
+                                                <div @click="drpSelectDate(cell)"
+                                                     @mouseenter="drpHover(cell)"
+                                                     :class="drpCellClass(cell)"
+                                                     class="drp-cell"
+                                                     x-text="cell.d || ''"></div>
+                                            </template>
+                                        </div>
+                                        {{-- Quick Presets --}}
+                                        <div class="drp-presets">
+                                            <button type="button" @click="drpPreset('7d')" class="drp-preset-btn">7 Hari</button>
+                                            <button type="button" @click="drpPreset('30d')" class="drp-preset-btn">30 Hari</button>
+                                            <button type="button" @click="drpPreset('bulan')" class="drp-preset-btn">Bulan Ini</button>
+                                            <button type="button" @click="drpPreset('3bulan')" class="drp-preset-btn">3 Bulan</button>
+                                            <button type="button" @click="drpPreset('tahun')" class="drp-preset-btn">Tahun Ini</button>
+                                        </div>
+                                        {{-- Selection hint --}}
+                                        <p style="font-size:11px;color:#9CA3AF;text-align:center;margin-top:8px" x-show="drp.step === 1">
+                                            <i class="bi bi-hand-index"></i> Klik tanggal akhir
+                                        </p>
                                     </div>
                                 </div>
                                 
@@ -1429,8 +1521,8 @@
                                 <template x-if="filters.from_date || filters.to_date">
                                     <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full">
                                         <i class="bi bi-calendar3 text-[10px]"></i>
-                                        <span x-text="(filters.from_date || '...') + ' - ' + (filters.to_date || '...')"></span>
-                                        <button @click="filters.from_date = ''; filters.to_date = ''; tableFilterInputs.from_date = ''; tableFilterInputs.to_date = ''; applyTableFilters()" class="hover:text-primary-900">
+                                        <span x-text="drpDisplayText()"></span>
+                                        <button @click="drpClear()" class="hover:text-primary-900">
                                             <i class="bi bi-x"></i>
                                         </button>
                                     </span>
@@ -1721,6 +1813,17 @@
                     search: '{{ $search }}',
                     table_cs: '{{ $cs ?? "all" }}'
                 },
+
+                // Date Range Picker state
+                drp: {
+                    open: false,
+                    month: new Date().getMonth(),
+                    year: new Date().getFullYear(),
+                    startDate: null,  // 'YYYY-MM-DD'
+                    endDate: null,
+                    hoverDate: null,
+                    step: 0,  // 0=pick start, 1=pick end
+                },
                 stats: initialStats,
                 charts: initialCharts,
                 table: initialTable,
@@ -1743,6 +1846,17 @@
                 init() {
                     // Start tip rotation
                     this.startTipRotation();
+                    
+                    // Initialize date range picker from existing filter values
+                    if (this.tableFilterInputs.from_date) {
+                        this.drp.startDate = this.tableFilterInputs.from_date;
+                        var sp = this.tableFilterInputs.from_date.split('-');
+                        this.drp.month = parseInt(sp[1]) - 1;
+                        this.drp.year = parseInt(sp[0]);
+                    }
+                    if (this.tableFilterInputs.to_date) {
+                        this.drp.endDate = this.tableFilterInputs.to_date;
+                    }
                     
                     // Simulate loading progress and initialize charts
                     this.loadInitialData();
@@ -1829,6 +1943,9 @@
                     this.filters.status = this.tableFilterInputs.status;
                     this.filters.from_date = '';
                     this.filters.to_date = '';
+                    this.drp.startDate = null;
+                    this.drp.endDate = null;
+                    this.drp.step = 1;
                     await this.applyTableFilters();
                 },
                 
@@ -1838,6 +1955,146 @@
                     this.filters.to_date = this.tableFilterInputs.to_date;
                     await this.applyTableFilters();
                 },
+
+                // ===== Date Range Picker Methods =====
+                _drpMonths: ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'],
+
+                drpMonthYear() {
+                    return this._drpMonths[this.drp.month] + ' ' + this.drp.year;
+                },
+                drpPrevMonth() {
+                    if (this.drp.month === 0) { this.drp.month = 11; this.drp.year--; }
+                    else { this.drp.month--; }
+                },
+                drpNextMonth() {
+                    if (this.drp.month === 11) { this.drp.month = 0; this.drp.year++; }
+                    else { this.drp.month++; }
+                },
+                drpGetDays() {
+                    var y = this.drp.year, m = this.drp.month;
+                    var firstDay = new Date(y, m, 1).getDay(); // 0=Sun
+                    var offset = firstDay === 0 ? 6 : firstDay - 1; // shift to Mon=0
+                    var daysInMonth = new Date(y, m + 1, 0).getDate();
+                    var cells = [];
+                    // Empty cells before day 1
+                    for (var i = 0; i < offset; i++) {
+                        cells.push({ key: 'e' + i, d: null, date: null, empty: true });
+                    }
+                    // Day cells
+                    var today = new Date(); today.setHours(0,0,0,0);
+                    for (var d = 1; d <= daysInMonth; d++) {
+                        var dt = new Date(y, m, d);
+                        var iso = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+                        cells.push({
+                            key: iso,
+                            d: d,
+                            date: iso,
+                            empty: false,
+                            isToday: dt.getTime() === today.getTime(),
+                        });
+                    }
+                    return cells;
+                },
+                drpSelectDate(cell) {
+                    if (!cell.date || cell.empty) return;
+                    if (this.drp.step === 0) {
+                        // Pick start date
+                        this.drp.startDate = cell.date;
+                        this.drp.endDate = null;
+                        this.drp.hoverDate = null;
+                        this.drp.step = 1;
+                    } else {
+                        // Pick end date
+                        var s = this.drp.startDate, e = cell.date;
+                        if (e < s) { var tmp = s; s = e; e = tmp; }
+                        this.drp.startDate = s;
+                        this.drp.endDate = e;
+                        this.drp.step = 0;
+                        this.drp.open = false;
+                        // Apply to filters
+                        this.tableFilterInputs.from_date = s;
+                        this.tableFilterInputs.to_date = e;
+                        this.applyDateRangeFilter();
+                    }
+                },
+                drpHover(cell) {
+                    if (this.drp.step === 1 && cell.date) {
+                        this.drp.hoverDate = cell.date;
+                    }
+                },
+                drpCellClass(cell) {
+                    if (cell.empty) return 'drp-empty';
+                    var cls = [];
+                    if (cell.isToday) cls.push('drp-today');
+                    var s = this.drp.startDate, e = this.drp.endDate, h = this.drp.hoverDate, dt = cell.date;
+                    if (s && e) {
+                        // Both selected — show range
+                        if (dt === s && dt === e) cls.push('drp-start drp-end');
+                        else if (dt === s) cls.push('drp-start');
+                        else if (dt === e) cls.push('drp-end');
+                        else if (dt > s && dt < e) cls.push('drp-in-range');
+                    } else if (s && !e && this.drp.step === 1) {
+                        // Selecting — show hover preview
+                        var rangeStart = s, rangeEnd = h || s;
+                        if (rangeEnd < rangeStart) { var t = rangeStart; rangeStart = rangeEnd; rangeEnd = t; }
+                        if (dt === rangeStart && dt === rangeEnd) cls.push('drp-start drp-end');
+                        else if (dt === rangeStart) cls.push('drp-start');
+                        else if (dt === rangeEnd) cls.push('drp-hover-end');
+                        else if (dt > rangeStart && dt < rangeEnd) cls.push('drp-in-range');
+                    }
+                    return cls.join(' ');
+                },
+                drpDisplayText() {
+                    var f = this.tableFilterInputs.from_date, t = this.tableFilterInputs.to_date;
+                    if (f && t) {
+                        return this._drpFmtShort(f) + ' — ' + this._drpFmtShort(t);
+                    }
+                    if (f) return this._drpFmtShort(f) + ' — ...';
+                    return 'Pilih rentang tanggal';
+                },
+                _drpFmtShort(iso) {
+                    var parts = iso.split('-');
+                    var mn = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                    return parseInt(parts[2]) + ' ' + mn[parseInt(parts[1]) - 1] + ' ' + parts[0];
+                },
+                drpClear() {
+                    this.drp.startDate = null;
+                    this.drp.endDate = null;
+                    this.drp.hoverDate = null;
+                    this.drp.step = 0;
+                    this.tableFilterInputs.from_date = '';
+                    this.tableFilterInputs.to_date = '';
+                    this.applyDateRangeFilter();
+                },
+                drpPreset(key) {
+                    var now = new Date();
+                    var end = now.toISOString().slice(0, 10);
+                    var start;
+                    if (key === '7d') {
+                        start = new Date(now.getTime() - 6 * 86400000).toISOString().slice(0, 10);
+                    } else if (key === '30d') {
+                        start = new Date(now.getTime() - 29 * 86400000).toISOString().slice(0, 10);
+                    } else if (key === 'bulan') {
+                        start = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-01';
+                    } else if (key === '3bulan') {
+                        var d3 = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+                        start = d3.toISOString().slice(0, 10);
+                    } else if (key === 'tahun') {
+                        start = now.getFullYear() + '-01-01';
+                    }
+                    this.drp.startDate = start;
+                    this.drp.endDate = end;
+                    this.drp.step = 0;
+                    this.drp.open = false;
+                    this.tableFilterInputs.from_date = start;
+                    this.tableFilterInputs.to_date = end;
+                    // Navigate calendar to start month
+                    var sp = start.split('-');
+                    this.drp.month = parseInt(sp[1]) - 1;
+                    this.drp.year = parseInt(sp[0]);
+                    this.applyDateRangeFilter();
+                },
+                // ===== End Date Range Picker =====
                 
                 // Apply search filter (manual - button/enter)
                 async applySearchFilter() {
