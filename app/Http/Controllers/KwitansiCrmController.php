@@ -51,7 +51,7 @@ class KwitansiCrmController extends Controller
         }
 
         if ($tanggal === 'today') {
-            $query->whereDate('tanggal', now()->toDateString());
+            $query->whereDate('tanggal', Carbon::now('Asia/Jakarta')->toDateString());
         } elseif ($tanggal) {
             $query->whereDate('tanggal', $tanggal);
         }
@@ -79,15 +79,16 @@ class KwitansiCrmController extends Controller
 
         $queryBase = Kwitansi::query();
         if ($tanggal === 'today') {
-            $queryBase->whereDate('tanggal', now()->toDateString());
+            $queryBase->whereDate('tanggal', Carbon::now('Asia/Jakarta')->toDateString());
         } elseif ($tanggal) {
             $queryBase->whereDate('tanggal', $tanggal);
         }
 
+        $todayWib = Carbon::now('Asia/Jakarta')->toDateString();
         $total = (clone $queryBase)->count();
         $totalNominal = (clone $queryBase)->sum('jumlah_donasi');
-        $todayCount = Kwitansi::whereDate('tanggal', now()->toDateString())->count();
-        $todayNominal = Kwitansi::whereDate('tanggal', now()->toDateString())->sum('jumlah_donasi');
+        $todayCount = Kwitansi::whereDate('tanggal', $todayWib)->count();
+        $todayNominal = Kwitansi::whereDate('tanggal', $todayWib)->sum('jumlah_donasi');
 
         return response()->json([
             'total_kwitansi' => $total,
