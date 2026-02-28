@@ -84,34 +84,9 @@ class LaporanPerolehan extends Model
             }
         });
 
-        // Auto-create kwitansi jika laporan punya transaksi nyata
-        static::created(function ($laporan) {
-            try {
-                // Rule: hanya jika ada nama donatur DAN nominal > 0
-                $namaDonatur = trim($laporan->nama_donatur ?? '');
-                $jumlahPerolehan = (float) ($laporan->jml_perolehan ?? 0);
-
-                if ($namaDonatur === '' || $jumlahPerolehan <= 0) {
-                    return; // Laporan kosong, skip
-                }
-
-                // Tentukan nama donasi dari field yang tersedia
-                $namaDonasi = trim($laporan->program_utama ?? '')
-                    ?: trim($laporan->program ?? '')
-                    ?: trim($laporan->nama_produk ?? '')
-                    ?: 'Donasi Umum';
-
-                \App\Models\Kwitansi::create([
-                    'tanggal'       => $laporan->tanggal,
-                    'nama_donatur'  => $namaDonatur,
-                    'jumlah_donasi' => $jumlahPerolehan,
-                    'nama_donasi'   => $namaDonasi,
-                    'laporan_id'    => $laporan->id,
-                ]);
-            } catch (\Exception $e) {
-                // Log error tapi jangan gagalkan proses input laporan
-                Log::error('Auto-create kwitansi gagal untuk laporan #' . $laporan->id . ': ' . $e->getMessage());
-            }
-        });
+        // Auto-create kwitansi sekarang ditangani oleh MySQL AFTER INSERT trigger
+        // pada tabel laporans (migration 2026_03_01_100000).
+        // Trigger di level database memastikan kwitansi dibuat dari aplikasi MANAPUN
+        // yang insert ke tabel laporans, bukan hanya dari Laravel Eloquent.
     }
 }

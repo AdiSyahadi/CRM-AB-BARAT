@@ -1,0 +1,2 @@
+patch_id,objective,files_changed,status,verification_note
+022,MySQL AFTER INSERT trigger auto-create kwitansi dari laporans,"database/migrations/2026_03_01_100000_create_trigger_auto_kwitansi_on_laporans.php, app/Models/LaporanPerolehan.php",done,"Trigger bekerja via raw DB insert (simulasi app external). 3 test PASS: create OK, skip nama kosong OK, skip nominal 0 OK. Eloquent created event dihapus untuk cegah duplikasi."
