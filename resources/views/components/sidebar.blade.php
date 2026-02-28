@@ -37,9 +37,7 @@
     <!-- Sidebar Header -->
     <div class="flex items-center justify-between px-5 py-4 border-b border-primary-100 bg-gradient-to-r from-primary-50 to-white">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30">
-                <i class="bi bi-heart-pulse-fill text-white text-lg"></i>
-            </div>
+            <img src="{{ asset('images/logolaz.png') }}" alt="Logo LAZ Al-Bahjah" class="w-10 h-10 object-contain rounded-xl">
             <div>
                 <h1 class="text-base font-bold text-gray-800">Abbarat</h1>
                 <p class="text-[10px] text-gray-500">Management System</p>
