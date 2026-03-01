@@ -1,0 +1,38 @@
+Patch,024
+Judul,Modal ARIA Roles & Labels
+Tanggal,2025-03-02
+Status,DONE
+
+Masalah,"Semua 24 modal di 10 file tidak memiliki role=dialog dan aria-modal=true (WCAG 2.1 AA violation)"
+Penyebab,"Atribut aksesibilitas tidak ditambahkan saat modal dibuat"
+Solusi,"Tambah role=dialog aria-modal=true aria-label pada setiap modal overlay div"
+
+File,Modal,Aria-Label
+resources/views/kwitansi/index.blade.php,showFormModal,Form Kwitansi
+resources/views/kwitansi/index.blade.php,showDeleteModal,Konfirmasi Hapus Kwitansi
+resources/views/laporan-ramadhan/index.blade.php,showPeriodModal,Form Periode Ramadhan
+resources/views/laporan-ramadhan/index.blade.php,showDeleteModal,Konfirmasi Hapus Laporan
+resources/views/pegawai/index.blade.php,showFormModal,Form Pegawai
+resources/views/pegawai/index.blade.php,showDeleteModal,Konfirmasi Hapus Pegawai
+resources/views/pegawai/index.blade.php,showDetailModal,Detail Pegawai
+resources/views/absensi/index.blade.php,showDeleteModal,Konfirmasi Hapus Absensi
+resources/views/partnership/index.blade.php,showFormModal,Form Partnership
+resources/views/partnership/index.blade.php,showDeleteModal,Konfirmasi Hapus Partnership
+resources/views/partnership/index.blade.php,showDetailModal,Detail Partnership
+resources/views/penyebaran-toko/index.blade.php,showFormModal,Form Penyebaran Toko
+resources/views/penyebaran-toko/index.blade.php,showDeleteModal,Konfirmasi Hapus Penyebaran Toko
+resources/views/penyebaran-toko/index.blade.php,showDetailModal,Detail Penyebaran Toko
+resources/views/manajemen-user/index.blade.php,showFormModal,Form User
+resources/views/manajemen-user/index.blade.php,showDeleteModal,Konfirmasi Hapus User
+resources/views/manajemen-user/index.blade.php,showDetailModal,Detail User
+resources/views/customer-service/daftar.blade.php,showDetailModal,Detail Customer Service
+resources/views/customer-service/daftar.blade.php,showFormModal,Form Customer Service
+resources/views/customer-service/daftar.blade.php,showDeleteModal,Konfirmasi Hapus Customer Service
+resources/views/input-laporan/index.blade.php,showFormModal,Form Input Laporan
+resources/views/input-laporan/index.blade.php,showDeleteModal,Konfirmasi Hapus Laporan
+resources/views/donatur/index.blade.php,modals.form,Form Donatur
+resources/views/donatur/index.blade.php,modals.delete,Konfirmasi Hapus Donatur
+
+Total Modal,24
+Total File,10
+Regresi,Tidak ada - hanya menambah atribut HTML tanpa mengubah behavior

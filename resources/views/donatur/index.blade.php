@@ -1030,6 +1030,7 @@
     
     <!-- Create/Edit Modal -->
     <div x-show="modals.form" 
+         role="dialog" aria-modal="true" aria-label="Form Donatur"
          x-transition
          class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-start sm:items-center justify-center p-0 sm:p-4 overflow-y-auto"
          @keydown.escape.window="closeFormModal()">
@@ -1353,6 +1354,7 @@
     
     <!-- Delete Confirmation Modal -->
     <div x-show="modals.delete" 
+         role="dialog" aria-modal="true" aria-label="Konfirmasi Hapus Donatur"
          x-transition
          class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
         <div @click.stop class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">

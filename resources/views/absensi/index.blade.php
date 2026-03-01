@@ -199,6 +199,7 @@
 
 {{-- ============ DELETE CONFIRMATION MODAL ============ --}}
 <div x-show="showDeleteModal" x-cloak x-transition.opacity
+     role="dialog" aria-modal="true" aria-label="Konfirmasi Hapus Absensi"
      class="fixed inset-0 z-[90] flex items-center justify-center bg-black/30 backdrop-blur-sm"
      @keydown.escape.window="showDeleteModal && (showDeleteModal = false)">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6 text-center" @click.outside="showDeleteModal = false">

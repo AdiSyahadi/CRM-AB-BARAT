@@ -51,6 +51,7 @@
 
     {{-- ======= CREATE / EDIT MODAL ======= --}}
     <div x-show="showFormModal" x-cloak
+         role="dialog" aria-modal="true" aria-label="Form Input Laporan"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
@@ -347,6 +348,7 @@
 
     {{-- ======= DELETE CONFIRM MODAL ======= --}}
     <div x-show="showDeleteModal" x-cloak
+         role="dialog" aria-modal="true" aria-label="Konfirmasi Hapus Laporan"
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"

@@ -19,6 +19,7 @@
 @push('before-sidebar')
     <!-- CS Detail Modal -->
     <div x-show="showDetailModal" x-cloak
+         role="dialog" aria-modal="true" aria-label="Detail Customer Service"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
@@ -162,6 +163,7 @@
 
     <!-- Add/Edit CS Modal -->
     <div x-show="showFormModal" x-cloak
+         role="dialog" aria-modal="true" aria-label="Form Customer Service"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
@@ -205,6 +207,7 @@
 
     <!-- Delete Confirmation -->
     <div x-show="showDeleteModal" x-cloak
+         role="dialog" aria-modal="true" aria-label="Konfirmasi Hapus Customer Service"
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"

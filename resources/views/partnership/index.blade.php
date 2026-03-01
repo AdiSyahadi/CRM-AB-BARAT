@@ -97,6 +97,7 @@
 
 {{-- ============ CREATE / EDIT MODAL ============ --}}
 <div x-show="showFormModal" x-cloak x-transition.opacity
+     role="dialog" aria-modal="true" aria-label="Form Partnership"
      class="fixed inset-0 z-[80] flex items-start justify-center pt-10 bg-black/30 backdrop-blur-sm overflow-y-auto pb-10"
      @keydown.escape.window="showFormModal && closeFormModal()">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4" @click.outside="closeFormModal()">
@@ -156,6 +157,7 @@
 
 {{-- ============ DELETE CONFIRMATION MODAL ============ --}}
 <div x-show="showDeleteModal" x-cloak x-transition.opacity
+     role="dialog" aria-modal="true" aria-label="Konfirmasi Hapus Partnership"
      class="fixed inset-0 z-[90] flex items-center justify-center bg-black/30 backdrop-blur-sm"
      @keydown.escape.window="showDeleteModal && (showDeleteModal = false)">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6 text-center" @click.outside="showDeleteModal = false">
@@ -176,6 +178,7 @@
 
 {{-- ============ DETAIL MODAL ============ --}}
 <div x-show="showDetailModal" x-cloak x-transition.opacity
+     role="dialog" aria-modal="true" aria-label="Detail Partnership"
      class="fixed inset-0 z-[80] flex items-start justify-center pt-10 bg-black/30 backdrop-blur-sm overflow-y-auto pb-10"
      @keydown.escape.window="showDetailModal && (showDetailModal = false)">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4" @click.outside="showDetailModal = false">
