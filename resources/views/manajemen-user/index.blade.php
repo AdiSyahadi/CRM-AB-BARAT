@@ -49,19 +49,19 @@
         </div>
         <div class="px-5 py-4 space-y-3">
             <div>
-                <label class="crud-field-label">Nama <span style="color:#EF4444">*</span></label>
+                <label class="crud-field-label">Nama <span class="text-red-500">*</span></label>
                 <input type="text" x-model="form.name" class="crud-field-input" placeholder="Nama lengkap">
                 <template x-if="formErrors.name"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.name[0]"></p></template>
             </div>
             <div>
-                <label class="crud-field-label">Email <span style="color:#EF4444">*</span></label>
+                <label class="crud-field-label">Email <span class="text-red-500">*</span></label>
                 <input type="email" x-model="form.email" class="crud-field-input" placeholder="email@example.com">
                 <template x-if="formErrors.email"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.email[0]"></p></template>
             </div>
             <div>
                 <label class="crud-field-label">
                     Password
-                    <span x-show="!editingId" style="color:#EF4444">*</span>
+                    <span x-show="!editingId" class="text-red-500">*</span>
                     <span x-show="editingId" style="font-weight:400;color:#9CA3AF;font-size:11px">(kosongkan jika tidak ingin mengubah)</span>
                 </label>
                 <div style="position:relative">
@@ -92,7 +92,7 @@
      @keydown.escape.window="showDeleteModal && (showDeleteModal = false)">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6 text-center" @click.outside="showDeleteModal = false">
         <div style="width:48px;height:48px;background:#FEE2E2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-            <i class="bi bi-exclamation-triangle-fill text-xl" style="color:#DC2626"></i>
+            <i class="bi bi-exclamation-triangle-fill text-xl text-red-600"></i>
         </div>
         <h3 class="font-semibold text-gray-800 mb-1">Hapus User?</h3>
         <p class="text-sm text-gray-500 mb-4">Data user yang dihapus tidak dapat dikembalikan.</p>

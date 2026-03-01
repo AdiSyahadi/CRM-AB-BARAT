@@ -57,23 +57,23 @@
         </div>
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div>
-                <label class="crud-field-label">Nama <span style="color:#EF4444">*</span></label>
+                <label class="crud-field-label">Nama <span class="text-red-500">*</span></label>
                 <input type="text" x-model="ubudiyahForm.nama" class="crud-field-input" placeholder="Nama pegawai">
                 <template x-if="formErrors.nama"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama[0]"></p></template>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="crud-field-label">Tanggal <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Tanggal <span class="text-red-500">*</span></label>
                     <input type="date" x-model="ubudiyahForm.tanggal" class="crud-field-input">
                 </div>
                 <div>
-                    <label class="crud-field-label">Jam <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Jam <span class="text-red-500">*</span></label>
                     <input type="time" x-model="ubudiyahForm.jam" class="crud-field-input">
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="crud-field-label">Status <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Status <span class="text-red-500">*</span></label>
                     <select x-model="ubudiyahForm.status" class="crud-field-input">
                         <option value="">— Pilih —</option>
                         <option value="Hadir">Hadir</option>
@@ -125,23 +125,23 @@
         </div>
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div>
-                <label class="crud-field-label">Nama CS <span style="color:#EF4444">*</span></label>
+                <label class="crud-field-label">Nama CS <span class="text-red-500">*</span></label>
                 <input type="text" x-model="harianForm.nama_cs" class="crud-field-input" placeholder="Nama CS">
                 <template x-if="formErrors.nama_cs"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama_cs[0]"></p></template>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="crud-field-label">Tanggal <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Tanggal <span class="text-red-500">*</span></label>
                     <input type="date" x-model="harianForm.tanggal" class="crud-field-input">
                 </div>
                 <div>
-                    <label class="crud-field-label">Jam <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Jam <span class="text-red-500">*</span></label>
                     <input type="time" x-model="harianForm.jam" class="crud-field-input">
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="crud-field-label">Tipe Absen <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Tipe Absen <span class="text-red-500">*</span></label>
                     <select x-model="harianForm.tipe_absen" class="crud-field-input">
                         <option value="">— Pilih —</option>
                         <option value="Masuk">Masuk</option>
@@ -179,7 +179,7 @@
      @keydown.escape.window="showDeleteModal && (showDeleteModal = false)">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6 text-center" @click.outside="showDeleteModal = false">
         <div style="width:48px;height:48px;background:#FEE2E2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-            <i class="bi bi-exclamation-triangle-fill text-xl" style="color:#DC2626"></i>
+            <i class="bi bi-exclamation-triangle-fill text-xl text-red-600"></i>
         </div>
         <h3 class="font-semibold text-gray-800 mb-1">Hapus Data Absensi?</h3>
         <p class="text-sm text-gray-500 mb-4">Data yang dihapus tidak dapat dikembalikan.</p>
@@ -200,7 +200,7 @@
     <div style="max-width:480px;margin:0 16px;position:relative" @click.stop>
         <img :src="photoUrl" style="border-radius:12px;box-shadow:0 25px 50px rgba(0,0,0,.25);max-height:80vh;width:auto" alt="Foto Absensi">
         <button @click="showPhotoModal = false" aria-label="Tutup" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.8);border-radius:50%;padding:8px;border:none;cursor:pointer">
-            <i class="bi bi-x-lg" style="color:#374151"></i>
+            <i class="bi bi-x-lg text-gray-700"></i>
         </button>
     </div>
 </div>
@@ -227,27 +227,27 @@
     {{-- Stat Cards - showing BOTH daily + total --}}
     <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
         <div class="ab-stat-card">
-            <div class="flex items-center gap-2 mb-1"><i class="bi bi-moon-stars-fill" style="color:#4F46E5"></i><span style="font-size:12px;color:#6B7280">Ubudiyah</span></div>
+            <div class="flex items-center gap-2 mb-1"><i class="bi bi-moon-stars-fill text-indigo-600"></i><span style="font-size:12px;color:#6B7280">Ubudiyah</span></div>
             <p style="font-size:24px;font-weight:700;color:#1F2937" x-text="stats.ubudiyah_today ?? '—'"></p>
             <p style="font-size:11px;color:#9CA3AF;margin-top:2px">Total: <span style="font-weight:600;color:#4F46E5" x-text="stats.ubudiyah_total ?? '-'"></span></p>
         </div>
         <div class="ab-stat-card">
-            <div class="flex items-center gap-2 mb-1"><i class="bi bi-sunrise-fill" style="color:#D97706"></i><span style="font-size:12px;color:#6B7280">Tahajud</span></div>
+            <div class="flex items-center gap-2 mb-1"><i class="bi bi-sunrise-fill text-amber-600"></i><span style="font-size:12px;color:#6B7280">Tahajud</span></div>
             <p style="font-size:24px;font-weight:700;color:#1F2937" x-text="stats.tahajud_today ?? '—'"></p>
             <p style="font-size:11px;color:#9CA3AF;margin-top:2px" x-text="'Tgl: ' + (stats.tanggal || '-')"></p>
         </div>
         <div class="ab-stat-card">
-            <div class="flex items-center gap-2 mb-1"><i class="bi bi-sun-fill" style="color:#EA580C"></i><span style="font-size:12px;color:#6B7280">Dhuha</span></div>
+            <div class="flex items-center gap-2 mb-1"><i class="bi bi-sun-fill text-orange-600"></i><span style="font-size:12px;color:#6B7280">Dhuha</span></div>
             <p style="font-size:24px;font-weight:700;color:#1F2937" x-text="stats.dhuha_today ?? '—'"></p>
             <p style="font-size:11px;color:#9CA3AF;margin-top:2px" x-text="'Tgl: ' + (stats.tanggal || '-')"></p>
         </div>
         <div class="ab-stat-card">
-            <div class="flex items-center gap-2 mb-1"><i class="bi bi-box-arrow-in-right" style="color:#16A34A"></i><span style="font-size:12px;color:#6B7280">CS Masuk</span></div>
+            <div class="flex items-center gap-2 mb-1"><i class="bi bi-box-arrow-in-right text-green-600"></i><span style="font-size:12px;color:#6B7280">CS Masuk</span></div>
             <p style="font-size:24px;font-weight:700;color:#1F2937" x-text="stats.cs_masuk_today ?? '—'"></p>
             <p style="font-size:11px;color:#9CA3AF;margin-top:2px">Total CS: <span style="font-weight:600;color:#16A34A" x-text="stats.cs_total ?? '-'"></span></p>
         </div>
         <div class="ab-stat-card col-span-2 lg:col-span-1">
-            <div class="flex items-center gap-2 mb-1"><i class="bi bi-building" style="color:#0284C7"></i><span style="font-size:12px;color:#6B7280">WFO / WFH</span></div>
+            <div class="flex items-center gap-2 mb-1"><i class="bi bi-building text-sky-600"></i><span style="font-size:12px;color:#6B7280">WFO / WFH</span></div>
             <p style="font-size:24px;font-weight:700;color:#1F2937">
                 <span x-text="stats.cs_wfo ?? '—'"></span>
                 <span style="font-size:14px;color:#9CA3AF">/</span>
@@ -346,7 +346,7 @@
                                               'amber': 'background:#FEF3C7;color:#B45309',
                                           }[row.ubudiyah_color] || 'background:#F3F4F6;color:#4B5563'"
                                           x-text="row.ubudiyah"></span>
-                                    <span x-show="!row.ubudiyah" style="color:#9CA3AF">-</span>
+                                    <span x-show="!row.ubudiyah" class="text-gray-400">-</span>
                                 </td>
                                 <td style="padding:12px 16px;color:#6B7280;font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" class="hidden lg:table-cell" x-text="row.keterangan || '-'"></td>
                                 <td style="padding:12px 16px;text-align:center">

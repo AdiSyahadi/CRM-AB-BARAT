@@ -74,42 +74,42 @@
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="crud-field-label">Tanggal Registrasi <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Tanggal Registrasi <span class="text-red-500">*</span></label>
                     <input type="date" x-model="form.tanggal_registrasi" class="crud-field-input">
                     <template x-if="formErrors.tanggal_registrasi"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.tanggal_registrasi[0]"></p></template>
                 </div>
                 <div>
-                    <label class="crud-field-label">Nama CS <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Nama CS <span class="text-red-500">*</span></label>
                     <input type="text" x-model="form.nama_cs" class="crud-field-input" placeholder="Nama CS">
                     <template x-if="formErrors.nama_cs"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama_cs[0]"></p></template>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="crud-field-label">Nama Toko <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Nama Toko <span class="text-red-500">*</span></label>
                     <input type="text" x-model="form.nama_toko" class="crud-field-input" placeholder="Nama toko">
                     <template x-if="formErrors.nama_toko"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama_toko[0]"></p></template>
                 </div>
                 <div>
-                    <label class="crud-field-label">Nama Donatur <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Nama Donatur <span class="text-red-500">*</span></label>
                     <input type="text" x-model="form.nama_donatur" class="crud-field-input" placeholder="Nama donatur">
                     <template x-if="formErrors.nama_donatur"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama_donatur[0]"></p></template>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="crud-field-label">No. Kencleng <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">No. Kencleng <span class="text-red-500">*</span></label>
                     <input type="text" x-model="form.nomor_kencleng" class="crud-field-input" placeholder="Nomor kencleng">
                     <template x-if="formErrors.nomor_kencleng"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nomor_kencleng[0]"></p></template>
                 </div>
                 <div>
-                    <label class="crud-field-label">No. HP <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">No. HP <span class="text-red-500">*</span></label>
                     <input type="text" x-model="form.no_hp" class="crud-field-input" placeholder="08xxxxxxxxxx">
                     <template x-if="formErrors.no_hp"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.no_hp[0]"></p></template>
                 </div>
             </div>
             <div>
-                <label class="crud-field-label">Alamat <span style="color:#EF4444">*</span></label>
+                <label class="crud-field-label">Alamat <span class="text-red-500">*</span></label>
                 <textarea x-model="form.alamat" class="crud-field-input" rows="2" placeholder="Alamat lengkap"></textarea>
                 <template x-if="formErrors.alamat"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.alamat[0]"></p></template>
             </div>
@@ -154,7 +154,7 @@
      @keydown.escape.window="showDeleteModal && (showDeleteModal = false)">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6 text-center" @click.outside="showDeleteModal = false">
         <div style="width:48px;height:48px;background:#FEE2E2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-            <i class="bi bi-exclamation-triangle-fill text-xl" style="color:#DC2626"></i>
+            <i class="bi bi-exclamation-triangle-fill text-xl text-red-600"></i>
         </div>
         <h3 class="font-semibold text-gray-800 mb-1">Hapus Data Penyebaran Toko?</h3>
         <p class="text-sm text-gray-500 mb-4">Data yang dihapus tidak dapat dikembalikan.</p>
@@ -199,7 +199,7 @@
                     <template x-if="detailData.foto_url">
                         <div>
                             <span style="font-size:12px;color:#6B7280;display:block;margin-bottom:4px">Foto</span>
-                            <a :href="detailData.foto_url" target="_blank" style="color:#059669;font-size:13px;text-decoration:underline">
+                            <a :href="detailData.foto_url" target="_blank" class="text-emerald-600 text-[13px] underline">
                                 <i class="bi bi-image"></i> Lihat Foto
                             </a>
                         </div>
@@ -207,7 +207,7 @@
                     <template x-if="detailData.latitude && detailData.longitude">
                         <div>
                             <span style="font-size:12px;color:#6B7280;display:block;margin-bottom:4px">Lokasi</span>
-                            <a :href="'https://www.google.com/maps?q=' + detailData.latitude + ',' + detailData.longitude" target="_blank" style="color:#059669;font-size:13px;text-decoration:underline">
+                            <a :href="'https://www.google.com/maps?q=' + detailData.latitude + ',' + detailData.longitude" target="_blank" class="text-emerald-600 text-[13px] underline">
                                 <i class="bi bi-geo-alt"></i> Buka di Google Maps
                             </a>
                         </div>

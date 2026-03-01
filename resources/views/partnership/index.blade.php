@@ -86,18 +86,18 @@
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="crud-field-label">Tanggal <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Tanggal <span class="text-red-500">*</span></label>
                     <input type="date" x-model="form.tanggal" class="crud-field-input">
                     <template x-if="formErrors.tanggal"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.tanggal[0]"></p></template>
                 </div>
                 <div>
-                    <label class="crud-field-label">Nama CS <span style="color:#EF4444">*</span></label>
+                    <label class="crud-field-label">Nama CS <span class="text-red-500">*</span></label>
                     <input type="text" x-model="form.nama_cs" class="crud-field-input" placeholder="Nama CS">
                     <template x-if="formErrors.nama_cs"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama_cs[0]"></p></template>
                 </div>
             </div>
             <div>
-                <label class="crud-field-label">Jumlah Perolehan <span style="color:#EF4444">*</span></label>
+                <label class="crud-field-label">Jumlah Perolehan <span class="text-red-500">*</span></label>
                 <input type="number" x-model="form.jml_perolehan" class="crud-field-input" placeholder="0" min="0">
                 <template x-if="formErrors.jml_perolehan"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.jml_perolehan[0]"></p></template>
             </div>
@@ -137,7 +137,7 @@
      @keydown.escape.window="showDeleteModal && (showDeleteModal = false)">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6 text-center" @click.outside="showDeleteModal = false">
         <div style="width:48px;height:48px;background:#FEE2E2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-            <i class="bi bi-exclamation-triangle-fill text-xl" style="color:#DC2626"></i>
+            <i class="bi bi-exclamation-triangle-fill text-xl text-red-600"></i>
         </div>
         <h3 class="font-semibold text-gray-800 mb-1">Hapus Data Partnership?</h3>
         <p class="text-sm text-gray-500 mb-4">Data yang dihapus tidak dapat dikembalikan.</p>
