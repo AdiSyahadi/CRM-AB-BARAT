@@ -371,16 +371,12 @@
                 <span x-show="uPagination.total > 0" x-text="'Menampilkan ' + uPagination.from + '–' + uPagination.to + ' dari ' + uPagination.total"></span>
                 <span x-show="uPagination.total === 0">Tidak ada data</span>
                 <div class="flex gap-1">
-                    <button @click="loadUbudiyah(uPagination.current_page - 1)" :disabled="!uPagination.prev_page_url"
-                            aria-label="Halaman sebelumnya"
-                            style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                            :style="!uPagination.prev_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
+                    <button class="pagination-btn" @click="loadUbudiyah(uPagination.current_page - 1)" :disabled="!uPagination.prev_page_url"
+                            aria-label="Halaman sebelumnya">
                         <i class="bi bi-chevron-left"></i>
                     </button>
-                    <button @click="loadUbudiyah(uPagination.current_page + 1)" :disabled="!uPagination.next_page_url"
-                            aria-label="Halaman berikutnya"
-                            style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                            :style="!uPagination.next_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
+                    <button class="pagination-btn" @click="loadUbudiyah(uPagination.current_page + 1)" :disabled="!uPagination.next_page_url"
+                            aria-label="Halaman berikutnya">
                         <i class="bi bi-chevron-right"></i>
                     </button>
                 </div>
@@ -477,16 +473,12 @@
                 <span x-show="hPagination.total > 0" x-text="'Menampilkan ' + hPagination.from + '–' + hPagination.to + ' dari ' + hPagination.total"></span>
                 <span x-show="hPagination.total === 0">Tidak ada data</span>
                 <div class="flex gap-1">
-                    <button @click="loadHarian(hPagination.current_page - 1)" :disabled="!hPagination.prev_page_url"
-                            aria-label="Halaman sebelumnya"
-                            style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                            :style="!hPagination.prev_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
+                    <button class="pagination-btn" @click="loadHarian(hPagination.current_page - 1)" :disabled="!hPagination.prev_page_url"
+                            aria-label="Halaman sebelumnya">
                         <i class="bi bi-chevron-left"></i>
                     </button>
-                    <button @click="loadHarian(hPagination.current_page + 1)" :disabled="!hPagination.next_page_url"
-                            aria-label="Halaman berikutnya"
-                            style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                            :style="!hPagination.next_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
+                    <button class="pagination-btn" @click="loadHarian(hPagination.current_page + 1)" :disabled="!hPagination.next_page_url"
+                            aria-label="Halaman berikutnya">
                         <i class="bi bi-chevron-right"></i>
                     </button>
                 </div>

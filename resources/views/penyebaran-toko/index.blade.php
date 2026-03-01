@@ -376,15 +376,11 @@
             <span x-show="pagination.total > 0" x-text="'Menampilkan ' + pagination.from + '–' + pagination.to + ' dari ' + pagination.total"></span>
             <span x-show="pagination.total === 0">Tidak ada data</span>
             <div class="flex gap-1">
-                <button @click="goToPage(pagination.current_page - 1)" :disabled="!pagination.prev_page_url"
-                        style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                        :style="!pagination.prev_page_url ? 'opacity:0.4;cursor:not-allowed' : ''"
+                <button class="pagination-btn" @click="goToPage(pagination.current_page - 1)" :disabled="!pagination.prev_page_url"
                         aria-label="Halaman sebelumnya">
                     <i class="bi bi-chevron-left"></i>
                 </button>
-                <button @click="goToPage(pagination.current_page + 1)" :disabled="!pagination.next_page_url"
-                        style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                        :style="!pagination.next_page_url ? 'opacity:0.4;cursor:not-allowed' : ''"
+                <button class="pagination-btn" @click="goToPage(pagination.current_page + 1)" :disabled="!pagination.next_page_url"
                         aria-label="Halaman berikutnya">
                     <i class="bi bi-chevron-right"></i>
                 </button>
