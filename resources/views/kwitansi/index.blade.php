@@ -7,7 +7,7 @@
         width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
         font-size: 13px; transition: all 0.15s; background: white;
     }
-    .field-input:focus { outline: none; border-color: #059669; box-shadow: 0 0 0 3px rgba(5,150,105,0.1); }
+    .field-input:focus { outline: 2px solid transparent; border-color: #059669; box-shadow: 0 0 0 3px rgba(5,150,105,0.1); }
     .field-input.error { border-color: #EF4444; }
     .field-error { font-size: 11px; color: #EF4444; margin-top: 2px; }
     .btn-primary {

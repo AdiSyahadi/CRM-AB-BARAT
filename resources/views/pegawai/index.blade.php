@@ -5,7 +5,7 @@
 <style>
     .pg-field-input {
         width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
-        font-size: 13px; transition: all 0.15s; background: white; outline: none;
+        font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
     }
     .pg-field-input:focus { border-color: #3B82F6; box-shadow: 0 0 0 2px rgba(59,130,246,0.15); }
     .pg-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }

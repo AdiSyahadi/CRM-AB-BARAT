@@ -5,7 +5,7 @@
 <style>
     .mu-field-input {
         width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
-        font-size: 13px; transition: all 0.15s; background: white; outline: none;
+        font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
     }
     .mu-field-input:focus { border-color: #4F46E5; box-shadow: 0 0 0 2px rgba(79,70,229,0.15); }
     .mu-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }

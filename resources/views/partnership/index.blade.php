@@ -5,7 +5,7 @@
 <style>
     .ps-field-input {
         width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
-        font-size: 13px; transition: all 0.15s; background: white; outline: none;
+        font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
     }
     .ps-field-input:focus { border-color: #8B5CF6; box-shadow: 0 0 0 2px rgba(139,92,246,0.15); }
     .ps-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }
@@ -39,7 +39,7 @@
     /* Year filter */
     .ps-year-select {
         border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
-        font-size: 13px; background: white; outline: none; cursor: pointer;
+        font-size: 13px; background: white; outline: 2px solid transparent; cursor: pointer;
         font-weight: 600; color: #374151;
     }
     .ps-year-select:focus { border-color: #8B5CF6; box-shadow: 0 0 0 2px rgba(139,92,246,0.15); }
