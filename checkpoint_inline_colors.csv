@@ -1,0 +1,2 @@
+patch_id,objective,files_changed,status,verification_note
+034,Replace inline color styles with Tailwind classes,"resources/views/pegawai/index.blade.php,resources/views/absensi/index.blade.php,resources/views/partnership/index.blade.php,resources/views/penyebaran-toko/index.blade.php,resources/views/manajemen-user/index.blade.php",done,38 inline style=color:# replaced with Tailwind text-color classes across 5 CRUD files. Zero inline color styles remain in these files

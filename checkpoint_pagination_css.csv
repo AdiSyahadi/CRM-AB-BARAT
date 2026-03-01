@@ -1,0 +1,2 @@
+patch_id,objective,files_changed,status,verification_note
+033,Replace inline pagination styles with pagination-btn class,"resources/views/pegawai/index.blade.php,resources/views/absensi/index.blade.php,resources/views/partnership/index.blade.php,resources/views/penyebaran-toko/index.blade.php,resources/views/manajemen-user/index.blade.php",done,12 inline pagination button styles replaced with .pagination-btn class from shared.css across 5 files. No inline padding/border-radius/border styles remain

@@ -1,0 +1,2 @@
+patch_id,objective,files_changed,status,verification_note
+031,Consolidate CRUD form CSS into shared.css,"public/css/shared.css,resources/views/pegawai/index.blade.php,resources/views/absensi/index.blade.php,resources/views/partnership/index.blade.php,resources/views/penyebaran-toko/index.blade.php,resources/views/manajemen-user/index.blade.php",done,22 shared rules added to shared.css with crud- prefix. 55 duplicate CSS rules removed and 143 HTML class replacements across 5 CRUD files. Old prefixed classes (pg- ab- ps- pt- mu-) fully removed

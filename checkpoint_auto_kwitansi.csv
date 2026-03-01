@@ -1,0 +1,3 @@
+patch_id,objective,files_changed,status,verification_note
+020,Add laporan_id FK ke tabel kwitansis,database/migrations/2026_02_28_173618_add_laporan_id_to_kwitansis_table.php;app/Models/Kwitansi.php,done,"Migration berhasil, FK int(11) match laporans.id, nullable utk kwitansi lama"
+021,Auto-create kwitansi dari laporan dgn transaksi,app/Models/LaporanPerolehan.php,done,"3 test PASS: transaksi=create, kosong=skip, nominal0=skip, cleanup OK"

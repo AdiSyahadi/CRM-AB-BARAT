@@ -1,0 +1,2 @@
+patch_id,objective,files_changed,status,verification_note
+027-030,Fix brand colors to emerald/primary on pegawai absensi partnership manajemen-user,"resources/views/pegawai/index.blade.php,resources/views/absensi/index.blade.php,resources/views/partnership/index.blade.php,resources/views/manajemen-user/index.blade.php",done,50 color changes total - blue/violet/indigo replaced with emerald/primary palette. Remaining blue refs in absensi are semantic (status badges)

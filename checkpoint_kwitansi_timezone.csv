@@ -1,0 +1,2 @@
+patch_id,objective,files_changed,status,verification_note
+023,Fix timezone Hari Ini kwitansi UTC->WIB,app/Http/Controllers/KwitansiCrmController.php,done,"Root cause: now() menggunakan UTC timezone server. Fix: Carbon::now('Asia/Jakarta') di 3 titik (apiList filter today + apiStats filter today + apiStats today cards). Tidak ubah APP_TIMEZONE global untuk cegah side effect."

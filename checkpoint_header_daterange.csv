@@ -1,0 +1,3 @@
+patch_id,objective,files_changed,status,verification_note
+017,Header date range picker for stat cards only,"AnalisisDonaturController.php, analisis-donatur/index.blade.php, web.php",done,"Stats filtered by date range; charts and table unaffected; new /stats-data endpoint works"
+018,Fix stat card nominal mismatch with chart data,AnalisisDonaturController.php,done,"total_perolehan and perolehan_tahun_lalu now filter by no_hp matching chart trend_bulanan"
