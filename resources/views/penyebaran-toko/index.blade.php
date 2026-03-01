@@ -1,4 +1,4 @@
-<x-layouts.app active="penyebaran-toko" title="Penyebaran Toko" xData="penyebaranTokoApp()">
+<x-layouts.app active="penyebaran-toko" title="Penyebaran Kencleng" xData="penyebaranTokoApp()">
 
 {{-- ===== CUSTOM STYLES (plain CSS, no @apply) ===== --}}
 @push('styles')
@@ -54,20 +54,20 @@
      class="fixed inset-0 z-[100] bg-white/70 backdrop-blur-sm flex items-center justify-center">
     <div class="flex flex-col items-center gap-3">
         <i class="bi bi-arrow-repeat text-3xl text-emerald-600 pt-spin"></i>
-        <span class="text-sm text-gray-500 font-medium">Memuat data penyebaran toko...</span>
+        <span class="text-sm text-gray-500 font-medium">Memuat data penyebaran kencleng...</span>
     </div>
 </div>
 
 {{-- ============ CREATE / EDIT MODAL ============ --}}
 <div x-show="showFormModal" x-cloak x-transition.opacity
-     role="dialog" aria-modal="true" aria-label="Form Penyebaran Toko"
+     role="dialog" aria-modal="true" aria-label="Form Penyebaran Kencleng"
      class="fixed inset-0 z-[80] flex items-start justify-center pt-10 bg-black/30 backdrop-blur-sm overflow-y-auto pb-10"
      @keydown.escape.window="showFormModal && closeFormModal()">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4" @click.outside="closeFormModal()">
         <div class="flex items-center justify-between px-5 py-4 border-b">
             <div class="flex items-center gap-2">
                 <i :class="editingId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-plus-circle-fill text-emerald-600'" class="text-lg"></i>
-                <h3 class="font-semibold text-gray-800" x-text="editingId ? 'Edit Penyebaran Toko' : 'Tambah Penyebaran Toko'"></h3>
+                <h3 class="font-semibold text-gray-800" x-text="editingId ? 'Edit Penyebaran Kencleng' : 'Tambah Penyebaran Kencleng'"></h3>
             </div>
             <button @click="closeFormModal()" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
         </div>
@@ -149,14 +149,14 @@
 
 {{-- ============ DELETE CONFIRMATION MODAL ============ --}}
 <div x-show="showDeleteModal" x-cloak x-transition.opacity
-     role="dialog" aria-modal="true" aria-label="Konfirmasi Hapus Penyebaran Toko"
+     role="dialog" aria-modal="true" aria-label="Konfirmasi Hapus Penyebaran Kencleng"
      class="fixed inset-0 z-[90] flex items-center justify-center bg-black/30 backdrop-blur-sm"
      @keydown.escape.window="showDeleteModal && (showDeleteModal = false)">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6 text-center" @click.outside="showDeleteModal = false">
         <div style="width:48px;height:48px;background:#FEE2E2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
             <i class="bi bi-exclamation-triangle-fill text-xl text-red-600"></i>
         </div>
-        <h3 class="font-semibold text-gray-800 mb-1">Hapus Data Penyebaran Toko?</h3>
+        <h3 class="font-semibold text-gray-800 mb-1">Hapus Data Penyebaran Kencleng?</h3>
         <p class="text-sm text-gray-500 mb-4">Data yang dihapus tidak dapat dikembalikan.</p>
         <div class="flex gap-2 justify-center">
             <button @click="showDeleteModal = false" class="crud-btn-secondary">Batal</button>
@@ -170,14 +170,14 @@
 
 {{-- ============ DETAIL MODAL ============ --}}
 <div x-show="showDetailModal" x-cloak x-transition.opacity
-     role="dialog" aria-modal="true" aria-label="Detail Penyebaran Toko"
+     role="dialog" aria-modal="true" aria-label="Detail Penyebaran Kencleng"
      class="fixed inset-0 z-[80] flex items-start justify-center pt-10 bg-black/30 backdrop-blur-sm overflow-y-auto pb-10"
      @keydown.escape.window="showDetailModal && (showDetailModal = false)">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4" @click.outside="showDetailModal = false">
         <div class="flex items-center justify-between px-5 py-4 border-b">
             <div class="flex items-center gap-2">
                 <i class="bi bi-geo-alt-fill text-emerald-600 text-lg"></i>
-                <h3 class="font-semibold text-gray-800">Detail Penyebaran Toko</h3>
+                <h3 class="font-semibold text-gray-800">Detail Penyebaran Kencleng</h3>
             </div>
             <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
         </div>
@@ -231,7 +231,7 @@
 <div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
         <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600" aria-label="Toggle menu"><i class="bi bi-list text-xl"></i></button>
-        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-geo-alt-fill text-emerald-600 mr-1"></i> Penyebaran Toko</h1>
+        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-geo-alt-fill text-emerald-600 mr-1"></i> Penyebaran Kencleng</h1>
     </div>
     <button @click="openCreateModal()" class="crud-btn-primary" style="font-size:12px">
         <i class="bi bi-plus-lg"></i> <span class="hidden sm:inline">Tambah Data</span><span class="sm:hidden">Tambah</span>
@@ -278,7 +278,7 @@
     {{-- Map Section --}}
     <div x-show="activeView === 'map'" x-cloak class="pt-map-container">
         <div class="pt-map-header">
-            <h3><i class="bi bi-map-fill text-emerald-600"></i> Peta Penyebaran Toko</h3>
+            <h3><i class="bi bi-map-fill text-emerald-600"></i> Peta Penyebaran Kencleng</h3>
             <div class="pt-map-legend">
                 <span><span class="pt-map-legend-dot" style="background:#16a34a"></span>Di Terima</span>
                 <span><span class="pt-map-legend-dot" style="background:#dc2626"></span>Di Tolak</span>
@@ -286,7 +286,7 @@
         </div>
         <div id="penyebaranMap"></div>
         <div class="pt-map-info">
-            <i class="bi bi-info-circle"></i> Klik marker untuk melihat detail toko. Scroll untuk zoom.
+            <i class="bi bi-info-circle"></i> Klik marker untuk melihat detail kencleng. Scroll untuk zoom.
         </div>
     </div>
 

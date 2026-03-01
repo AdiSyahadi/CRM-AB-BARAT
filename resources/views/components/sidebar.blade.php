@@ -238,11 +238,11 @@
             <span class="font-medium">Partnership</span>
         </a>
         
-        <!-- Penyebaran Toko -->
+        <!-- Penyebaran Kencleng -->
         <a href="{{ route('penyebaran-toko.index') }}" wire:navigate
            class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl transition mb-1 {{ $active === 'penyebaran-toko' ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-gray-600 hover:text-primary-700 hover:bg-primary-50' }}">
             <i class="bi bi-geo-alt-fill text-lg"></i>
-            <span class="font-medium">Penyebaran Toko</span>
+            <span class="font-medium">Penyebaran Kencleng</span>
         </a>
         
         <!-- User Management -->
