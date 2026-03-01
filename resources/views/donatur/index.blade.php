@@ -1917,22 +1917,7 @@
                     this.formData.saving = false;
                 },
                 
-                showToast(message, type = 'info') {
-                    // Simple toast notification
-                    const toast = document.createElement('div');
-                    toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-xl shadow-lg z-[200] transition-all transform translate-y-0 ${
-                        type === 'success' ? 'bg-green-500 text-white' : 
-                        type === 'error' ? 'bg-red-500 text-white' : 
-                        'bg-gray-800 text-white'
-                    }`;
-                    toast.textContent = message;
-                    document.body.appendChild(toast);
-                    
-                    setTimeout(() => {
-                        toast.classList.add('opacity-0', 'translate-y-2');
-                        setTimeout(() => toast.remove(), 300);
-                    }, 3000);
-                },
+                showToast: window.showToast,
                 
                 openDetailPanel(id) {
                     this.detailPanel.donatur = this.table.data.find(d => d.id === id);

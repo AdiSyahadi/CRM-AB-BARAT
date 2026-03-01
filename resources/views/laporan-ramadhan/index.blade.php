@@ -865,15 +865,7 @@ function laporanRamadhanApp() {
             return 'Rp ' + this.numberFormat(total);
         },
 
-        // ===== Toast =====
-        showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            const colors = { success: 'bg-green-500 text-white', error: 'bg-red-500 text-white', info: 'bg-gray-800 text-white' };
-            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-xl shadow-lg z-[200] transition-all transform ${colors[type] || colors.info}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(10px)'; setTimeout(() => toast.remove(), 300); }, 3000);
-        },
+        showToast: window.showToast,
     };
 }
 </script>

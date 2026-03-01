@@ -79,6 +79,9 @@
     
     <!-- Shared Styles -->
     <link rel="stylesheet" href="{{ asset('css/shared.css') }}">
+
+    <!-- Shared Scripts -->
+    <script src="{{ asset('js/shared.js') }}"></script>
     
     <!-- Livewire Styles (for wire:navigate SPA) -->
     @livewireStyles
