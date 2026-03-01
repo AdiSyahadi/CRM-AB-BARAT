@@ -114,3 +114,44 @@ body { font-family: 'Inter', sans-serif; }
     border-radius: 50%;
     animation: pulse-ring 1.5s ease-out infinite;
 }
+
+/* ==========================================
+   CRUD Form Shared Styles
+   ========================================== */
+.crud-field-input {
+    width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
+    font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
+}
+.crud-field-input:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.15); }
+.crud-field-input.error { border-color: #EF4444; }
+.crud-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }
+.crud-field-error { font-size: 11px; color: #EF4444; margin-top: 2px; }
+.crud-btn-primary {
+    background: #059669; color: white; padding: 8px 16px; border-radius: 10px;
+    font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.crud-btn-primary:hover { background: #047857; }
+.crud-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.crud-btn-secondary {
+    background: #F3F4F6; color: #374151; padding: 8px 16px; border-radius: 10px;
+    font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
+}
+.crud-btn-secondary:hover { background: #E5E7EB; }
+.crud-btn-danger {
+    background: #DC2626; color: white; padding: 8px 16px; border-radius: 10px;
+    font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.crud-btn-danger:hover { background: #B91C1C; }
+.crud-btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
+.crud-spin { animation: spin 1s linear infinite; }
+@keyframes crud-fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Pagination */
+.pagination-btn {
+    padding: 4px 10px; border-radius: 6px; border: 1px solid #E5E7EB;
+    font-size: 12px; background: white; cursor: pointer; transition: all 0.15s;
+}
+.pagination-btn:hover:not(:disabled) { border-color: #059669; color: #059669; }
+.pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }

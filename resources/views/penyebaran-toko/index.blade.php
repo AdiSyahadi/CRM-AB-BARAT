@@ -35,32 +35,6 @@
     .pt-popup-row span { font-weight: 500; color: #1F2937; }
     .pt-popup-badge { display: inline-block; padding: 1px 8px; border-radius: 9999px; font-size: 11px; font-weight: 500; }
 
-    /* ---- Existing styles ---- */
-    .pt-field-input {
-        width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
-        font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
-    }
-    .pt-field-input:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.15); }
-    .pt-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }
-    .pt-btn-primary {
-        background: #059669; color: white; padding: 8px 16px; border-radius: 10px;
-        font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
-        display: inline-flex; align-items: center; gap: 6px;
-    }
-    .pt-btn-primary:hover { background: #047857; }
-    .pt-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .pt-btn-secondary {
-        background: #F3F4F6; color: #374151; padding: 8px 16px; border-radius: 10px;
-        font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
-    }
-    .pt-btn-secondary:hover { background: #E5E7EB; }
-    .pt-btn-danger {
-        background: #DC2626; color: white; padding: 8px 16px; border-radius: 10px;
-        font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
-        display: inline-flex; align-items: center; gap: 6px;
-    }
-    .pt-btn-danger:hover { background: #B91C1C; }
-    .pt-btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
     .pt-stat-card {
         background: white; border-radius: 12px; padding: 16px; border: 1px solid #F3F4F6;
         box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -100,72 +74,72 @@
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="pt-field-label">Tanggal Registrasi <span style="color:#EF4444">*</span></label>
-                    <input type="date" x-model="form.tanggal_registrasi" class="pt-field-input">
+                    <label class="crud-field-label">Tanggal Registrasi <span style="color:#EF4444">*</span></label>
+                    <input type="date" x-model="form.tanggal_registrasi" class="crud-field-input">
                     <template x-if="formErrors.tanggal_registrasi"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.tanggal_registrasi[0]"></p></template>
                 </div>
                 <div>
-                    <label class="pt-field-label">Nama CS <span style="color:#EF4444">*</span></label>
-                    <input type="text" x-model="form.nama_cs" class="pt-field-input" placeholder="Nama CS">
+                    <label class="crud-field-label">Nama CS <span style="color:#EF4444">*</span></label>
+                    <input type="text" x-model="form.nama_cs" class="crud-field-input" placeholder="Nama CS">
                     <template x-if="formErrors.nama_cs"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama_cs[0]"></p></template>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="pt-field-label">Nama Toko <span style="color:#EF4444">*</span></label>
-                    <input type="text" x-model="form.nama_toko" class="pt-field-input" placeholder="Nama toko">
+                    <label class="crud-field-label">Nama Toko <span style="color:#EF4444">*</span></label>
+                    <input type="text" x-model="form.nama_toko" class="crud-field-input" placeholder="Nama toko">
                     <template x-if="formErrors.nama_toko"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama_toko[0]"></p></template>
                 </div>
                 <div>
-                    <label class="pt-field-label">Nama Donatur <span style="color:#EF4444">*</span></label>
-                    <input type="text" x-model="form.nama_donatur" class="pt-field-input" placeholder="Nama donatur">
+                    <label class="crud-field-label">Nama Donatur <span style="color:#EF4444">*</span></label>
+                    <input type="text" x-model="form.nama_donatur" class="crud-field-input" placeholder="Nama donatur">
                     <template x-if="formErrors.nama_donatur"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama_donatur[0]"></p></template>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="pt-field-label">No. Kencleng <span style="color:#EF4444">*</span></label>
-                    <input type="text" x-model="form.nomor_kencleng" class="pt-field-input" placeholder="Nomor kencleng">
+                    <label class="crud-field-label">No. Kencleng <span style="color:#EF4444">*</span></label>
+                    <input type="text" x-model="form.nomor_kencleng" class="crud-field-input" placeholder="Nomor kencleng">
                     <template x-if="formErrors.nomor_kencleng"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nomor_kencleng[0]"></p></template>
                 </div>
                 <div>
-                    <label class="pt-field-label">No. HP <span style="color:#EF4444">*</span></label>
-                    <input type="text" x-model="form.no_hp" class="pt-field-input" placeholder="08xxxxxxxxxx">
+                    <label class="crud-field-label">No. HP <span style="color:#EF4444">*</span></label>
+                    <input type="text" x-model="form.no_hp" class="crud-field-input" placeholder="08xxxxxxxxxx">
                     <template x-if="formErrors.no_hp"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.no_hp[0]"></p></template>
                 </div>
             </div>
             <div>
-                <label class="pt-field-label">Alamat <span style="color:#EF4444">*</span></label>
-                <textarea x-model="form.alamat" class="pt-field-input" rows="2" placeholder="Alamat lengkap"></textarea>
+                <label class="crud-field-label">Alamat <span style="color:#EF4444">*</span></label>
+                <textarea x-model="form.alamat" class="crud-field-input" rows="2" placeholder="Alamat lengkap"></textarea>
                 <template x-if="formErrors.alamat"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.alamat[0]"></p></template>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="pt-field-label">Status</label>
-                    <select x-model="form.status" class="pt-field-input">
+                    <label class="crud-field-label">Status</label>
+                    <select x-model="form.status" class="crud-field-input">
                         <option value="Di terima">Di terima</option>
                         <option value="Di tolak">Di tolak</option>
                     </select>
                 </div>
                 <div>
-                    <label class="pt-field-label">Keterangan</label>
-                    <input type="text" x-model="form.keterangan" class="pt-field-input" placeholder="Catatan">
+                    <label class="crud-field-label">Keterangan</label>
+                    <input type="text" x-model="form.keterangan" class="crud-field-input" placeholder="Catatan">
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="pt-field-label">Latitude</label>
-                    <input type="text" x-model="form.latitude" class="pt-field-input" placeholder="-6.xxxxx">
+                    <label class="crud-field-label">Latitude</label>
+                    <input type="text" x-model="form.latitude" class="crud-field-input" placeholder="-6.xxxxx">
                 </div>
                 <div>
-                    <label class="pt-field-label">Longitude</label>
-                    <input type="text" x-model="form.longitude" class="pt-field-input" placeholder="106.xxxxx">
+                    <label class="crud-field-label">Longitude</label>
+                    <input type="text" x-model="form.longitude" class="crud-field-input" placeholder="106.xxxxx">
                 </div>
             </div>
         </div>
         <div class="flex justify-end gap-2 px-5 py-3 border-t bg-gray-50 rounded-b-2xl">
-            <button @click="closeFormModal()" class="pt-btn-secondary">Batal</button>
-            <button @click="submitForm()" :disabled="saving" class="pt-btn-primary">
+            <button @click="closeFormModal()" class="crud-btn-secondary">Batal</button>
+            <button @click="submitForm()" :disabled="saving" class="crud-btn-primary">
                 <template x-if="saving"><i class="bi bi-arrow-repeat pt-spin"></i></template>
                 <span x-text="editingId ? 'Update' : 'Simpan'"></span>
             </button>
@@ -185,8 +159,8 @@
         <h3 class="font-semibold text-gray-800 mb-1">Hapus Data Penyebaran Toko?</h3>
         <p class="text-sm text-gray-500 mb-4">Data yang dihapus tidak dapat dikembalikan.</p>
         <div class="flex gap-2 justify-center">
-            <button @click="showDeleteModal = false" class="pt-btn-secondary">Batal</button>
-            <button @click="executeDelete()" :disabled="saving" class="pt-btn-danger">
+            <button @click="showDeleteModal = false" class="crud-btn-secondary">Batal</button>
+            <button @click="executeDelete()" :disabled="saving" class="crud-btn-danger">
                 <template x-if="saving"><i class="bi bi-arrow-repeat pt-spin"></i></template>
                 Hapus
             </button>
@@ -242,8 +216,8 @@
             </template>
         </div>
         <div class="flex justify-end gap-2 px-5 py-3 border-t bg-gray-50 rounded-b-2xl">
-            <button @click="showDetailModal = false" class="pt-btn-secondary">Tutup</button>
-            <button @click="showDetailModal = false; openEditModal(detailData.id)" class="pt-btn-primary">
+            <button @click="showDetailModal = false" class="crud-btn-secondary">Tutup</button>
+            <button @click="showDetailModal = false; openEditModal(detailData.id)" class="crud-btn-primary">
                 <i class="bi bi-pencil-square"></i> Edit
             </button>
         </div>
@@ -259,7 +233,7 @@
         <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600" aria-label="Toggle menu"><i class="bi bi-list text-xl"></i></button>
         <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-geo-alt-fill text-emerald-600 mr-1"></i> Penyebaran Toko</h1>
     </div>
-    <button @click="openCreateModal()" class="pt-btn-primary" style="font-size:12px">
+    <button @click="openCreateModal()" class="crud-btn-primary" style="font-size:12px">
         <i class="bi bi-plus-lg"></i> <span class="hidden sm:inline">Tambah Data</span><span class="sm:hidden">Tambah</span>
     </button>
 </div>
@@ -321,15 +295,15 @@
         <div class="relative flex-1" style="min-width:180px">
             <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" style="font-size:13px"></i>
             <input type="text" x-model="filters.search" @input.debounce.500ms="resetAndLoad()"
-                   class="pt-field-input" style="padding-left:36px" placeholder="Cari nama toko, CS, donatur, alamat...">
+                   class="crud-field-input" style="padding-left:36px" placeholder="Cari nama toko, CS, donatur, alamat...">
         </div>
-        <select x-model="filters.status" @change="resetAndLoad()" class="pt-field-input" style="width:auto">
+        <select x-model="filters.status" @change="resetAndLoad()" class="crud-field-input" style="width:auto">
             <option value="">Semua Status</option>
             <option value="Di terima">Di terima</option>
             <option value="Di tolak">Di tolak</option>
         </select>
-        <input type="date" x-model="filters.date_from" @change="resetAndLoad()" class="pt-field-input" style="width:auto" title="Dari tanggal">
-        <input type="date" x-model="filters.date_to" @change="resetAndLoad()" class="pt-field-input" style="width:auto" title="Sampai tanggal">
+        <input type="date" x-model="filters.date_from" @change="resetAndLoad()" class="crud-field-input" style="width:auto" title="Dari tanggal">
+        <input type="date" x-model="filters.date_to" @change="resetAndLoad()" class="crud-field-input" style="width:auto" title="Sampai tanggal">
         <button @click="clearFilters()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset Filter" aria-label="Reset filter">
             <i class="bi bi-x-circle"></i>
         </button>

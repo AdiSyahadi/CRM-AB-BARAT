@@ -3,31 +3,6 @@
 {{-- ===== CUSTOM STYLES (plain CSS, no @apply) ===== --}}
 @push('styles')
 <style>
-    .ab-field-input {
-        width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
-        font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
-    }
-    .ab-field-input:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.15); }
-    .ab-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }
-    .ab-btn-primary {
-        background: #059669; color: white; padding: 8px 16px; border-radius: 10px;
-        font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
-        display: inline-flex; align-items: center; gap: 6px;
-    }
-    .ab-btn-primary:hover { background: #047857; }
-    .ab-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .ab-btn-secondary {
-        background: #F3F4F6; color: #374151; padding: 8px 16px; border-radius: 10px;
-        font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
-    }
-    .ab-btn-secondary:hover { background: #E5E7EB; }
-    .ab-btn-danger {
-        background: #DC2626; color: white; padding: 8px 16px; border-radius: 10px;
-        font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
-        display: inline-flex; align-items: center; gap: 6px;
-    }
-    .ab-btn-danger:hover { background: #B91C1C; }
-    .ab-btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
     .ab-stat-card {
         background: white; border-radius: 12px; padding: 16px; border: 1px solid #F3F4F6;
         box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -82,24 +57,24 @@
         </div>
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div>
-                <label class="ab-field-label">Nama <span style="color:#EF4444">*</span></label>
-                <input type="text" x-model="ubudiyahForm.nama" class="ab-field-input" placeholder="Nama pegawai">
+                <label class="crud-field-label">Nama <span style="color:#EF4444">*</span></label>
+                <input type="text" x-model="ubudiyahForm.nama" class="crud-field-input" placeholder="Nama pegawai">
                 <template x-if="formErrors.nama"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama[0]"></p></template>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="ab-field-label">Tanggal <span style="color:#EF4444">*</span></label>
-                    <input type="date" x-model="ubudiyahForm.tanggal" class="ab-field-input">
+                    <label class="crud-field-label">Tanggal <span style="color:#EF4444">*</span></label>
+                    <input type="date" x-model="ubudiyahForm.tanggal" class="crud-field-input">
                 </div>
                 <div>
-                    <label class="ab-field-label">Jam <span style="color:#EF4444">*</span></label>
-                    <input type="time" x-model="ubudiyahForm.jam" class="ab-field-input">
+                    <label class="crud-field-label">Jam <span style="color:#EF4444">*</span></label>
+                    <input type="time" x-model="ubudiyahForm.jam" class="crud-field-input">
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="ab-field-label">Status <span style="color:#EF4444">*</span></label>
-                    <select x-model="ubudiyahForm.status" class="ab-field-input">
+                    <label class="crud-field-label">Status <span style="color:#EF4444">*</span></label>
+                    <select x-model="ubudiyahForm.status" class="crud-field-input">
                         <option value="">— Pilih —</option>
                         <option value="Hadir">Hadir</option>
                         <option value="Izin">Izin</option>
@@ -108,8 +83,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="ab-field-label">Ubudiyah</label>
-                    <select x-model="ubudiyahForm.ubudiyah" class="ab-field-input">
+                    <label class="crud-field-label">Ubudiyah</label>
+                    <select x-model="ubudiyahForm.ubudiyah" class="crud-field-input">
                         <option value="">— Pilih —</option>
                         <option value="Shalat Tahajud">Shalat Tahajud</option>
                         <option value="Shalat Dhuha">Shalat Dhuha</option>
@@ -118,17 +93,17 @@
                 </div>
             </div>
             <div>
-                <label class="ab-field-label">Alamat</label>
-                <input type="text" x-model="ubudiyahForm.alamat" class="ab-field-input" placeholder="Alamat/lokasi">
+                <label class="crud-field-label">Alamat</label>
+                <input type="text" x-model="ubudiyahForm.alamat" class="crud-field-input" placeholder="Alamat/lokasi">
             </div>
             <div>
-                <label class="ab-field-label">Keterangan</label>
-                <input type="text" x-model="ubudiyahForm.keterangan" class="ab-field-input" placeholder="Catatan tambahan">
+                <label class="crud-field-label">Keterangan</label>
+                <input type="text" x-model="ubudiyahForm.keterangan" class="crud-field-input" placeholder="Catatan tambahan">
             </div>
         </div>
         <div class="flex justify-end gap-2 px-5 py-3 border-t bg-gray-50 rounded-b-2xl">
-            <button @click="closeUbudiyahModal()" class="ab-btn-secondary">Batal</button>
-            <button @click="submitUbudiyah()" :disabled="saving" class="ab-btn-primary">
+            <button @click="closeUbudiyahModal()" class="crud-btn-secondary">Batal</button>
+            <button @click="submitUbudiyah()" :disabled="saving" class="crud-btn-primary">
                 <template x-if="saving"><i class="bi bi-arrow-repeat ab-spin"></i></template>
                 <span x-text="editingUbudiyahId ? 'Update' : 'Simpan'"></span>
             </button>
@@ -150,46 +125,46 @@
         </div>
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div>
-                <label class="ab-field-label">Nama CS <span style="color:#EF4444">*</span></label>
-                <input type="text" x-model="harianForm.nama_cs" class="ab-field-input" placeholder="Nama CS">
+                <label class="crud-field-label">Nama CS <span style="color:#EF4444">*</span></label>
+                <input type="text" x-model="harianForm.nama_cs" class="crud-field-input" placeholder="Nama CS">
                 <template x-if="formErrors.nama_cs"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.nama_cs[0]"></p></template>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="ab-field-label">Tanggal <span style="color:#EF4444">*</span></label>
-                    <input type="date" x-model="harianForm.tanggal" class="ab-field-input">
+                    <label class="crud-field-label">Tanggal <span style="color:#EF4444">*</span></label>
+                    <input type="date" x-model="harianForm.tanggal" class="crud-field-input">
                 </div>
                 <div>
-                    <label class="ab-field-label">Jam <span style="color:#EF4444">*</span></label>
-                    <input type="time" x-model="harianForm.jam" class="ab-field-input">
+                    <label class="crud-field-label">Jam <span style="color:#EF4444">*</span></label>
+                    <input type="time" x-model="harianForm.jam" class="crud-field-input">
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="ab-field-label">Tipe Absen <span style="color:#EF4444">*</span></label>
-                    <select x-model="harianForm.tipe_absen" class="ab-field-input">
+                    <label class="crud-field-label">Tipe Absen <span style="color:#EF4444">*</span></label>
+                    <select x-model="harianForm.tipe_absen" class="crud-field-input">
                         <option value="">— Pilih —</option>
                         <option value="Masuk">Masuk</option>
                         <option value="Pulang">Pulang</option>
                     </select>
                 </div>
                 <div>
-                    <label class="ab-field-label">Status Kehadiran</label>
-                    <input type="text" x-model="harianForm.status_kehadiran" class="ab-field-input" placeholder="cth: HadirWFO">
+                    <label class="crud-field-label">Status Kehadiran</label>
+                    <input type="text" x-model="harianForm.status_kehadiran" class="crud-field-input" placeholder="cth: HadirWFO">
                 </div>
             </div>
             <div>
-                <label class="ab-field-label">Lokasi</label>
-                <input type="text" x-model="harianForm.lokasi" class="ab-field-input" placeholder="Lokasi absen">
+                <label class="crud-field-label">Lokasi</label>
+                <input type="text" x-model="harianForm.lokasi" class="crud-field-input" placeholder="Lokasi absen">
             </div>
             <div>
-                <label class="ab-field-label">Keterangan</label>
-                <textarea x-model="harianForm.keterangan" class="ab-field-input" rows="2" placeholder="Catatan tambahan"></textarea>
+                <label class="crud-field-label">Keterangan</label>
+                <textarea x-model="harianForm.keterangan" class="crud-field-input" rows="2" placeholder="Catatan tambahan"></textarea>
             </div>
         </div>
         <div class="flex justify-end gap-2 px-5 py-3 border-t bg-gray-50 rounded-b-2xl">
-            <button @click="closeHarianModal()" class="ab-btn-secondary">Batal</button>
-            <button @click="submitHarian()" :disabled="saving" class="ab-btn-primary">
+            <button @click="closeHarianModal()" class="crud-btn-secondary">Batal</button>
+            <button @click="submitHarian()" :disabled="saving" class="crud-btn-primary">
                 <template x-if="saving"><i class="bi bi-arrow-repeat ab-spin"></i></template>
                 <span x-text="editingHarianId ? 'Update' : 'Simpan'"></span>
             </button>
@@ -209,8 +184,8 @@
         <h3 class="font-semibold text-gray-800 mb-1">Hapus Data Absensi?</h3>
         <p class="text-sm text-gray-500 mb-4">Data yang dihapus tidak dapat dikembalikan.</p>
         <div class="flex gap-2 justify-center">
-            <button @click="showDeleteModal = false" class="ab-btn-secondary">Batal</button>
-            <button @click="executeDelete()" :disabled="saving" class="ab-btn-danger">
+            <button @click="showDeleteModal = false" class="crud-btn-secondary">Batal</button>
+            <button @click="executeDelete()" :disabled="saving" class="crud-btn-danger">
                 <template x-if="saving"><i class="bi bi-arrow-repeat ab-spin"></i></template>
                 Hapus
             </button>
@@ -240,8 +215,8 @@
         <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-calendar-check-fill text-primary-600 mr-1"></i> Absensi</h1>
     </div>
     <div class="flex items-center gap-2">
-        <input type="date" x-model="statDate" @change="loadStats()" class="ab-field-input" style="width:auto;font-size:12px" title="Tanggal statistik">
-        <button @click="activeTab === 'ubudiyah' ? openUbudiyahCreate() : openHarianCreate()" class="ab-btn-primary" style="font-size:12px">
+        <input type="date" x-model="statDate" @change="loadStats()" class="crud-field-input" style="width:auto;font-size:12px" title="Tanggal statistik">
+        <button @click="activeTab === 'ubudiyah' ? openUbudiyahCreate() : openHarianCreate()" class="crud-btn-primary" style="font-size:12px">
             <i class="bi bi-plus-lg"></i> <span class="hidden sm:inline">Tambah</span>
         </button>
     </div>
@@ -301,23 +276,23 @@
         <div class="bg-white rounded-xl border p-3 flex flex-wrap items-center gap-2 mb-4">
             <div class="relative flex-1" style="min-width:160px">
                 <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" style="font-size:13px"></i>
-                <input type="text" x-model="uFilter.search" @input.debounce.500ms="loadUbudiyah(1)" class="ab-field-input" style="padding-left:36px" placeholder="Cari nama, alamat...">
+                <input type="text" x-model="uFilter.search" @input.debounce.500ms="loadUbudiyah(1)" class="crud-field-input" style="padding-left:36px" placeholder="Cari nama, alamat...">
             </div>
-            <select x-model="uFilter.status" @change="loadUbudiyah(1)" class="ab-field-input" style="width:auto;font-size:12px">
+            <select x-model="uFilter.status" @change="loadUbudiyah(1)" class="crud-field-input" style="width:auto;font-size:12px">
                 <option value="">Semua Status</option>
                 <option value="Hadir">Hadir</option>
                 <option value="Izin">Izin</option>
                 <option value="Sakit">Sakit</option>
                 <option value="Tugas diluar">Tugas diluar</option>
             </select>
-            <select x-model="uFilter.ubudiyah" @change="loadUbudiyah(1)" class="ab-field-input" style="width:auto;font-size:12px">
+            <select x-model="uFilter.ubudiyah" @change="loadUbudiyah(1)" class="crud-field-input" style="width:auto;font-size:12px">
                 <option value="">Semua Ubudiyah</option>
                 <option value="Shalat Tahajud">Shalat Tahajud</option>
                 <option value="Shalat Dhuha">Shalat Dhuha</option>
                 <option value="Tidak Ubudiyah">Tidak Ubudiyah</option>
             </select>
-            <input type="date" x-model="uFilter.tanggal_dari" @change="loadUbudiyah(1)" class="ab-field-input" style="width:auto;font-size:12px" title="Dari tanggal">
-            <input type="date" x-model="uFilter.tanggal_sampai" @change="loadUbudiyah(1)" class="ab-field-input" style="width:auto;font-size:12px" title="Sampai tanggal">
+            <input type="date" x-model="uFilter.tanggal_dari" @change="loadUbudiyah(1)" class="crud-field-input" style="width:auto;font-size:12px" title="Dari tanggal">
+            <input type="date" x-model="uFilter.tanggal_sampai" @change="loadUbudiyah(1)" class="crud-field-input" style="width:auto;font-size:12px" title="Sampai tanggal">
             <button @click="clearUFilter()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset" aria-label="Reset filter"><i class="bi bi-x-circle"></i></button>
         </div>
 
@@ -420,21 +395,21 @@
         <div class="bg-white rounded-xl border p-3 flex flex-wrap items-center gap-2 mb-4">
             <div class="relative flex-1" style="min-width:160px">
                 <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" style="font-size:13px"></i>
-                <input type="text" x-model="hFilter.search" @input.debounce.500ms="loadHarian(1)" class="ab-field-input" style="padding-left:36px" placeholder="Cari nama CS, lokasi...">
+                <input type="text" x-model="hFilter.search" @input.debounce.500ms="loadHarian(1)" class="crud-field-input" style="padding-left:36px" placeholder="Cari nama CS, lokasi...">
             </div>
-            <select x-model="hFilter.tipe_absen" @change="loadHarian(1)" class="ab-field-input" style="width:auto;font-size:12px">
+            <select x-model="hFilter.tipe_absen" @change="loadHarian(1)" class="crud-field-input" style="width:auto;font-size:12px">
                 <option value="">Semua Tipe</option>
                 <option value="Masuk">Masuk</option>
                 <option value="Pulang">Pulang</option>
             </select>
-            <select x-model="hFilter.status_kehadiran" @change="loadHarian(1)" class="ab-field-input" style="width:auto;font-size:12px">
+            <select x-model="hFilter.status_kehadiran" @change="loadHarian(1)" class="crud-field-input" style="width:auto;font-size:12px">
                 <option value="">Semua Status</option>
                 <template x-for="s in options.status_kehadiran" :key="s">
                     <option :value="s" x-text="s"></option>
                 </template>
             </select>
-            <input type="date" x-model="hFilter.tanggal_dari" @change="loadHarian(1)" class="ab-field-input" style="width:auto;font-size:12px" title="Dari tanggal">
-            <input type="date" x-model="hFilter.tanggal_sampai" @change="loadHarian(1)" class="ab-field-input" style="width:auto;font-size:12px" title="Sampai tanggal">
+            <input type="date" x-model="hFilter.tanggal_dari" @change="loadHarian(1)" class="crud-field-input" style="width:auto;font-size:12px" title="Dari tanggal">
+            <input type="date" x-model="hFilter.tanggal_sampai" @change="loadHarian(1)" class="crud-field-input" style="width:auto;font-size:12px" title="Sampai tanggal">
             <button @click="clearHFilter()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset" aria-label="Reset filter"><i class="bi bi-x-circle"></i></button>
         </div>
 

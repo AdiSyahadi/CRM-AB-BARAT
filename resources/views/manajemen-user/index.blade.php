@@ -3,31 +3,6 @@
 {{-- ===== CUSTOM STYLES (plain CSS, no @apply) ===== --}}
 @push('styles')
 <style>
-    .mu-field-input {
-        width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
-        font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
-    }
-    .mu-field-input:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.15); }
-    .mu-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }
-    .mu-btn-primary {
-        background: #059669; color: white; padding: 8px 16px; border-radius: 10px;
-        font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
-        display: inline-flex; align-items: center; gap: 6px;
-    }
-    .mu-btn-primary:hover { background: #047857; }
-    .mu-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .mu-btn-secondary {
-        background: #F3F4F6; color: #374151; padding: 8px 16px; border-radius: 10px;
-        font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
-    }
-    .mu-btn-secondary:hover { background: #E5E7EB; }
-    .mu-btn-danger {
-        background: #DC2626; color: white; padding: 8px 16px; border-radius: 10px;
-        font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
-        display: inline-flex; align-items: center; gap: 6px;
-    }
-    .mu-btn-danger:hover { background: #B91C1C; }
-    .mu-btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
     .mu-stat-card {
         background: white; border-radius: 12px; padding: 16px; border: 1px solid #F3F4F6;
         box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -74,23 +49,23 @@
         </div>
         <div class="px-5 py-4 space-y-3">
             <div>
-                <label class="mu-field-label">Nama <span style="color:#EF4444">*</span></label>
-                <input type="text" x-model="form.name" class="mu-field-input" placeholder="Nama lengkap">
+                <label class="crud-field-label">Nama <span style="color:#EF4444">*</span></label>
+                <input type="text" x-model="form.name" class="crud-field-input" placeholder="Nama lengkap">
                 <template x-if="formErrors.name"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.name[0]"></p></template>
             </div>
             <div>
-                <label class="mu-field-label">Email <span style="color:#EF4444">*</span></label>
-                <input type="email" x-model="form.email" class="mu-field-input" placeholder="email@example.com">
+                <label class="crud-field-label">Email <span style="color:#EF4444">*</span></label>
+                <input type="email" x-model="form.email" class="crud-field-input" placeholder="email@example.com">
                 <template x-if="formErrors.email"><p style="font-size:12px;color:#EF4444;margin-top:4px" x-text="formErrors.email[0]"></p></template>
             </div>
             <div>
-                <label class="mu-field-label">
+                <label class="crud-field-label">
                     Password
                     <span x-show="!editingId" style="color:#EF4444">*</span>
                     <span x-show="editingId" style="font-weight:400;color:#9CA3AF;font-size:11px">(kosongkan jika tidak ingin mengubah)</span>
                 </label>
                 <div style="position:relative">
-                    <input :type="showPassword ? 'text' : 'password'" x-model="form.password" class="mu-field-input" style="padding-right:40px" placeholder="Minimal 6 karakter">
+                    <input :type="showPassword ? 'text' : 'password'" x-model="form.password" class="crud-field-input" style="padding-right:40px" placeholder="Minimal 6 karakter">
                     <button type="button" @click="showPassword = !showPassword"
                             style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:14px"
                             aria-label="Tampilkan password">
@@ -101,8 +76,8 @@
             </div>
         </div>
         <div class="flex justify-end gap-2 px-5 py-3 border-t bg-gray-50 rounded-b-2xl">
-            <button @click="closeFormModal()" class="mu-btn-secondary">Batal</button>
-            <button @click="submitForm()" :disabled="saving" class="mu-btn-primary">
+            <button @click="closeFormModal()" class="crud-btn-secondary">Batal</button>
+            <button @click="submitForm()" :disabled="saving" class="crud-btn-primary">
                 <template x-if="saving"><i class="bi bi-arrow-repeat mu-spin"></i></template>
                 <span x-text="editingId ? 'Update' : 'Simpan'"></span>
             </button>
@@ -122,8 +97,8 @@
         <h3 class="font-semibold text-gray-800 mb-1">Hapus User?</h3>
         <p class="text-sm text-gray-500 mb-4">Data user yang dihapus tidak dapat dikembalikan.</p>
         <div class="flex gap-2 justify-center">
-            <button @click="showDeleteModal = false" class="mu-btn-secondary">Batal</button>
-            <button @click="executeDelete()" :disabled="saving" class="mu-btn-danger">
+            <button @click="showDeleteModal = false" class="crud-btn-secondary">Batal</button>
+            <button @click="executeDelete()" :disabled="saving" class="crud-btn-danger">
                 <template x-if="saving"><i class="bi bi-arrow-repeat mu-spin"></i></template>
                 Hapus
             </button>
@@ -173,8 +148,8 @@
             </template>
         </div>
         <div class="flex justify-end gap-2 px-5 py-3 border-t bg-gray-50 rounded-b-2xl">
-            <button @click="showDetailModal = false" class="mu-btn-secondary">Tutup</button>
-            <button @click="showDetailModal = false; openEditModal(detailData.id)" class="mu-btn-primary">
+            <button @click="showDetailModal = false" class="crud-btn-secondary">Tutup</button>
+            <button @click="showDetailModal = false; openEditModal(detailData.id)" class="crud-btn-primary">
                 <i class="bi bi-pencil-square"></i> Edit
             </button>
         </div>
@@ -190,7 +165,7 @@
         <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600" aria-label="Toggle menu"><i class="bi bi-list text-xl"></i></button>
         <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-person-gear text-primary-600 mr-1"></i> Manajemen User</h1>
     </div>
-    <button @click="openCreateModal()" class="mu-btn-primary" style="font-size:12px">
+    <button @click="openCreateModal()" class="crud-btn-primary" style="font-size:12px">
         <i class="bi bi-plus-lg"></i> <span class="hidden sm:inline">Tambah User</span><span class="sm:hidden">Tambah</span>
     </button>
 </div>
@@ -222,7 +197,7 @@
         <div class="relative flex-1" style="min-width:200px">
             <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" style="font-size:13px"></i>
             <input type="text" x-model="filters.search" @input.debounce.500ms="resetAndLoad()"
-                   class="mu-field-input" style="padding-left:36px" placeholder="Cari nama atau email...">
+                   class="crud-field-input" style="padding-left:36px" placeholder="Cari nama atau email...">
         </div>
         <button @click="clearFilters()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset Filter" aria-label="Reset filter">
             <i class="bi bi-x-circle"></i>
