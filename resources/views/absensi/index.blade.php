@@ -7,14 +7,14 @@
         width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
         font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
     }
-    .ab-field-input:focus { border-color: #3B82F6; box-shadow: 0 0 0 2px rgba(59,130,246,0.15); }
+    .ab-field-input:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.15); }
     .ab-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }
     .ab-btn-primary {
-        background: #2563EB; color: white; padding: 8px 16px; border-radius: 10px;
+        background: #059669; color: white; padding: 8px 16px; border-radius: 10px;
         font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
         display: inline-flex; align-items: center; gap: 6px;
     }
-    .ab-btn-primary:hover { background: #1D4ED8; }
+    .ab-btn-primary:hover { background: #047857; }
     .ab-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
     .ab-btn-secondary {
         background: #F3F4F6; color: #374151; padding: 8px 16px; border-radius: 10px;
@@ -42,7 +42,7 @@
         display: inline-flex; align-items: center; gap: 6px;
     }
     .ab-tab-active {
-        background: #2563EB; color: white; box-shadow: 0 2px 6px rgba(37,99,235,0.3);
+        background: #059669; color: white; box-shadow: 0 2px 6px rgba(5,150,105,0.3);
     }
     .ab-tab-inactive {
         background: transparent; color: #4B5563;
@@ -63,7 +63,7 @@
 <div x-show="loading" x-cloak
      class="fixed inset-0 z-[100] bg-white/70 backdrop-blur-sm flex items-center justify-center">
     <div class="flex flex-col items-center gap-3">
-        <i class="bi bi-arrow-repeat text-3xl text-blue-600 ab-spin"></i>
+        <i class="bi bi-arrow-repeat text-3xl text-primary-600 ab-spin"></i>
         <span class="text-sm text-gray-500 font-medium">Memuat data absensi...</span>
     </div>
 </div>
@@ -237,7 +237,7 @@
 <div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
         <button @click="$dispatch('toggle-sidebar')" aria-label="Toggle menu" class="lg:hidden text-gray-600"><i class="bi bi-list text-xl"></i></button>
-        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-calendar-check-fill text-blue-600 mr-1"></i> Absensi</h1>
+        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-calendar-check-fill text-primary-600 mr-1"></i> Absensi</h1>
     </div>
     <div class="flex items-center gap-2">
         <input type="date" x-model="statDate" @change="loadStats()" class="ab-field-input" style="width:auto;font-size:12px" title="Tanggal statistik">
@@ -349,7 +349,7 @@
                             <td colspan="8" style="padding:40px 16px;text-align:center;color:#9CA3AF"><i class="bi bi-inbox" style="font-size:24px;display:block;margin-bottom:4px"></i> Tidak ada data</td>
                         </tr>
                         <template x-for="(row, idx) in ubudiyahData" :key="row.id">
-                            <tr class="hover:bg-blue-50/40" style="transition:background 0.15s">
+                            <tr class="hover:bg-primary-50/40" style="transition:background 0.15s">
                                 <td style="padding:12px 16px;color:#9CA3AF;font-size:12px" x-text="uPagination.from + idx"></td>
                                 <td style="padding:12px 16px;font-weight:500;color:#1F2937" x-text="row.nama"></td>
                                 <td style="padding:12px 16px;color:#4B5563" x-text="row.tanggal_fmt"></td>
@@ -468,7 +468,7 @@
                             <td colspan="8" style="padding:40px 16px;text-align:center;color:#9CA3AF"><i class="bi bi-inbox" style="font-size:24px;display:block;margin-bottom:4px"></i> Tidak ada data</td>
                         </tr>
                         <template x-for="(row, idx) in harianData" :key="row.id">
-                            <tr class="hover:bg-blue-50/40" style="transition:background 0.15s">
+                            <tr class="hover:bg-primary-50/40" style="transition:background 0.15s">
                                 <td style="padding:12px 16px;color:#9CA3AF;font-size:12px" x-text="hPagination.from + idx"></td>
                                 <td style="padding:12px 16px;font-weight:500;color:#1F2937" x-text="row.nama_cs"></td>
                                 <td style="padding:12px 16px;color:#4B5563" x-text="row.tanggal_fmt"></td>
@@ -814,7 +814,7 @@ function absensiApp() {
         // TOAST
         showToast: function(message, type) {
             if (!type) type = 'success';
-            var bg = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#2563eb';
+            var bg = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#059669';
             var icon = type === 'success' ? 'check-circle-fill' : type === 'error' ? 'x-circle-fill' : 'info-circle-fill';
             var toast = document.createElement('div');
             toast.innerHTML = '<i class="bi bi-' + icon + '"></i> ' + message;

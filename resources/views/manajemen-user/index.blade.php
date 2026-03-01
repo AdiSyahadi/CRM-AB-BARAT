@@ -7,14 +7,14 @@
         width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
         font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
     }
-    .mu-field-input:focus { border-color: #4F46E5; box-shadow: 0 0 0 2px rgba(79,70,229,0.15); }
+    .mu-field-input:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.15); }
     .mu-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }
     .mu-btn-primary {
-        background: #4F46E5; color: white; padding: 8px 16px; border-radius: 10px;
+        background: #059669; color: white; padding: 8px 16px; border-radius: 10px;
         font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
         display: inline-flex; align-items: center; gap: 6px;
     }
-    .mu-btn-primary:hover { background: #4338CA; }
+    .mu-btn-primary:hover { background: #047857; }
     .mu-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
     .mu-btn-secondary {
         background: #F3F4F6; color: #374151; padding: 8px 16px; border-radius: 10px;
@@ -38,7 +38,7 @@
         width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #E5E7EB;
     }
     .mu-avatar-placeholder {
-        width: 36px; height: 36px; border-radius: 50%; background: #EEF2FF; color: #4F46E5;
+        width: 36px; height: 36px; border-radius: 50%; background: #ECFDF5; color: #059669;
         display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;
         border: 2px solid #E5E7EB;
     }
@@ -54,7 +54,7 @@
 <div x-show="loading" x-cloak
      class="fixed inset-0 z-[100] bg-white/70 backdrop-blur-sm flex items-center justify-center">
     <div class="flex flex-col items-center gap-3">
-        <i class="bi bi-arrow-repeat text-3xl text-indigo-600 mu-spin"></i>
+        <i class="bi bi-arrow-repeat text-3xl text-primary-600 mu-spin"></i>
         <span class="text-sm text-gray-500 font-medium">Memuat data user...</span>
     </div>
 </div>
@@ -67,7 +67,7 @@
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4" @click.outside="closeFormModal()">
         <div class="flex items-center justify-between px-5 py-4 border-b">
             <div class="flex items-center gap-2">
-                <i :class="editingId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-plus-circle-fill text-indigo-600'" class="text-lg"></i>
+                <i :class="editingId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-plus-circle-fill text-primary-600'" class="text-lg"></i>
                 <h3 class="font-semibold text-gray-800" x-text="editingId ? 'Edit User' : 'Tambah User'"></h3>
             </div>
             <button @click="closeFormModal()" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
@@ -139,7 +139,7 @@
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4" @click.outside="showDetailModal = false">
         <div class="flex items-center justify-between px-5 py-4 border-b">
             <div class="flex items-center gap-2">
-                <i class="bi bi-person-circle text-indigo-600 text-lg"></i>
+                <i class="bi bi-person-circle text-primary-600 text-lg"></i>
                 <h3 class="font-semibold text-gray-800">Detail User</h3>
             </div>
             <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
@@ -188,7 +188,7 @@
 <div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
         <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600" aria-label="Toggle menu"><i class="bi bi-list text-xl"></i></button>
-        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-person-gear text-indigo-600 mr-1"></i> Manajemen User</h1>
+        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-person-gear text-primary-600 mr-1"></i> Manajemen User</h1>
     </div>
     <button @click="openCreateModal()" class="mu-btn-primary" style="font-size:12px">
         <i class="bi bi-plus-lg"></i> <span class="hidden sm:inline">Tambah User</span><span class="sm:hidden">Tambah</span>
@@ -200,7 +200,7 @@
     {{-- Stat Cards --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="mu-stat-card">
-            <div class="flex items-center gap-2 mb-1"><i class="bi bi-people-fill text-indigo-600"></i><span style="font-size:12px;color:#6B7280">Total User</span></div>
+            <div class="flex items-center gap-2 mb-1"><i class="bi bi-people-fill text-primary-600"></i><span style="font-size:12px;color:#6B7280">Total User</span></div>
             <p style="font-size:24px;font-weight:700;color:#1F2937" x-text="stats.total ?? '—'"></p>
         </div>
         <div class="mu-stat-card">
@@ -255,7 +255,7 @@
                         <td colspan="6" style="padding:40px 16px;text-align:center;color:#9CA3AF"><i class="bi bi-inbox" style="font-size:24px;display:block;margin-bottom:4px"></i> Tidak ada data</td>
                     </tr>
                     <template x-for="(row, idx) in tableData" :key="row.id">
-                        <tr style="cursor:pointer;transition:background 0.15s" class="hover:bg-indigo-50/40" @click="openDetailModal(row.id)">
+                        <tr style="cursor:pointer;transition:background 0.15s" class="hover:bg-primary-50/40" @click="openDetailModal(row.id)">
                             <td style="padding:12px 16px;color:#9CA3AF;font-size:12px" x-text="pagination.from + idx"></td>
                             <td style="padding:12px 16px">
                                 <div style="display:flex;align-items:center;gap:10px">
@@ -484,7 +484,7 @@ function manajemenUserApp() {
 
         showToast: function(message, type) {
             if (!type) type = 'success';
-            var bg = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#4F46E5';
+            var bg = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#059669';
             var icon = type === 'success' ? 'check-circle-fill' : type === 'error' ? 'x-circle-fill' : 'info-circle-fill';
             var toast = document.createElement('div');
             toast.innerHTML = '<i class="bi bi-' + icon + '"></i> ' + message;

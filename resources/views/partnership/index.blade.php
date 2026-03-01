@@ -7,14 +7,14 @@
         width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
         font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
     }
-    .ps-field-input:focus { border-color: #8B5CF6; box-shadow: 0 0 0 2px rgba(139,92,246,0.15); }
+    .ps-field-input:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.15); }
     .ps-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }
     .ps-btn-primary {
-        background: #7C3AED; color: white; padding: 8px 16px; border-radius: 10px;
+        background: #059669; color: white; padding: 8px 16px; border-radius: 10px;
         font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
         display: inline-flex; align-items: center; gap: 6px;
     }
-    .ps-btn-primary:hover { background: #6D28D9; }
+    .ps-btn-primary:hover { background: #047857; }
     .ps-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
     .ps-btn-secondary {
         background: #F3F4F6; color: #374151; padding: 8px 16px; border-radius: 10px;
@@ -42,7 +42,7 @@
         font-size: 13px; background: white; outline: 2px solid transparent; cursor: pointer;
         font-weight: 600; color: #374151;
     }
-    .ps-year-select:focus { border-color: #8B5CF6; box-shadow: 0 0 0 2px rgba(139,92,246,0.15); }
+    .ps-year-select:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.15); }
 
     /* YoY comparison */
     .ps-yoy-card {
@@ -50,7 +50,7 @@
         box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;
     }
     .ps-yoy-header {
-        background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
         color: white; padding: 16px 20px; font-weight: 700; font-size: 15px;
         display: flex; align-items: center; gap: 8px;
     }
@@ -65,7 +65,7 @@
         padding: 12px 16px; border-bottom: 1px solid #F3F4F6;
     }
     .ps-yoy-table td:not(:first-child) { text-align: right; }
-    .ps-yoy-table tr:hover { background: #FAF5FF; }
+    .ps-yoy-table tr:hover { background: #ECFDF5; }
     .ps-growth-badge {
         display: inline-flex; align-items: center; gap: 3px;
         padding: 2px 8px; border-radius: 20px; font-size: 12px; font-weight: 600;
@@ -90,7 +90,7 @@
 <div x-show="loading" x-cloak
      class="fixed inset-0 z-[100] bg-white/70 backdrop-blur-sm flex items-center justify-center">
     <div class="flex flex-col items-center gap-3">
-        <i class="bi bi-arrow-repeat text-3xl text-purple-600 ps-spin"></i>
+        <i class="bi bi-arrow-repeat text-3xl text-primary-600 ps-spin"></i>
         <span class="text-sm text-gray-500 font-medium">Memuat data partnership...</span>
     </div>
 </div>
@@ -103,7 +103,7 @@
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4" @click.outside="closeFormModal()">
         <div class="flex items-center justify-between px-5 py-4 border-b">
             <div class="flex items-center gap-2">
-                <i :class="editingId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-plus-circle-fill text-purple-600'" class="text-lg"></i>
+                <i :class="editingId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-plus-circle-fill text-primary-600'" class="text-lg"></i>
                 <h3 class="font-semibold text-gray-800" x-text="editingId ? 'Edit Partnership' : 'Tambah Partnership'"></h3>
             </div>
             <button @click="closeFormModal()" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
@@ -184,7 +184,7 @@
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4" @click.outside="showDetailModal = false">
         <div class="flex items-center justify-between px-5 py-4 border-b">
             <div class="flex items-center gap-2">
-                <i class="bi bi-building text-purple-600 text-lg"></i>
+                <i class="bi bi-building text-primary-600 text-lg"></i>
                 <h3 class="font-semibold text-gray-800">Detail Partnership</h3>
             </div>
             <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
@@ -194,7 +194,7 @@
                 <div style="display:flex;flex-direction:column;gap:10px">
                     <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Tanggal</span><span style="font-size:14px;font-weight:500" x-text="detailData.tanggal_fmt"></span></div>
                     <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Nama CS</span><span style="font-size:14px;font-weight:500" x-text="detailData.nama_cs || '-'"></span></div>
-                    <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Jumlah Perolehan</span><span style="font-size:14px;font-weight:700;color:#7C3AED" x-text="detailData.jml_perolehan_fmt"></span></div>
+                    <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Jumlah Perolehan</span><span style="font-size:14px;font-weight:700;color:#059669" x-text="detailData.jml_perolehan_fmt"></span></div>
                     <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Nama Donatur</span><span style="font-size:14px" x-text="detailData.nama_donatur || '-'"></span></div>
                     <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Nama Bank</span><span style="font-size:14px" x-text="detailData.nama_bank || '-'"></span></div>
                     <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">No. Rekening</span><span style="font-size:14px" x-text="detailData.no_rek || '-'"></span></div>
@@ -218,7 +218,7 @@
 <div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
         <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden text-gray-600" aria-label="Toggle menu"><i class="bi bi-list text-xl"></i></button>
-        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-building text-purple-600 mr-1"></i> Partnership</h1>
+        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-building text-primary-600 mr-1"></i> Partnership</h1>
     </div>
     <button @click="openCreateModal()" class="ps-btn-primary" style="font-size:12px">
         <i class="bi bi-plus-lg"></i> <span class="hidden sm:inline">Tambah Data</span><span class="sm:hidden">Tambah</span>
@@ -230,7 +230,7 @@
     {{-- Year Filter + Stat Cards --}}
     <div class="flex flex-wrap items-center gap-3 mb-1">
         <div class="flex items-center gap-2">
-            <i class="bi bi-calendar3 text-purple-600"></i>
+            <i class="bi bi-calendar3 text-primary-600"></i>
             <select x-model="filters.year" @change="onYearChange()" class="ps-year-select">
                 <option value="all">Semua Tahun</option>
                 <template x-for="y in availableYears" :key="y">
@@ -243,7 +243,7 @@
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="ps-stat-card">
-            <div class="flex items-center gap-2 mb-1"><i class="bi bi-clipboard-data text-purple-600"></i><span style="font-size:12px;color:#6B7280">Total Data</span></div>
+            <div class="flex items-center gap-2 mb-1"><i class="bi bi-clipboard-data text-primary-600"></i><span style="font-size:12px;color:#6B7280">Total Data</span></div>
             <p style="font-size:24px;font-weight:700;color:#1F2937" x-text="stats.total_data ?? '—'"></p>
         </div>
         <div class="ps-stat-card">
@@ -281,7 +281,7 @@
                     <template x-for="(row, idx) in yoyData" :key="row.year">
                         <tr>
                             <td>
-                                <span style="font-weight:700;color:#7C3AED;font-size:15px" x-text="row.year"></span>
+                                <span style="font-weight:700;color:#059669;font-size:15px" x-text="row.year"></span>
                             </td>
                             <td style="font-weight:600" x-text="row.total_data"></td>
                             <td style="font-weight:700;color:#1F2937" x-text="row.total_perolehan_fmt"></td>
@@ -321,7 +321,7 @@
                 <template x-for="row in yoyData" :key="'bar-'+row.year">
                     <div>
                         <div class="flex items-center gap-2 mb-1">
-                            <span style="font-size:12px;font-weight:700;color:#7C3AED" x-text="row.year"></span>
+                            <span style="font-size:12px;font-weight:700;color:#059669" x-text="row.year"></span>
                             <span style="font-size:11px;color:#9CA3AF" x-text="row.total_perolehan_fmt"></span>
                         </div>
                         <div class="ps-bar-container">
@@ -386,11 +386,11 @@
                         <td colspan="8" style="padding:40px 16px;text-align:center;color:#9CA3AF"><i class="bi bi-inbox" style="font-size:24px;display:block;margin-bottom:4px"></i> Tidak ada data</td>
                     </tr>
                     <template x-for="(row, idx) in tableData" :key="row.id">
-                        <tr style="cursor:pointer;transition:background 0.15s" class="hover:bg-purple-50/40" @click="openDetailModal(row.id)">
+                        <tr style="cursor:pointer;transition:background 0.15s" class="hover:bg-primary-50/40" @click="openDetailModal(row.id)">
                             <td style="padding:12px 16px;color:#9CA3AF;font-size:12px" x-text="pagination.from + idx"></td>
                             <td style="padding:12px 16px;color:#4B5563" x-text="row.tanggal_fmt"></td>
                             <td style="padding:12px 16px;font-weight:500;color:#1F2937" x-text="row.nama_cs || '-'"></td>
-                            <td style="padding:12px 16px;text-align:right;font-weight:600;color:#7C3AED" x-text="row.jml_perolehan_fmt"></td>
+                            <td style="padding:12px 16px;text-align:right;font-weight:600;color:#059669" x-text="row.jml_perolehan_fmt"></td>
                             <td style="padding:12px 16px;color:#4B5563" class="hidden md:table-cell" x-text="row.nama_donatur || '-'"></td>
                             <td style="padding:12px 16px;color:#4B5563;font-size:12px" class="hidden lg:table-cell" x-text="row.nama_bank || '-'"></td>
                             <td style="padding:12px 16px;color:#6B7280;font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" class="hidden xl:table-cell" x-text="row.keterangan || '-'"></td>
@@ -455,7 +455,7 @@ function partnershipApp() {
 
         availableYears: [],
         yoyData: [],
-        yearColors: ['#7C3AED', '#2563EB', '#059669', '#D97706', '#DC2626', '#6366F1', '#0891B2'],
+        yearColors: ['#059669', '#2563EB', '#10B981', '#D97706', '#DC2626', '#6366F1', '#0891B2'],
 
         async init() {
             try {
@@ -652,7 +652,7 @@ function partnershipApp() {
 
         showToast: function(message, type) {
             if (!type) type = 'success';
-            var bg = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#7c3aed';
+            var bg = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#059669';
             var icon = type === 'success' ? 'check-circle-fill' : type === 'error' ? 'x-circle-fill' : 'info-circle-fill';
             var toast = document.createElement('div');
             toast.innerHTML = '<i class="bi bi-' + icon + '"></i> ' + message;

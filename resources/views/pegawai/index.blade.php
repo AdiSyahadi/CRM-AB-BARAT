@@ -7,14 +7,14 @@
         width: 100%; border: 1px solid #D1D5DB; border-radius: 8px; padding: 8px 12px;
         font-size: 13px; transition: all 0.15s; background: white; outline: 2px solid transparent;
     }
-    .pg-field-input:focus { border-color: #3B82F6; box-shadow: 0 0 0 2px rgba(59,130,246,0.15); }
+    .pg-field-input:focus { border-color: #059669; box-shadow: 0 0 0 2px rgba(5,150,105,0.15); }
     .pg-field-label { display: block; font-size: 12px; font-weight: 600; color: #4B5563; margin-bottom: 4px; }
     .pg-btn-primary {
-        background: #2563EB; color: white; padding: 8px 16px; border-radius: 10px;
+        background: #059669; color: white; padding: 8px 16px; border-radius: 10px;
         font-weight: 600; font-size: 13px; transition: all 0.2s; border: none; cursor: pointer;
         display: inline-flex; align-items: center; gap: 6px;
     }
-    .pg-btn-primary:hover { background: #1D4ED8; }
+    .pg-btn-primary:hover { background: #047857; }
     .pg-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
     .pg-btn-secondary {
         background: #F3F4F6; color: #374151; padding: 8px 16px; border-radius: 10px;
@@ -44,7 +44,7 @@
 <div x-show="loading" x-cloak
      class="fixed inset-0 z-[100] bg-white/70 backdrop-blur-sm flex items-center justify-center">
     <div class="flex flex-col items-center gap-3">
-        <i class="bi bi-arrow-repeat text-3xl text-blue-600 pg-spin"></i>
+        <i class="bi bi-arrow-repeat text-3xl text-primary-600 pg-spin"></i>
         <span class="text-sm text-gray-500 font-medium">Memuat data pegawai...</span>
     </div>
 </div>
@@ -57,7 +57,7 @@
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4" @click.outside="closeFormModal()">
         <div class="flex items-center justify-between px-5 py-4 border-b">
             <div class="flex items-center gap-2">
-                <i :class="editingId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-person-plus-fill text-blue-600'" class="text-lg"></i>
+                <i :class="editingId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-person-plus-fill text-primary-600'" class="text-lg"></i>
                 <h3 class="font-semibold text-gray-800" x-text="editingId ? 'Edit Pegawai' : 'Tambah Pegawai'"></h3>
             </div>
             <button @click="closeFormModal()" aria-label="Tutup" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
@@ -153,7 +153,7 @@
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4" @click.outside="showDetailModal = false">
         <div class="flex items-center justify-between px-5 py-4 border-b">
             <div class="flex items-center gap-2">
-                <i class="bi bi-person-badge-fill text-blue-600 text-lg"></i>
+                <i class="bi bi-person-badge-fill text-primary-600 text-lg"></i>
                 <h3 class="font-semibold text-gray-800">Detail Pegawai</h3>
             </div>
             <button @click="showDetailModal = false" aria-label="Tutup" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
@@ -167,7 +167,7 @@
                     <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">No. Telepon</span><span style="font-size:14px" x-text="detailData.no_telepon || '-'"></span></div>
                     <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Jabatan</span><span style="font-size:14px" x-text="detailData.jabatan_label"></span></div>
                     <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Tanggal Masuk</span><span style="font-size:14px" x-text="detailData.tanggal_masuk_fmt"></span></div>
-                    <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Masa Kerja</span><span style="font-size:14px;font-weight:500;color:#2563EB" x-text="detailData.masa_kerja"></span></div>
+                    <div class="flex justify-between"><span style="font-size:12px;color:#6B7280">Masa Kerja</span><span style="font-size:14px;font-weight:500;color:#059669" x-text="detailData.masa_kerja"></span></div>
                     <div><span style="font-size:12px;color:#6B7280;display:block;margin-bottom:4px">Alamat</span><p style="font-size:14px;background:#F9FAFB;border-radius:8px;padding:8px" x-text="detailData.alamat || '-'"></p></div>
                 </div>
             </template>
@@ -188,7 +188,7 @@
 <div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
         <button @click="$dispatch('toggle-sidebar')" aria-label="Toggle menu" class="lg:hidden text-gray-600"><i class="bi bi-list text-xl"></i></button>
-        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-person-badge-fill text-blue-600 mr-1"></i> Data Pegawai</h1>
+        <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-person-badge-fill text-primary-600 mr-1"></i> Data Pegawai</h1>
     </div>
     <button @click="openCreateModal()" class="pg-btn-primary" style="font-size:12px">
         <i class="bi bi-plus-lg"></i> <span class="hidden sm:inline">Tambah Pegawai</span><span class="sm:hidden">Tambah</span>
@@ -200,7 +200,7 @@
     {{-- Stat Cards --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="pg-stat-card">
-            <div class="flex items-center gap-2 mb-1"><i class="bi bi-people-fill text-blue-600"></i><span style="font-size:12px;color:#6B7280">Total Pegawai</span></div>
+            <div class="flex items-center gap-2 mb-1"><i class="bi bi-people-fill text-primary-600"></i><span style="font-size:12px;color:#6B7280">Total Pegawai</span></div>
             <p style="font-size:24px;font-weight:700;color:#1F2937" x-text="stats.total ?? '—'"></p>
         </div>
         <div class="pg-stat-card">
@@ -272,7 +272,7 @@
                         <td colspan="8" style="padding:40px 16px;text-align:center;color:#9CA3AF"><i class="bi bi-inbox" style="font-size:24px;display:block;margin-bottom:4px"></i> Tidak ada data</td>
                     </tr>
                     <template x-for="(row, idx) in tableData" :key="row.id_pegawai">
-                        <tr style="cursor:pointer;transition:background 0.15s" class="hover:bg-blue-50/40" @click="openDetailModal(row.id_pegawai)">
+                        <tr style="cursor:pointer;transition:background 0.15s" class="hover:bg-primary-50/40" @click="openDetailModal(row.id_pegawai)">
                             <td style="padding:12px 16px;color:#9CA3AF;font-size:12px" x-text="pagination.from + idx"></td>
                             <td style="padding:12px 16px;font-weight:500;color:#1F2937" x-text="row.nama_pegawai"></td>
                             <td style="padding:12px 16px" class="hidden md:table-cell">
@@ -509,7 +509,7 @@ function dataPegawaiApp() {
 
         showToast: function(message, type) {
             if (!type) type = 'success';
-            var bg = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#2563eb';
+            var bg = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#059669';
             var icon = type === 'success' ? 'check-circle-fill' : type === 'error' ? 'x-circle-fill' : 'info-circle-fill';
             var toast = document.createElement('div');
             toast.innerHTML = '<i class="bi bi-' + icon + '"></i> ' + message;
