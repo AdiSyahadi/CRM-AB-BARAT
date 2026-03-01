@@ -37,7 +37,7 @@
         <div class="flex flex-col md:flex-row gap-3 items-center">
             <!-- Year Selector -->
             <div class="flex items-center gap-2">
-                <button @click="changeYear(-1)" class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition">
+                <button @click="changeYear(-1)" class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition" aria-label="Tahun sebelumnya">
                     <i class="bi bi-chevron-left"></i>
                 </button>
                 <select x-model="selectedYear" @change="refreshAll()"
@@ -46,7 +46,7 @@
                     <option value="{{ $year }}">{{ $year }}</option>
                     @endforeach
                 </select>
-                <button @click="changeYear(1)" class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition">
+                <button @click="changeYear(1)" class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition" aria-label="Tahun berikutnya">
                     <i class="bi bi-chevron-right"></i>
                 </button>
             </div>

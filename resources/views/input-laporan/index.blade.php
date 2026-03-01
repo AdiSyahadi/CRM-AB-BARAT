@@ -74,7 +74,7 @@
                         <p class="text-xs text-gray-500">Isi data laporan perolehan harian</p>
                     </div>
                 </div>
-                <button @click="closeFormModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-400 hover:text-gray-600">
+                <button @click="closeFormModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-400 hover:text-gray-600" aria-label="Tutup">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -391,7 +391,7 @@
 <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
     <div class="flex items-center justify-between px-4 md:px-6 py-3">
         <div class="flex items-center gap-3">
-            <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition">
+            <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition" aria-label="Toggle menu">
                 <i class="bi bi-list text-xl"></i>
             </button>
             <div>
@@ -403,7 +403,7 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <button @click="fetchData(); fetchStats()" class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition" title="Refresh">
+            <button @click="fetchData(); fetchStats()" class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition" title="Refresh" aria-label="Refresh data">
                 <i class="bi bi-arrow-clockwise"></i>
             </button>
             <button @click="openCreateModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-500 text-white text-xs font-semibold rounded-xl hover:bg-primary-600 shadow-lg shadow-primary-500/20 transition">
@@ -551,10 +551,10 @@
                             <td class="px-3 py-2.5 text-gray-600 text-xs" x-text="row.hasil_dari || '-'"></td>
                             <td class="px-3 py-2.5 text-center">
                                 <div class="flex items-center justify-center gap-1">
-                                    <button @click="openEditModal(row)" class="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition" title="Edit">
+                                    <button @click="openEditModal(row)" class="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition" title="Edit" aria-label="Edit">
                                         <i class="bi bi-pencil-square text-sm"></i>
                                     </button>
-                                    <button @click="confirmDelete(row)" class="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition" title="Hapus">
+                                    <button @click="confirmDelete(row)" class="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition" title="Hapus" aria-label="Hapus">
                                         <i class="bi bi-trash3 text-sm"></i>
                                     </button>
                                 </div>
@@ -581,7 +581,7 @@
                 dari <strong x-text="pagination.total?.toLocaleString('id-ID') || 0"></strong> data
             </p>
             <div class="flex items-center gap-1">
-                <button class="pagination-btn" :disabled="pagination.current_page <= 1" @click="goToPage(pagination.current_page - 1)">
+                <button class="pagination-btn" :disabled="pagination.current_page <= 1" @click="goToPage(pagination.current_page - 1)" aria-label="Halaman sebelumnya">
                     <i class="bi bi-chevron-left text-xs"></i>
                 </button>
                 <template x-for="p in paginationPages()" :key="'pg'+p">
@@ -591,7 +591,7 @@
                             @click="p !== '...' && goToPage(p)"
                             x-text="p"></button>
                 </template>
-                <button class="pagination-btn" :disabled="pagination.current_page >= pagination.last_page" @click="goToPage(pagination.current_page + 1)">
+                <button class="pagination-btn" :disabled="pagination.current_page >= pagination.last_page" @click="goToPage(pagination.current_page + 1)" aria-label="Halaman berikutnya">
                     <i class="bi bi-chevron-right text-xs"></i>
                 </button>
             </div>

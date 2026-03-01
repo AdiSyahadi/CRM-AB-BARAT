@@ -78,7 +78,7 @@
                 <i :class="editingUbudiyahId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-plus-circle-fill text-indigo-600'" class="text-lg"></i>
                 <h3 class="font-semibold text-gray-800" x-text="editingUbudiyahId ? 'Edit Absensi Ubudiyah' : 'Tambah Absensi Ubudiyah'"></h3>
             </div>
-            <button @click="closeUbudiyahModal()" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
+            <button @click="closeUbudiyahModal()" aria-label="Tutup" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div>
@@ -146,7 +146,7 @@
                 <i :class="editingHarianId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-plus-circle-fill text-green-600'" class="text-lg"></i>
                 <h3 class="font-semibold text-gray-800" x-text="editingHarianId ? 'Edit Absen Harian CS' : 'Tambah Absen Harian CS'"></h3>
             </div>
-            <button @click="closeHarianModal()" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
+            <button @click="closeHarianModal()" aria-label="Tutup" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div>
@@ -224,7 +224,7 @@
      @click="showPhotoModal = false" @keydown.escape.window="showPhotoModal = false">
     <div style="max-width:480px;margin:0 16px;position:relative" @click.stop>
         <img :src="photoUrl" style="border-radius:12px;box-shadow:0 25px 50px rgba(0,0,0,.25);max-height:80vh;width:auto" alt="Foto Absensi">
-        <button @click="showPhotoModal = false" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.8);border-radius:50%;padding:8px;border:none;cursor:pointer">
+        <button @click="showPhotoModal = false" aria-label="Tutup" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.8);border-radius:50%;padding:8px;border:none;cursor:pointer">
             <i class="bi bi-x-lg" style="color:#374151"></i>
         </button>
     </div>
@@ -236,7 +236,7 @@
 {{-- Sticky Header --}}
 <div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
-        <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600"><i class="bi bi-list text-xl"></i></button>
+        <button @click="$dispatch('toggle-sidebar')" aria-label="Toggle menu" class="lg:hidden text-gray-600"><i class="bi bi-list text-xl"></i></button>
         <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-calendar-check-fill text-blue-600 mr-1"></i> Absensi</h1>
     </div>
     <div class="flex items-center gap-2">
@@ -318,7 +318,7 @@
             </select>
             <input type="date" x-model="uFilter.tanggal_dari" @change="loadUbudiyah(1)" class="ab-field-input" style="width:auto;font-size:12px" title="Dari tanggal">
             <input type="date" x-model="uFilter.tanggal_sampai" @change="loadUbudiyah(1)" class="ab-field-input" style="width:auto;font-size:12px" title="Sampai tanggal">
-            <button @click="clearUFilter()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset"><i class="bi bi-x-circle"></i></button>
+            <button @click="clearUFilter()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset" aria-label="Reset filter"><i class="bi bi-x-circle"></i></button>
         </div>
 
         {{-- Ubudiyah Table --}}
@@ -376,13 +376,13 @@
                                 <td style="padding:12px 16px;color:#6B7280;font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" class="hidden lg:table-cell" x-text="row.keterangan || '-'"></td>
                                 <td style="padding:12px 16px;text-align:center">
                                     <div class="flex items-center justify-center gap-1">
-                                        <button x-show="row.foto_url" @click="openPhoto(row.foto_url)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#3B82F6" title="Lihat Foto">
+                                        <button x-show="row.foto_url" @click="openPhoto(row.foto_url)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#3B82F6" title="Lihat Foto" aria-label="Lihat foto">
                                             <i class="bi bi-image"></i>
                                         </button>
-                                        <button @click="openUbudiyahEdit(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#D97706" title="Edit">
+                                        <button @click="openUbudiyahEdit(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#D97706" title="Edit" aria-label="Edit">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
-                                        <button @click="confirmDelete('ubudiyah', row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#EF4444" title="Hapus">
+                                        <button @click="confirmDelete('ubudiyah', row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#EF4444" title="Hapus" aria-label="Hapus">
                                             <i class="bi bi-trash3"></i>
                                         </button>
                                     </div>
@@ -397,11 +397,13 @@
                 <span x-show="uPagination.total === 0">Tidak ada data</span>
                 <div class="flex gap-1">
                     <button @click="loadUbudiyah(uPagination.current_page - 1)" :disabled="!uPagination.prev_page_url"
+                            aria-label="Halaman sebelumnya"
                             style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
                             :style="!uPagination.prev_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
                         <i class="bi bi-chevron-left"></i>
                     </button>
                     <button @click="loadUbudiyah(uPagination.current_page + 1)" :disabled="!uPagination.next_page_url"
+                            aria-label="Halaman berikutnya"
                             style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
                             :style="!uPagination.next_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
                         <i class="bi bi-chevron-right"></i>
@@ -433,7 +435,7 @@
             </select>
             <input type="date" x-model="hFilter.tanggal_dari" @change="loadHarian(1)" class="ab-field-input" style="width:auto;font-size:12px" title="Dari tanggal">
             <input type="date" x-model="hFilter.tanggal_sampai" @change="loadHarian(1)" class="ab-field-input" style="width:auto;font-size:12px" title="Sampai tanggal">
-            <button @click="clearHFilter()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset"><i class="bi bi-x-circle"></i></button>
+            <button @click="clearHFilter()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset" aria-label="Reset filter"><i class="bi bi-x-circle"></i></button>
         </div>
 
         {{-- Harian CS Table --}}
@@ -480,13 +482,13 @@
                                 <td style="padding:12px 16px;color:#6B7280;font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" class="hidden lg:table-cell" x-text="row.lokasi || '-'"></td>
                                 <td style="padding:12px 16px;text-align:center">
                                     <div class="flex items-center justify-center gap-1">
-                                        <button x-show="row.foto_url" @click="openPhoto(row.foto_url)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#3B82F6" title="Lihat Foto">
+                                        <button x-show="row.foto_url" @click="openPhoto(row.foto_url)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#3B82F6" title="Lihat Foto" aria-label="Lihat foto">
                                             <i class="bi bi-image"></i>
                                         </button>
-                                        <button @click="openHarianEdit(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#D97706" title="Edit">
+                                        <button @click="openHarianEdit(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#D97706" title="Edit" aria-label="Edit">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
-                                        <button @click="confirmDelete('harian', row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#EF4444" title="Hapus">
+                                        <button @click="confirmDelete('harian', row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#EF4444" title="Hapus" aria-label="Hapus">
                                             <i class="bi bi-trash3"></i>
                                         </button>
                                     </div>
@@ -501,11 +503,13 @@
                 <span x-show="hPagination.total === 0">Tidak ada data</span>
                 <div class="flex gap-1">
                     <button @click="loadHarian(hPagination.current_page - 1)" :disabled="!hPagination.prev_page_url"
+                            aria-label="Halaman sebelumnya"
                             style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
                             :style="!hPagination.prev_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
                         <i class="bi bi-chevron-left"></i>
                     </button>
                     <button @click="loadHarian(hPagination.current_page + 1)" :disabled="!hPagination.next_page_url"
+                            aria-label="Halaman berikutnya"
                             style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
                             :style="!hPagination.next_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
                         <i class="bi bi-chevron-right"></i>

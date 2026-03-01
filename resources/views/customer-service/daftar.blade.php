@@ -51,7 +51,7 @@
                         <span class="text-xs text-gray-500" x-text="csDetail?.cs?.team || ''"></span>
                     </div>
                 </div>
-                <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition">
+                <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition" aria-label="Tutup">
                     <i class="bi bi-x-lg text-xl"></i>
                 </button>
             </div>
@@ -233,7 +233,7 @@
 <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
     <div class="flex items-center justify-between px-4 md:px-6 py-3">
         <div class="flex items-center gap-3">
-            <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition">
+            <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition" aria-label="Toggle menu">
                 <i class="bi bi-list text-xl"></i>
             </button>
             <div>
@@ -252,7 +252,7 @@
                 <option value="3_bulan">3 Bulan</option>
                 <option value="tahun_ini">Tahun Ini</option>
             </select>
-            <button @click="refreshAll()" class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition" title="Refresh">
+            <button @click="refreshAll()" class="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition" title="Refresh" aria-label="Refresh data">
                 <i class="bi bi-arrow-clockwise"></i>
             </button>
             <button @click="openAddForm()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-500 text-white text-xs font-semibold rounded-xl hover:bg-primary-600 shadow-lg shadow-primary-500/20 transition">
@@ -363,11 +363,11 @@
             </select>
             <div class="flex items-center gap-1 bg-gray-50 rounded-xl p-1">
                 <button @click="viewMode = 'card'" :class="viewMode === 'card' ? 'bg-white shadow-sm text-primary-600' : 'text-gray-400'"
-                        class="px-3 py-1.5 rounded-lg text-sm transition">
+                        class="px-3 py-1.5 rounded-lg text-sm transition" aria-label="Tampilan kartu">
                     <i class="bi bi-grid-fill"></i>
                 </button>
                 <button @click="viewMode = 'table'" :class="viewMode === 'table' ? 'bg-white shadow-sm text-primary-600' : 'text-gray-400'"
-                        class="px-3 py-1.5 rounded-lg text-sm transition">
+                        class="px-3 py-1.5 rounded-lg text-sm transition" aria-label="Tampilan tabel">
                     <i class="bi bi-list-ul"></i>
                 </button>
             </div>
@@ -421,10 +421,10 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-1">
-                        <button @click.stop="openEditForm(cs)" class="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition" title="Edit">
+                        <button @click.stop="openEditForm(cs)" class="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition" title="Edit" aria-label="Edit">
                             <i class="bi bi-pencil-fill text-xs"></i>
                         </button>
-                        <button @click.stop="openDeleteModal(cs)" class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition" title="Hapus">
+                        <button @click.stop="openDeleteModal(cs)" class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition" title="Hapus" aria-label="Hapus">
                             <i class="bi bi-trash-fill text-xs"></i>
                         </button>
                     </div>
@@ -498,10 +498,10 @@
                             <td class="px-5 py-3 text-gray-500 text-xs" x-text="cs.last_active_formatted"></td>
                             <td class="px-5 py-3 text-center" @click.stop>
                                 <div class="flex items-center justify-center gap-1">
-                                    <button @click="openEditForm(cs)" class="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition" title="Edit">
+                                    <button @click="openEditForm(cs)" class="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition" title="Edit" aria-label="Edit">
                                         <i class="bi bi-pencil-fill text-xs"></i>
                                     </button>
-                                    <button @click="openDeleteModal(cs)" class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition" title="Hapus">
+                                    <button @click="openDeleteModal(cs)" class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition" title="Hapus" aria-label="Hapus">
                                         <i class="bi bi-trash-fill text-xs"></i>
                                     </button>
                                 </div>

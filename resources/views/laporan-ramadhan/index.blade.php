@@ -73,7 +73,7 @@
                         <p class="text-xs text-gray-500">Isi tanggal Ramadhan berdasarkan kalender Hijriah</p>
                     </div>
                 </div>
-                <button @click="closePeriodModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-400 hover:text-gray-600">
+                <button @click="closePeriodModal()" aria-label="Tutup" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-400 hover:text-gray-600">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -156,7 +156,7 @@
     <!-- Header -->
     <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div class="flex items-center justify-between px-4 md:px-6 py-3">
-            <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl">
+            <button @click="sidebarOpen = true" aria-label="Toggle menu" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl">
                 <i class="bi bi-list text-xl"></i>
             </button>
             <div class="flex items-center gap-3">
@@ -193,8 +193,8 @@
                     <div class="stat-card bg-white rounded-2xl p-4 border border-gray-100 shadow-sm relative group">
                         {{-- Edit/Delete on hover --}}
                         <div class="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition">
-                            <button @click="openEditPeriodModal(p.period_id)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-blue-50 text-blue-500 text-sm"><i class="bi bi-pencil"></i></button>
-                            <button @click="confirmDeletePeriod(p.period_id, p.label)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-red-500 text-sm"><i class="bi bi-trash"></i></button>
+                            <button @click="openEditPeriodModal(p.period_id)" aria-label="Edit" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-blue-50 text-blue-500 text-sm"><i class="bi bi-pencil"></i></button>
+                            <button @click="confirmDeletePeriod(p.period_id, p.label)" aria-label="Hapus" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-red-500 text-sm"><i class="bi bi-trash"></i></button>
                         </div>
                         <div class="flex items-center gap-3 mb-3">
                             <div class="w-10 h-10 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl flex items-center justify-center">

@@ -30,7 +30,7 @@
                         <h3 class="text-xl font-bold text-gray-800" x-text="csDetail?.cs?.name || 'Detail CS'"></h3>
                         <p class="text-sm text-gray-500" x-text="csDetail?.cs?.team || ''"></p>
                     </div>
-                    <button @click="showCsDetailModal = false" class="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition">
+                    <button @click="showCsDetailModal = false" class="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition" aria-label="Tutup">
                         <i class="bi bi-x-lg text-xl"></i>
                     </button>
                 </div>
@@ -98,7 +98,7 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
                         <!-- Mobile menu button -->
-                        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden text-gray-600 hover:text-primary-600 p-2 rounded-lg hover:bg-gray-100 transition">
+                        <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden text-gray-600 hover:text-primary-600 p-2 rounded-lg hover:bg-gray-100 transition" aria-label="Toggle menu">
                             <i class="bi bi-list text-xl"></i>
                         </button>
                         <div>

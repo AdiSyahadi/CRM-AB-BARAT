@@ -74,7 +74,7 @@
                         <p class="text-xs text-gray-500">Isi data kwitansi donasi</p>
                     </div>
                 </div>
-                <button @click="closeFormModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-400 hover:text-gray-600">
+                <button @click="closeFormModal()" aria-label="Tutup" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition text-gray-400 hover:text-gray-600">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -151,7 +151,7 @@
     <!-- Header -->
     <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div class="flex items-center justify-between px-4 md:px-6 py-3">
-            <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl">
+            <button @click="sidebarOpen = true" aria-label="Toggle menu" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl">
                 <i class="bi bi-list text-xl"></i>
             </button>
             <div class="flex items-center gap-3">
@@ -241,6 +241,7 @@
                                class="px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500">
                         <button x-show="filters.tanggal"
                                 @click="clearDateFilter()"
+                                aria-label="Hapus filter tanggal"
                                 class="px-3 py-2.5 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition text-sm">
                             <i class="bi bi-x-lg"></i>
                         </button>
@@ -334,15 +335,15 @@
                                 <td class="px-4 py-3">
                                     <div class="flex items-center justify-center gap-1">
                                         <a :href="'/kwitansi/' + item.id + '/pdf'" target="_blank"
-                                           class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary-50 text-primary-600 transition" title="Print PDF">
+                                           class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary-50 text-primary-600 transition" title="Print PDF" aria-label="Cetak PDF">
                                             <i class="bi bi-printer"></i>
                                         </a>
                                         <button @click="openEditModal(item.id)"
-                                                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-blue-50 text-blue-600 transition" title="Edit">
+                                                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-blue-50 text-blue-600 transition" title="Edit" aria-label="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </button>
                                         <button @click="confirmDelete(item.id, item.nama_donatur)"
-                                                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-red-500 transition" title="Hapus">
+                                                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-red-500 transition" title="Hapus" aria-label="Hapus">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
@@ -360,13 +361,13 @@
                     dari <span x-text="pagination.total ?? 0"></span> data
                 </p>
                 <div class="flex items-center gap-2">
-                    <button @click="prevPage()" :disabled="!pagination.prev_page_url" class="pagination-btn">
+                    <button @click="prevPage()" :disabled="!pagination.prev_page_url" aria-label="Halaman sebelumnya" class="pagination-btn">
                         <i class="bi bi-chevron-left"></i>
                     </button>
                     <span class="text-sm text-gray-600">
                         Halaman <span x-text="pagination.current_page"></span> / <span x-text="pagination.last_page"></span>
                     </span>
-                    <button @click="nextPage()" :disabled="!pagination.next_page_url" class="pagination-btn">
+                    <button @click="nextPage()" :disabled="!pagination.next_page_url" aria-label="Halaman berikutnya" class="pagination-btn">
                         <i class="bi bi-chevron-right"></i>
                     </button>
                 </div>

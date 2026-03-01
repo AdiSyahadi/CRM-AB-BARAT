@@ -44,7 +44,7 @@
             </div>
         </div>
         <!-- Close button mobile -->
-        <button @click="sidebarOpen = false" class="lg:hidden p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition">
+        <button @click="sidebarOpen = false" class="lg:hidden p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition" aria-label="Tutup">
             <i class="bi bi-x-lg text-lg"></i>
         </button>
     </div>

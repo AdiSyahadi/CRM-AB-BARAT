@@ -1,0 +1,32 @@
+Patch,025
+Judul,Icon Button Aria Labels
+Tanggal,2025-03-02
+Status,DONE
+
+Masalah,"~116 icon-only buttons tanpa aria-label (screen reader tidak bisa mengidentifikasi fungsi tombol)"
+Penyebab,"Atribut aksesibilitas tidak ditambahkan saat komponen dibuat"
+Solusi,"Tambah aria-label deskriptif pada setiap icon-only button/anchor"
+
+File,Jumlah Button
+resources/views/kwitansi/index.blade.php,8
+resources/views/laporan-ramadhan/index.blade.php,4
+resources/views/pegawai/index.blade.php,8
+resources/views/absensi/index.blade.php,16
+resources/views/partnership/index.blade.php,8
+resources/views/penyebaran-toko/index.blade.php,8
+resources/views/manajemen-user/index.blade.php,9
+resources/views/customer-service/daftar.blade.php,9
+resources/views/input-laporan/index.blade.php,7
+resources/views/donatur/index.blade.php,15
+resources/views/donasi-web/index.blade.php,2
+resources/views/analisis-donatur/index.blade.php,11
+resources/views/components/sidebar.blade.php,1
+resources/views/monitor-cs/index.blade.php,3
+resources/views/performa-cs/index.blade.php,2
+resources/views/customer-service/performa-bulanan.blade.php,2
+resources/views/laporan-perolehan/index.blade.php,2
+resources/views/auth/login.blade.php,1
+
+Total Button,116
+Total File,18
+Regresi,Tidak ada - hanya menambah atribut HTML tanpa mengubah behavior

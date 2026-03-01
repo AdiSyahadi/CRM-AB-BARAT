@@ -384,7 +384,7 @@
                 <div class="md:hidden flex items-center justify-between h-12">
                     <div class="flex items-center gap-2">
                         <!-- Hamburger Menu Button -->
-                        <button @click="sidebarOpen = true" class="p-2 -ml-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition">
+                        <button @click="sidebarOpen = true" class="p-2 -ml-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition" aria-label="Toggle menu">
                             <i class="bi bi-list text-xl"></i>
                         </button>
                         <div class="w-8 h-8 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg flex items-center justify-center shadow-md shadow-primary-500/30">
@@ -508,7 +508,7 @@
                                 <i class="bi bi-calendar-range text-primary-500 text-sm"></i>
                                 <span x-text="hdrDrpDisplayText()" class="max-w-[160px] truncate"></span>
                                 <template x-if="hdrDrp.startDate && hdrDrp.endDate">
-                                    <button @click.stop="hdrDrpClear()" class="text-gray-400 hover:text-red-500 transition ml-0.5">
+                                    <button @click.stop="hdrDrpClear()" class="text-gray-400 hover:text-red-500 transition ml-0.5" aria-label="Hapus filter tanggal">
                                         <i class="bi bi-x-circle-fill text-xs"></i>
                                     </button>
                                 </template>
@@ -525,9 +525,9 @@
                                  @click.outside="hdrDrp.open = false"
                                  class="drp-popover" style="left:auto;right:0;">
                                 <div class="drp-nav">
-                                    <button @click="hdrDrpPrevMonth()" type="button"><i class="bi bi-chevron-left"></i></button>
+                                    <button @click="hdrDrpPrevMonth()" type="button" aria-label="Bulan sebelumnya"><i class="bi bi-chevron-left"></i></button>
                                     <span style="font-size:14px;font-weight:700;color:#1F2937" x-text="hdrDrpMonthYear()"></span>
-                                    <button @click="hdrDrpNextMonth()" type="button"><i class="bi bi-chevron-right"></i></button>
+                                    <button @click="hdrDrpNextMonth()" type="button" aria-label="Bulan berikutnya"><i class="bi bi-chevron-right"></i></button>
                                 </div>
                                 <div class="drp-weekdays">
                                     <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
@@ -667,7 +667,7 @@
                                       :class="hdrDrp.startDate ? 'text-primary-700' : 'text-gray-600'"
                                       x-text="hdrDrp.startDate && hdrDrp.endDate ? hdrDrpShortText() : 'Tanggal'"></span>
                                 <template x-if="hdrDrp.startDate && hdrDrp.endDate">
-                                    <button @click.stop="hdrDrpClear()" class="text-gray-400 hover:text-red-500 ml-0.5">
+                                    <button @click.stop="hdrDrpClear()" class="text-gray-400 hover:text-red-500 ml-0.5" aria-label="Hapus filter tanggal">
                                         <i class="bi bi-x-circle-fill text-[10px]"></i>
                                     </button>
                                 </template>
@@ -680,9 +680,9 @@
                                  @click.outside="hdrDrp.open = false"
                                  class="drp-popover" style="right:0;left:auto;">
                                 <div class="drp-nav">
-                                    <button @click="hdrDrpPrevMonth()" type="button"><i class="bi bi-chevron-left"></i></button>
+                                    <button @click="hdrDrpPrevMonth()" type="button" aria-label="Bulan sebelumnya"><i class="bi bi-chevron-left"></i></button>
                                     <span style="font-size:14px;font-weight:700;color:#1F2937" x-text="hdrDrpMonthYear()"></span>
-                                    <button @click="hdrDrpNextMonth()" type="button"><i class="bi bi-chevron-right"></i></button>
+                                    <button @click="hdrDrpNextMonth()" type="button" aria-label="Bulan berikutnya"><i class="bi bi-chevron-right"></i></button>
                                 </div>
                                 <div class="drp-weekdays">
                                     <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
@@ -1535,7 +1535,7 @@
                                         <i class="bi bi-calendar-range text-primary-500"></i>
                                         <span x-text="drpDisplayText()" class="flex-1 truncate"></span>
                                         <template x-if="tableFilterInputs.from_date || tableFilterInputs.to_date">
-                                            <button @click.stop="drpClear()" class="text-gray-400 hover:text-red-500 transition">
+                                            <button @click.stop="drpClear()" class="text-gray-400 hover:text-red-500 transition" aria-label="Hapus filter tanggal">
                                                 <i class="bi bi-x-circle-fill text-sm"></i>
                                             </button>
                                         </template>
@@ -1553,9 +1553,9 @@
                                          class="drp-popover">
                                         {{-- Navigation --}}
                                         <div class="drp-nav">
-                                            <button @click="drpPrevMonth()" type="button"><i class="bi bi-chevron-left"></i></button>
+                                            <button @click="drpPrevMonth()" type="button" aria-label="Bulan sebelumnya"><i class="bi bi-chevron-left"></i></button>
                                             <span style="font-size:14px;font-weight:700;color:#1F2937" x-text="drpMonthYear()"></span>
-                                            <button @click="drpNextMonth()" type="button"><i class="bi bi-chevron-right"></i></button>
+                                            <button @click="drpNextMonth()" type="button" aria-label="Bulan berikutnya"><i class="bi bi-chevron-right"></i></button>
                                         </div>
                                         {{-- Weekday Headers --}}
                                         <div class="drp-weekdays">
@@ -1798,7 +1798,8 @@
                                 <button @click="goToPage(table.current_page - 1)" 
                                         :disabled="table.current_page <= 1"
                                         :class="table.current_page <= 1 ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-gray-700 bg-white border border-gray-200 hover:bg-gray-50'"
-                                        class="px-3 py-2 text-xs sm:text-sm rounded-lg transition-colors">
+                                        class="px-3 py-2 text-xs sm:text-sm rounded-lg transition-colors"
+                                        aria-label="Halaman sebelumnya">
                                     <i class="bi bi-chevron-left"></i>
                                     <span class="hidden sm:inline ml-1">Prev</span>
                                 </button>
@@ -1829,7 +1830,8 @@
                                 <button @click="goToPage(table.current_page + 1)" 
                                         :disabled="table.current_page >= table.last_page"
                                         :class="table.current_page >= table.last_page ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-white bg-primary-500 hover:bg-primary-600'"
-                                        class="px-3 py-2 text-xs sm:text-sm rounded-lg transition-colors">
+                                        class="px-3 py-2 text-xs sm:text-sm rounded-lg transition-colors"
+                                        aria-label="Halaman berikutnya">
                                     <span class="hidden sm:inline mr-1">Next</span>
                                     <i class="bi bi-chevron-right"></i>
                                 </button>

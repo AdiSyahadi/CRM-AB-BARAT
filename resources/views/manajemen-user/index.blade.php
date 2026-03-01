@@ -70,7 +70,7 @@
                 <i :class="editingId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-plus-circle-fill text-indigo-600'" class="text-lg"></i>
                 <h3 class="font-semibold text-gray-800" x-text="editingId ? 'Edit User' : 'Tambah User'"></h3>
             </div>
-            <button @click="closeFormModal()" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
+            <button @click="closeFormModal()" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="px-5 py-4 space-y-3">
             <div>
@@ -92,7 +92,8 @@
                 <div style="position:relative">
                     <input :type="showPassword ? 'text' : 'password'" x-model="form.password" class="mu-field-input" style="padding-right:40px" placeholder="Minimal 6 karakter">
                     <button type="button" @click="showPassword = !showPassword"
-                            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:14px">
+                            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:14px"
+                            aria-label="Tampilkan password">
                         <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                     </button>
                 </div>
@@ -141,7 +142,7 @@
                 <i class="bi bi-person-circle text-indigo-600 text-lg"></i>
                 <h3 class="font-semibold text-gray-800">Detail User</h3>
             </div>
-            <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
+            <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="px-5 py-4 space-y-3" x-show="detailData">
             <template x-if="detailData">
@@ -186,7 +187,7 @@
 {{-- Sticky Header --}}
 <div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
-        <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600"><i class="bi bi-list text-xl"></i></button>
+        <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600" aria-label="Toggle menu"><i class="bi bi-list text-xl"></i></button>
         <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-person-gear text-indigo-600 mr-1"></i> Manajemen User</h1>
     </div>
     <button @click="openCreateModal()" class="mu-btn-primary" style="font-size:12px">
@@ -223,7 +224,7 @@
             <input type="text" x-model="filters.search" @input.debounce.500ms="resetAndLoad()"
                    class="mu-field-input" style="padding-left:36px" placeholder="Cari nama atau email...">
         </div>
-        <button @click="clearFilters()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset Filter">
+        <button @click="clearFilters()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset Filter" aria-label="Reset filter">
             <i class="bi bi-x-circle"></i>
         </button>
     </div>
@@ -275,10 +276,10 @@
                             <td style="padding:12px 16px;color:#4B5563;font-size:12px" class="hidden lg:table-cell" x-text="row.created_fmt"></td>
                             <td style="padding:12px 16px;text-align:center" @click.stop>
                                 <div class="flex items-center justify-center gap-1">
-                                    <button @click="openEditModal(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#D97706" title="Edit">
+                                    <button @click="openEditModal(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#D97706" title="Edit" aria-label="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
-                                    <button @click="confirmDelete(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#EF4444" title="Hapus">
+                                    <button @click="confirmDelete(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#EF4444" title="Hapus" aria-label="Hapus">
                                         <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
@@ -294,12 +295,14 @@
             <div class="flex gap-1">
                 <button @click="goToPage(pagination.current_page - 1)" :disabled="!pagination.prev_page_url"
                         style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                        :style="!pagination.prev_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
+                        :style="!pagination.prev_page_url ? 'opacity:0.4;cursor:not-allowed' : ''"
+                        aria-label="Halaman sebelumnya">
                     <i class="bi bi-chevron-left"></i>
                 </button>
                 <button @click="goToPage(pagination.current_page + 1)" :disabled="!pagination.next_page_url"
                         style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                        :style="!pagination.next_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
+                        :style="!pagination.next_page_url ? 'opacity:0.4;cursor:not-allowed' : ''"
+                        aria-label="Halaman berikutnya">
                     <i class="bi bi-chevron-right"></i>
                 </button>
             </div>

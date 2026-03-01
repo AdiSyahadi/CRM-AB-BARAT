@@ -72,7 +72,7 @@
             <div class="flex items-center justify-between px-4 md:px-6 py-3">
                 <!-- Left: Menu & Title -->
                 <div class="flex items-center gap-3">
-                    <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl">
+                    <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl" aria-label="Toggle menu">
                         <i class="bi bi-list text-xl"></i>
                     </button>
                     <div>
@@ -100,7 +100,8 @@
                     <!-- Refresh Button -->
                     <button @click="loadAllData()" 
                             :disabled="isLoading"
-                            class="p-2 bg-primary-50 hover:bg-primary-100 text-primary-600 rounded-xl transition disabled:opacity-50">
+                            class="p-2 bg-primary-50 hover:bg-primary-100 text-primary-600 rounded-xl transition disabled:opacity-50"
+                            aria-label="Refresh data">
                         <i class="bi bi-arrow-clockwise" :class="isLoading ? 'animate-spin' : ''"></i>
                     </button>
                     

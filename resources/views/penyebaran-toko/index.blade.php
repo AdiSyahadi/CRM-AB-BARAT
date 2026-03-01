@@ -95,7 +95,7 @@
                 <i :class="editingId ? 'bi bi-pencil-square text-amber-600' : 'bi bi-plus-circle-fill text-emerald-600'" class="text-lg"></i>
                 <h3 class="font-semibold text-gray-800" x-text="editingId ? 'Edit Penyebaran Toko' : 'Tambah Penyebaran Toko'"></h3>
             </div>
-            <button @click="closeFormModal()" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
+            <button @click="closeFormModal()" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="px-5 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
             <div class="grid grid-cols-2 gap-3">
@@ -205,7 +205,7 @@
                 <i class="bi bi-geo-alt-fill text-emerald-600 text-lg"></i>
                 <h3 class="font-semibold text-gray-800">Detail Penyebaran Toko</h3>
             </div>
-            <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600"><i class="bi bi-x-lg"></i></button>
+            <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="px-5 py-4 space-y-3" x-show="detailData">
             <template x-if="detailData">
@@ -256,7 +256,7 @@
 {{-- Sticky Header --}}
 <div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b px-4 sm:px-6 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
-        <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600"><i class="bi bi-list text-xl"></i></button>
+        <button @click="$dispatch('toggle-sidebar')" class="lg:hidden text-gray-600" aria-label="Toggle menu"><i class="bi bi-list text-xl"></i></button>
         <h1 class="text-lg font-bold text-gray-800"><i class="bi bi-geo-alt-fill text-emerald-600 mr-1"></i> Penyebaran Toko</h1>
     </div>
     <button @click="openCreateModal()" class="pt-btn-primary" style="font-size:12px">
@@ -330,7 +330,7 @@
         </select>
         <input type="date" x-model="filters.date_from" @change="resetAndLoad()" class="pt-field-input" style="width:auto" title="Dari tanggal">
         <input type="date" x-model="filters.date_to" @change="resetAndLoad()" class="pt-field-input" style="width:auto" title="Sampai tanggal">
-        <button @click="clearFilters()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset Filter">
+        <button @click="clearFilters()" style="font-size:12px;color:#6B7280;cursor:pointer;border:none;background:none" title="Reset Filter" aria-label="Reset filter">
             <i class="bi bi-x-circle"></i>
         </button>
     </div>
@@ -385,10 +385,10 @@
                             </td>
                             <td style="padding:12px 16px;text-align:center" @click.stop>
                                 <div class="flex items-center justify-center gap-1">
-                                    <button @click="openEditModal(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#D97706" title="Edit">
+                                    <button @click="openEditModal(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#D97706" title="Edit" aria-label="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
-                                    <button @click="confirmDelete(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#EF4444" title="Hapus">
+                                    <button @click="confirmDelete(row.id)" style="padding:6px;border-radius:8px;border:none;background:none;cursor:pointer;color:#EF4444" title="Hapus" aria-label="Hapus">
                                         <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
@@ -404,12 +404,14 @@
             <div class="flex gap-1">
                 <button @click="goToPage(pagination.current_page - 1)" :disabled="!pagination.prev_page_url"
                         style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                        :style="!pagination.prev_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
+                        :style="!pagination.prev_page_url ? 'opacity:0.4;cursor:not-allowed' : ''"
+                        aria-label="Halaman sebelumnya">
                     <i class="bi bi-chevron-left"></i>
                 </button>
                 <button @click="goToPage(pagination.current_page + 1)" :disabled="!pagination.next_page_url"
                         style="padding:4px 10px;border-radius:6px;border:1px solid #E5E7EB;font-size:12px;background:white;cursor:pointer"
-                        :style="!pagination.next_page_url ? 'opacity:0.4;cursor:not-allowed' : ''">
+                        :style="!pagination.next_page_url ? 'opacity:0.4;cursor:not-allowed' : ''"
+                        aria-label="Halaman berikutnya">
                     <i class="bi bi-chevron-right"></i>
                 </button>
             </div>

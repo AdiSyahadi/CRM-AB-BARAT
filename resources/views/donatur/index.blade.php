@@ -94,7 +94,7 @@
         <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
             <div class="flex items-center justify-between px-4 md:px-6 py-3">
                 <!-- Mobile Menu Button -->
-                <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl">
+                <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-xl" aria-label="Toggle menu">
                     <i class="bi bi-list text-xl"></i>
                 </button>
                 
@@ -114,7 +114,8 @@
                     <!-- Alert Bell -->
                     <div class="relative" x-data="{ alertOpen: false }">
                         <button @click="alertOpen = !alertOpen; if(alertOpen && smartAlerts.alerts.length === 0) loadAlerts()"
-                                class="relative p-2.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition">
+                                class="relative p-2.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition"
+                                aria-label="Notifikasi">
                             <i class="bi bi-bell text-xl"></i>
                             <!-- Badge -->
                             <span x-show="smartAlerts.total > 0" 
@@ -350,7 +351,7 @@
                     <div class="bg-gray-50 px-4 py-2 border-b border-gray-100 flex items-center justify-between">
                         <span class="text-sm font-medium text-gray-700" 
                               x-text="getFollowUpTitle()"></span>
-                        <button @click="followUp.selectedPriority = null" class="text-gray-400 hover:text-gray-600">
+                        <button @click="followUp.selectedPriority = null" class="text-gray-400 hover:text-gray-600" aria-label="Tutup">
                             <i class="bi bi-x-lg"></i>
                         </button>
                     </div>
@@ -392,17 +393,17 @@
                                 <div class="flex items-center gap-1">
                                     <a :href="item.wa_link" target="_blank"
                                        class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
-                                       title="WhatsApp">
+                                       title="WhatsApp" aria-label="Hubungi via WhatsApp">
                                         <i class="bi bi-whatsapp"></i>
                                     </a>
                                     <button @click="openDetailPanel(item.id)"
                                             class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                                            title="Detail">
+                                            title="Detail" aria-label="Lihat detail">
                                         <i class="bi bi-eye"></i>
                                     </button>
                                     <button @click="markFollowUpDone(item.id)"
                                             class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition"
-                                            title="Mark Done">
+                                            title="Mark Done" aria-label="Tandai selesai">
                                         <i class="bi bi-check-lg"></i>
                                     </button>
                                 </div>
@@ -597,27 +598,27 @@
                                         <div class="flex items-center justify-center gap-0.5 md:gap-1">
                                             <a :href="donatur.wa_link" target="_blank" 
                                                class="p-1.5 md:p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
-                                               title="WhatsApp">
+                                               title="WhatsApp" aria-label="Hubungi via WhatsApp">
                                                 <i class="bi bi-whatsapp text-sm md:text-base"></i>
                                             </a>
                                             <button @click="openDetailPanel(donatur.id)" 
                                                     class="p-1.5 md:p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg transition"
-                                                    title="Lihat Detail">
+                                                    title="Lihat Detail" aria-label="Lihat detail">
                                                 <i class="bi bi-eye text-sm md:text-base"></i>
                                             </button>
                                             <button @click="openEditModal(donatur.id)" 
                                                     class="p-1.5 md:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition hidden sm:block"
-                                                    title="Edit">
+                                                    title="Edit" aria-label="Edit">
                                                 <i class="bi bi-pencil text-sm md:text-base"></i>
                                             </button>
                                             <button @click="confirmDelete(donatur.id, donatur.nama_donatur)" 
                                                     class="p-1.5 md:p-2 text-red-600 hover:bg-red-50 rounded-lg transition hidden sm:block"
-                                                    title="Hapus">
+                                                    title="Hapus" aria-label="Hapus">
                                                 <i class="bi bi-trash text-sm md:text-base"></i>
                                             </button>
                                             <!-- Mobile dropdown for more actions -->
                                             <div class="relative sm:hidden" x-data="{ open: false }">
-                                                <button @click="open = !open" class="p-1.5 text-gray-500 hover:bg-gray-50 rounded-lg transition">
+                                                <button @click="open = !open" class="p-1.5 text-gray-500 hover:bg-gray-50 rounded-lg transition" aria-label="Aksi lainnya">
                                                     <i class="bi bi-three-dots-vertical text-sm"></i>
                                                 </button>
                                                 <div x-show="open" @click.away="open = false" 
@@ -648,7 +649,8 @@
                     <div class="flex items-center gap-2">
                         <button @click="prevPage()" 
                                 :disabled="table.current_page <= 1"
-                                class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition">
+                                class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                aria-label="Halaman sebelumnya">
                             <i class="bi bi-chevron-left"></i>
                         </button>
                         <span class="text-sm text-gray-600">
@@ -656,7 +658,8 @@
                         </span>
                         <button @click="nextPage()" 
                                 :disabled="table.current_page >= table.last_page"
-                                class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition">
+                                class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                aria-label="Halaman berikutnya">
                             <i class="bi bi-chevron-right"></i>
                         </button>
                     </div>
@@ -690,7 +693,7 @@
                             <p class="text-primary-100 text-sm" x-text="detailPanel.donatur?.did || '-'"></p>
                         </div>
                     </div>
-                    <button @click="closeDetailPanel()" class="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition">
+                    <button @click="closeDetailPanel()" class="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition" aria-label="Tutup">
                         <i class="bi bi-x-lg"></i>
                     </button>
                 </div>
@@ -1046,7 +1049,7 @@
                         <p class="text-xs text-white/70 hidden sm:block">Lengkapi informasi donatur di bawah ini</p>
                     </div>
                 </div>
-                <button @click="closeFormModal()" class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition">
+                <button @click="closeFormModal()" class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition" aria-label="Tutup">
                     <i class="bi bi-x-lg text-lg"></i>
                 </button>
             </div>
